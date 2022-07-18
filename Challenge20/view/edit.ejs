@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Data</title>
+
+    <script>
+        function Previous() {
+            window.history.back()
+        }
+    </script>
+
+    <style>
+        h1 {
+            color: black;
+            text-align: center;
+            text-decoration: underline;
+            text-decoration-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        input[type=text], [type=number],  [type=date],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+
+        input[type=submit] {
+            background-color: #a78f29;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        input[type=button] {
+            background-color: #b66545;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: left;
+        }
+
+        input[type=button]:hover {
+            background-color: #992b10;
+        }
+
+        .container {
+            border-radius: 20px;
+            background-color: #48b448;
+            padding: 50px;
+            float: inherit
+        }
+
+        .col-25 {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
+
+        .col-75 {
+            float: left;
+            width: 75%;
+            margin-top: 6px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        @media screen and (max-width: 600px) {
+
+            .col-25,
+            .col-75,
+            input[type=submit] {
+                width: 100%;
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Data</h1>
+    <div class="container">
+        <form action="" method="post">
+            <div class="row">
+                <div class="col-25">
+                    <label for="Strings">String</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" name="String" value="<%= item.Strings %>">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="Integers">Integer</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" name="Integer" value="<%= item.Integers %>">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="Float">Float</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" step=0.01 name="Float" value="<%= item.Floats %>">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="Date">Date</label>
+                </div>
+                <div class="col-75">
+                    <input type="date" name="Date" value="<%= item.Dates %>">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="Booleans">Boolean</label>
+                </div>
+
+                <div class="col-75">
+                    <select name="Boolean" id="Booleans" value="<%=item.Booleans %>">
+                        <option value="True"> True</option>
+                        <option value="False"> False</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <input type="submit" value="Save">
+            <input type="button"
+            value="Back"
+            onclick="Previous()">
+        </form>
+    </div>
+</body>
+
+</html>

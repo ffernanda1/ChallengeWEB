@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataList</title>
+
+    
+
+    </script>
+    <style>
+        div {
+            border: 1px solid black;
+            background-color: rgb(235, 236, 236);
+            padding-top: 50px;
+            padding-right: 30px;
+            padding-bottom: 50px;
+            padding-left: 80px;
+        }
+    </style>
+
+    <style>
+        #styletable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #styletable td {
+            border: 2px groove;
+            padding: 8px;
+        }
+        #styletable th {
+            
+            border: 2px groove;
+            padding: 8px;
+        }
+
+        #styletable tr:nth-child(even) {
+            background-color: #d8d677;
+        }
+
+        #styletable tr:hover {
+            background-color: #ddd;
+        }
+
+        #styletable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>BREAD (Roti)</h2>
+    <div>
+        <table id="styletable">
+            <thead>
+                <tr>
+                    <th>Nomor</th>
+                    <th>String</th>
+                    <th>Integer</th>
+                    <th>Float</th>
+                    <th>Date</th>
+                    <th>Boolean</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <style>
+                    .tombol {
+                        background-color: #ffffff;
+                        transition-duration: 0.5s;
+                        color: rgb(0, 0, 0);
+                        padding: 15px 32px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        border-radius: 12px;
+                        font-size: 16px;
+                        margin: 4px 2px;
+                        cursor: pointer;
+                    }
+
+                    .tomboldelete {
+                        background-color: rgb(255, 6, 6);
+                        color: rgb(255, 255, 255);
+                        border: 2px solid rgb(255, 6, 6);
+                    }
+
+                    .tomboldelete:hover {
+                        background-color: rgb(255, 255, 255);
+                        color: rgb(255, 6, 6);
+                    }
+
+                    .tomboledit {
+                        background-color: rgb(5, 236, 25);
+                        color: rgb(255, 255, 255);
+                        border: 2px solid rgb(5, 236, 25);
+                    }
+
+                    .tomboledit:hover {
+                        background-color: rgb(255, 255, 255);
+                        color: rgb(5, 236, 25);
+                    }
+
+                    .tomboltambah {
+                        background-color: rgb(223, 15, 178);
+                        color: rgb(255, 255, 255);
+                        border: 2px solid rgb(223, 15, 178);
+                    }
+
+                    .tomboltambah:hover {
+                        background-color: rgb(255, 255, 255);
+                        color: rgb(223, 15, 178);
+                    }
+                </style>
+                <% list.forEach((item, index)=> { %>
+                    <tr>
+                        <td>
+                            <%= index + 1 %>
+                        </td>
+                        <td>
+                            <%= item.Strings %>
+                        </td>
+                        <td>
+                            <%= item.Integers %>
+                        </td>
+                        <td>
+                            <%= item.Floats %>
+                        </td>
+                        <td>
+                            <%= item.Dates %>
+                        </td>
+                        <td>
+                            <%= item.Booleans %>
+                        </td>
+                        <td>
+                            <a href="/delete/<%= item.id%>" class="tombol tomboldelete">Delete</a>
+                            <a href="/edit/<%= item.id%>" class="tombol tomboledit">Edit</a>
+                        </td>
+                    </tr>
+                    <%})%>
+            </tbody>
+        </table>
+    </div>
+    <a href="/add" class="tombol tomboltambah"> Tambah</a>
+</body>
+
+</html>
