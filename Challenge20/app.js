@@ -45,30 +45,33 @@ app.post('/add', (req, res) => {
 })
 
 app.get('/delete/:id', (req, res) => {
-  var id = req.params.id
+  let id = req.params.id
   db.run(`DELETE FROM Ch20 WHERE id= ${id}`
   )
   res.redirect('/')
 })
 
 app.get('/edit/:id', (req, res) => {
-  db.run('SELECT * FROM ch20 WHERE id=?', [req.params.id], (err, data) => 
-  res.render('edit', { item: data})
+  let id = req.params.id
+  db.all(`SELECT * FROM ch20 WHERE id=${id}`, (err, data) => {
+    res.render('edit', { item: data})
+    console.log(data)
+  }
   )
 })
 
-// app.post('/edit/:id', (req, res) => {
-//   db.run('UPDATE ch20 ')
-//   data[req.params.id] = {
-//     String: req.body.String, 
-//     Integer: req.body.Integer, 
-//     Float: req.body.Float, 
-//     Date: req.body.Date, 
-//     Boolean: req.body.Boolean
-//   }
-//   fs.writeFileSync('data.json', JSON.stringify(data, null, 3), 'utf-8')
-//   res.redirect('/')
-// })
+app.post('/edit/:id', (req, res) => {
+  db.run(`UPDATE ch20 SET 
+    Strings = ${req.body.String},
+    Integers = ${req.body.Integer},
+    Floats = ${req.body.Float},
+    Dates = ${req.body.Date},
+    Booleans = ${req.body.Boolean}
+    WHERE id = ${req.params.id}
+    `)
+
+  res.redirect('/')
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

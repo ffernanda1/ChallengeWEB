@@ -1,0 +1,22 @@
+CREATE TABLE Ch20 (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Strings VARCHAR(50),
+    Integers INTEGER,
+    Floats INTEGER,
+    Dates Date,
+    Booleans Boolean
+)
+
+INSERT INTO Ch20 (
+    Strings,
+    Integers,
+    Floats,
+    Dates,
+    Booleans
+) VALUES (
+    'nanda',
+    123,
+    12.21,
+    '2020-05-16',
+    'true'
+);

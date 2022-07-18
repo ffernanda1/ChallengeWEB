@@ -109,7 +109,7 @@
         <form action="" method="post">
             <div class="row">
                 <div class="col-25">
-                    <label for="Strings">String</label>
+                    <label for="String">String</label>
                 </div>
                 <div class="col-75">
                     <input type="text" name="String" value="<%= item.Strings %>">
@@ -117,7 +117,7 @@
             </div>
             <div class="row">
                 <div class="col-25">
-                    <label for="Integers">Integer</label>
+                    <label for="Integer">Integer</label>
                 </div>
                 <div class="col-75">
                     <input type="number" name="Integer" value="<%= item.Integers %>">
@@ -138,14 +138,11 @@
                 <div class="col-75">
                     <input type="date" name="Date" value="<%= item.Dates %>">
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="Booleans">Boolean</label>
+            </div><%= item.id%>
                 </div>
 
                 <div class="col-75">
-                    <select name="Boolean" id="Booleans" value="<%=item.Booleans %>">
+                    <select name="Boolean" id="Booleans" value="<%= item.Booleans %>">
                         <option value="True"> True</option>
                         <option value="False"> False</option>
                     </select>
