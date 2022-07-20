@@ -7,9 +7,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DataList</title>
 
-    
+    <style>
+        .div1 {
+            float: right;
+            padding: 0;
+        }
 
-    </script>
+        .pagination a {
+            color: rgb(5, 126, 224);
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .5s;
+        }
+
+        .pagination a.active {
+            background-color: aquamarine;
+            color: rgb(245, 237, 237);
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: rgb(245, 237, 237)
+        }
+    </style>
+
     <style>
         div {
             border: 1px solid black;
@@ -32,8 +53,9 @@
             border: 2px groove;
             padding: 8px;
         }
+
         #styletable th {
-            
+
             border: 2px groove;
             padding: 8px;
         }
@@ -143,14 +165,26 @@
                         </td>
                         <td>
                             <a href="/delete/<%= item.id%>" class="tombol tomboldelete">Delete</a>
-                            <a href="/edit/<%= item.id%>" class="tombol tomboledit">Edit</a>
+                            <a href="/update/<%= item.id%>" class="tombol tomboledit">Edit</a>
                         </td>
                     </tr>
                     <%})%>
             </tbody>
         </table>
     </div>
-    <a href="/add" class="tombol tomboltambah"> Tambah</a>
+    <div class="div1">
+        <a href="/add" class="tombol tomboltambah"> Tambah</a>
+    </div>
+    <nav>
+
+        <div class="pagination">
+            <%for(let i=1; i <=pages; i++) {%>
+                <a class="page-link" href="/?page=<%= i%>">
+                    <%=i%>
+                </a>
+                <%}%>
+        </div>
+    </nav>
 </body>
 
 </html>

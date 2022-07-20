@@ -5,11 +5,9 @@ const path = require('path')
 const fs = require('fs')
 
 const bodyParser = require('body-parser')
-const req = require('express/lib/request')
-const res = require('express/lib/response')
 const sqlite3 = require('sqlite3').verbose()
 
-const db = new sqlite3.Database('./challenge20.db', sqlite3.OPEN_READWRITE, (err) => {
+const db = new sqlite3.Database('challenge20.db', sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
     console.log('gagal koneksi', err)
   }
@@ -24,8 +22,16 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
-  db.all("SELECT * FROM Ch20", (err, data) => {
-    res.render('list', { list: data })
+  const page = req.query.page || 1
+  const limit = 3
+  const offset = (page - 1) * limit
+
+  db.all("SELECT COUNT(*) AS TOTAL FROM Ch20", (err, data) => {
+    const pages = Math.ceil(data[0].total / limit)
+    db.all('SELECT * FROM ch20 LIMIT ? OFFSET ?', [limit, offset], (err, data) => {
+      res.render('list', { list: data, pages, page })
+    })
+    
   })
 })
 
@@ -51,26 +57,36 @@ app.get('/delete/:id', (req, res) => {
   res.redirect('/')
 })
 
-app.get('/edit/:id', (req, res) => {
+app.get('/update/:id', (req, res) => {
   let id = req.params.id
-  db.all(`SELECT * FROM ch20 WHERE id=${id}`, (err, data) => {
-    res.render('edit', { item: data})
-    console.log(data)
-  }
-  )
+  let sql = `SELECT * FROM Ch20 WHERE id=${id}`;
+ 
+  db.all(sql, (err, data) => {
+    if (err) {
+      console.log(err)
+    } else {
+      //res.redirect('/')
+      res.render('edit', {item: data[0]})
+    }
+  })
 })
 
-app.post('/edit/:id', (req, res) => {
-  db.run(`UPDATE ch20 SET 
-    Strings = ${req.body.String},
-    Integers = ${req.body.Integer},
-    Floats = ${req.body.Float},
-    Dates = ${req.body.Date},
-    Booleans = ${req.body.Boolean}
-    WHERE id = ${req.params.id}
-    `)
+app.post('/update/:id', (req, res) => {
+  let sql = `UPDATE Ch20 SET 
+  Strings = '${req.body.Strings}',
+  Integers = ${req.body.Integers},
+  Floats = ${req.body.Floats},
+  Dates = '${req.body.Dates}',
+  Booleans = '${req.body.Booleans}'
+  WHERE id = ${req.params.id}
+  `
+  db.run(sql, (err)=>{
+      if(err) {
+        return res.send(err)
+      }
+      res.redirect('/')
+    })
 
-  res.redirect('/')
 })
 
 app.listen(port, () => {

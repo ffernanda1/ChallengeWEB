@@ -25,7 +25,9 @@
             box-sizing: border-box;
         }
 
-        input[type=text], [type=number],  [type=date],
+        input[type=text],
+        [type=number],
+        [type=date],
         select {
             width: 100%;
             padding: 12px;
@@ -103,16 +105,25 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Edit Data</h1>
     <div class="container">
         <form action="" method="post">
             <div class="row">
                 <div class="col-25">
+                    <label for="ids">id</label>
+                </div>
+                <div class="col-75">
+                    <input type="number" name="ids" value="<%= item.id %>">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
                     <label for="String">String</label>
                 </div>
                 <div class="col-75">
-                    <input type="text" name="String" value="<%= item.Strings %>">
+                    <input type="text" name="Strings" value="<%= item.Strings %>">
                 </div>
             </div>
             <div class="row">
@@ -120,7 +131,7 @@
                     <label for="Integer">Integer</label>
                 </div>
                 <div class="col-75">
-                    <input type="number" name="Integer" value="<%= item.Integers %>">
+                    <input type="number" name="Integers" value="<%= item.Integers %>">
                 </div>
             </div>
             <div class="row">
@@ -128,7 +139,7 @@
                     <label for="Float">Float</label>
                 </div>
                 <div class="col-75">
-                    <input type="number" step=0.01 name="Float" value="<%= item.Floats %>">
+                    <input type="number" step=0.01 name="Floats" value="<%= item.Floats %>">
                 </div>
             </div>
             <div class="row">
@@ -136,23 +147,23 @@
                     <label for="Date">Date</label>
                 </div>
                 <div class="col-75">
-                    <input type="date" name="Date" value="<%= item.Dates %>">
+                    <input type="date" name="Dates" value="<%= item.Dates %>">
                 </div>
-            </div><%= item.id%>
-                </div>
-
+                <div class="row">
+                    <div class="col-25">
+                        <label for="Booleans">Boolean</label>
+                    </div>
                 <div class="col-75">
-                    <select name="Boolean" id="Booleans" value="<%= item.Booleans %>">
-                        <option value="True"> True</option>
-                        <option value="False"> False</option>
+                    <select class="arrows" name="Booleans" id="Booleans">
+                        <option disabled hidden>Choose the boolean..</option>
+                        <option value="False" <%=item.Booleans =='false' ? 'selected' : null %>>False</option>
+                        <option value="True" <%=item.Booleans =='true' ? 'selected' : null %> >True</option>
                     </select>
                 </div>
             </div>
             <br>
             <input type="submit" value="Save">
-            <input type="button"
-            value="Back"
-            onclick="Previous()">
+            <input type="button" value="Back" onclick="Previous()">
         </form>
     </div>
 </body>
