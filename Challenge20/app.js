@@ -25,11 +25,12 @@ app.get('/', (req, res) => {
   const page = req.query.page || 1
   const limit = 3
   const offset = (page - 1) * limit
+  
 
-  db.all("SELECT COUNT(*) AS TOTAL FROM Ch20", (err, data) => {
+  db.all("SELECT COUNT(*) AS total FROM Ch20", (err, data) => {
     const pages = Math.ceil(data[0].total / limit)
     db.all('SELECT * FROM ch20 LIMIT ? OFFSET ?', [limit, offset], (err, data) => {
-      res.render('list', { list: data, pages, page })
+      res.render('list', { list: data, pages, page, offset})
     })
     
   })
@@ -65,7 +66,6 @@ app.get('/update/:id', (req, res) => {
     if (err) {
       console.log(err)
     } else {
-      //res.redirect('/')
       res.render('edit', {item: data[0]})
     }
   })
