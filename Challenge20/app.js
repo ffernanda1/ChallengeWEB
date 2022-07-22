@@ -22,11 +22,13 @@ app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
   const url = req.url == '/' ? '/?page=1' : req.url
-  const page = req.query.page || 1
+  const page = parseInt(req.query.page) || 1
   const limit = 3
   const offset = (page - 1) * limit
   const search = []
   const hasil = []
+
+
 
   //Searching
   if (req.query.String) {
@@ -137,3 +139,5 @@ app.post('/update/:id', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+

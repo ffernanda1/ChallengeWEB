@@ -164,7 +164,6 @@
                 margin-top: 0;
             }
         }
-
     </style>
 </head>
 
@@ -219,7 +218,8 @@
                     </div>
 
                     <div class="col-75">
-                        <select name="Boolean" id="Booleans" value="<%= query.boolean ? query.boolean : query.boolean = '' %>">
+                        <select name="Boolean" id="Booleans"
+                            value="<%= query.boolean ? query.boolean : query.boolean = '' %>">
                             <option disabled <%=query.boolean=='' ? 'selected' : null %>>Choose the boolean..</option>
                             <option value="True" <%=query.boolean=='false' ? 'selected' : null %>> True</option>
                             <option value="False" <%=query.boolean=='true' ? 'selected' : null %>> False</option>
@@ -349,11 +349,16 @@
         </div>
 
         <div class="pagination">
+            <a
+                href="<%= page == 1 ? url : url.includes(`&page=${page}`) ? url.replace(`&page=${page}`, `&page=${(page - 1)}`) : `/?page=${(page - 1)}` %>">Previous</a>
             <%for(let i=1; i <=pages; i++) {%>
                 <a class="<%= page == i ? 'active' : '' %>" href="<%= url.replace(`page=${page}`, `page=${i}`) %>">
                     <%=i%>
                 </a>
                 <%}%>
+
+                    <a
+                        href="<%= page == pages ? url : url.includes(`&page=${page}`) ? url.replace(`&page=${page}`, `&page=${(1 + page)}`) : `/?page=${(1 + page)}` %>">Next</a>
         </div>
     </div>
 </body>
