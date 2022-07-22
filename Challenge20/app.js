@@ -13,7 +13,6 @@ const db = new sqlite3.Database('challenge20.db', sqlite3.OPEN_READWRITE, (err) 
   }
 });
 
-
 app.set('views', path.join(__dirname, 'view'));
 app.set('view engine', 'ejs')
 
@@ -23,7 +22,6 @@ app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
   const url = req.url == '/' ? '/?page=1' : req.url
-  console.log(url)
   const page = req.query.page || 1
   const limit = 3
   const offset = (page - 1) * limit
