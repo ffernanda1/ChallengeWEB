@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataList</title>
+
+    <script>
+
+    </script>
+
+    <style>
+        .pagination {
+            display: inline-block;
+        }
+
+        .pagination a {
+            font-family: arial, sans-serif;
+            color: rgb(0, 119, 255);
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .5s;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .pagination a.active {
+            background-color: rgb(27, 192, 41);
+            color: white;
+            border: 1px solid rgb(27, 192, 41);
+            border-radius: 5px;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+    </style>
+
+
+    <style>
+        .div {
+            border: 1px solid black;
+            background-color: rgb(235, 236, 236);
+            padding-top: 50px;
+            padding-right: 30px;
+            padding-bottom: 50px;
+            padding-left: 80px;
+        }
+    </style>
+
+    <style>
+        .div1 {
+            float: right;
+            padding: 0;
+        }
+
+        #styletable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #styletable td {
+            border: 2px groove;
+            padding: 8px;
+        }
+
+        #styletable th {
+
+            border: 2px groove;
+            padding: 8px;
+        }
+
+        #styletable tr:nth-child(even) {
+            background-color: #d8d677;
+        }
+
+        #styletable tr:hover {
+            background-color: #ddd;
+        }
+
+        #styletable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #04AA6D;
+            color: white;
+        }
+
+
+
+        input[type=text],
+        [type=number],
+        [type=date],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+
+        .container {
+            border-radius: 20px;
+            background-color: #27d3d3;
+            padding: 50px;
+            float: inherit
+        }
+
+        .containerouter {
+            border-radius: 20px;
+            background-color: rgb(255, 255, 255);
+            padding: 50px;
+            float: inherit
+        }
+
+        .col-25 {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
+
+        .col-75 {
+            float: left;
+            width: 75%;
+            margin-top: 6px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .button[type=submit] {
+            background-color: #b66545;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: left;
+        }
+
+        .button[type=submit]:hover {
+            background-color: #992b10;
+        }
+
+
+        @media screen and (max-width: 600px) {
+
+            .col-25,
+            .col-75,
+            input[type=submit] {
+                width: 100%;
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="containerouter">
+        <h2>Searching</h2>
+        <div class="container">
+            <form action="" method="get">
+                <input type="hidden" name="page" value="1">
+                <div class="row">
+                    <div class="col-25">
+                        <label for="Strings">String</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="Strings" name="String" value="<%= query.String%>">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label for="Integers">Integer</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="Integers" name="Integer" value="<%= query.Integer%>">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="Floats">Float</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" step=0.01 id="Floats" name="Float" value="<%= query.Float%>">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label for="Dates">Date</label>
+                    </div>
+
+                    <div class="col-75">
+                        <input type="date" id="Dates" name="Date" value="<%= query.Date%>">
+                        <p> To </p>
+                        <input type="date" id="Dates" name="Date2" value="<%= query.Date2%>">
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-25">
+                        <label for="Booleans">Boolean</label>
+                    </div>
+
+                    <div class="col-75">
+                        <select name="Boolean" id="Booleans"
+                            value="<%= query.boolean ? query.boolean : query.boolean = '' %>">
+                            <option disabled <%=query.boolean=='' ? 'selected' : null %>>Choose the boolean..</option>
+                            <option value="True" <%=query.boolean=='false' ? 'selected' : null %>> True</option>
+                            <option value="False" <%=query.boolean=='true' ? 'selected' : null %>> False</option>
+
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <a href="/" class="tombolclear">Clear</a>
+                <button type="submit" class="button">Search</button>
+            </form>
+        </div>
+
+
+        <h2>BREAD (Roti)</h2>
+        <div>
+            <table id="styletable">
+                <thead>
+                    <tr>
+                        <th>Nomor</th>
+                        <th>String</th>
+                        <th>Integer</th>
+                        <th>Float</th>
+                        <th>Date</th>
+                        <th>Boolean</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <style>
+                        .tombol {
+                            background-color: #ffffff;
+                            transition-duration: 0.5s;
+                            color: rgb(0, 0, 0);
+                            padding: 15px 32px;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-block;
+                            border-radius: 12px;
+                            font-size: 16px;
+                            margin: 4px 2px;
+                            cursor: pointer;
+                        }
+
+                        .tombolclear {
+                            background-color: #454db6;
+                            color: white;
+                            padding: 12px 20px;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            float: right;
+
+                        }
+
+                        .tombolclear:hover {
+                            background-color: rgb(28, 2, 87);
+                            color: rgb(13, 231, 220);
+                        }
+
+                        .tomboldelete {
+                            background-color: rgb(255, 6, 6);
+                            color: rgb(255, 255, 255);
+                            border: 2px solid rgb(255, 6, 6);
+                        }
+
+                        .tomboldelete:hover {
+                            background-color: rgb(255, 255, 255);
+                            color: rgb(255, 6, 6);
+                        }
+
+                        .tomboledit {
+                            background-color: rgb(5, 236, 25);
+                            color: rgb(255, 255, 255);
+                            border: 2px solid rgb(5, 236, 25);
+                        }
+
+                        .tomboledit:hover {
+                            background-color: rgb(255, 255, 255);
+                            color: rgb(5, 236, 25);
+                        }
+
+                        .tomboltambah {
+                            background-color: rgb(223, 15, 178);
+                            color: rgb(255, 255, 255);
+                            border: 2px solid rgb(223, 15, 178);
+                        }
+
+                        .tomboltambah:hover {
+                            background-color: rgb(255, 255, 255);
+                            color: rgb(223, 15, 178);
+                        }
+                    </style>
+                    <% list.forEach((item, index)=> { %>
+                        <tr>
+                            <td>
+                                <%= offset + index + 1 %>
+                            </td>
+                            <td>
+                                <%= item.Strings %>
+                            </td>
+                            <td>
+                                <%= item.Integers %>
+                            </td>
+                            <td>
+                                <%= item.Floats %>
+                            </td>
+                            <td>
+                                <%= moment(item.Dates).format('DD MMM YYYY') %>
+                            </td>
+                            <td>
+                                <%= item.Booleans %>
+                            </td>
+                            <td>
+                                <a href="/delete/<%= item.id%>" class="tombol tomboldelete">Delete</a>
+                                <a href="/update/<%= item.id%>" class="tombol tomboledit">Edit</a>
+                            </td>
+                        </tr>
+                        <%})%>
+                </tbody>
+            </table>
+        </div>
+        <br>
+
+        <div class="div1">
+            <a href="/add" class="tombol tomboltambah"> Tambah</a>
+        </div>
+
+        <div class="pagination">
+            <a
+                href="<%= page == 1 ? url : url.includes(`&page=${page}`) ? url.replace(`&page=${page}`, `&page=${(page - 1)}`) : `/?page=${(page - 1)}` %>">Previous</a>
+            <%for(let i=1; i <=pages; i++) {%>
+                <a class="<%= page == i ? 'active' : '' %>" href="<%= url.replace(`page=${page}`, `page=${i}`) %>">
+                    <%=i%>
+                </a>
+                <%}%>
+
+                    <a
+                        href="<%= page == pages ? url : url.includes(`&page=${page}`) ? url.replace(`&page=${page}`, `&page=${(1 + page)}`) : `/?page=${(1 + page)}` %>">Next</a>
+        </div>
+    </div>
+</body>
+
+</html>
