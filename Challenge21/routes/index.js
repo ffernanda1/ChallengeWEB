@@ -1,12 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var sqlite3 = require('sqlite3').verbose()
 
-const db = new sqlite3.Database('challenge20.db', sqlite3.OPEN_READWRITE, (err) => {
-  if (err) {
-    console.log('gagal koneksi', err)
-  }
-});
 
 /* GET home page. */
 router.get('/', (req, res) => {

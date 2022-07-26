@@ -3,13 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const sqlite3 = require('sqlite3').verbose()
 
-const db = new sqlite3.Database('challenge20.db', sqlite3.OPEN_READWRITE, (err) => {
-  if (err) {
-    console.log('gagal koneksi', err)
-  }
-});
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
