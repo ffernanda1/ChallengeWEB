@@ -4,8 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const { Pool, Client } = require('pg')
+const pool = new Pool({
+  user: 'user',
+  host: 'localhost',
+  database: 'challenge21db',
+  password: '1234',
+  port: '5432',
+})
 
-var indexRouter = require('./routes/index');
+
+var indexRouter = require('./routes/index')(pool);
 var usersRouter = require('./routes/users');
 
 var app = express();

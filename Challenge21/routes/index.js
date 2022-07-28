@@ -1,5 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var pool = require('pg')
+var moment = require('moment')
+
+module.exports = function(pool) {
+
 
 
 /* GET home page. */
@@ -10,58 +15,72 @@ router.get('/', (req, res) => {
   const offset = (page - 1) * limit
   const search = []
   const hasil = []
-
+  
+  var count = 1
 
 
   //Searching
   if (req.query.String) {
-    search.push(`Strings like '%' || ? || '%'`)
+    search.push(`strings ILIKE '%'||$${count}||'%' `)
+    count++
     hasil.push(req.query.String)
   }
 
   if (req.query.Integer) {
-    search.push(`Integers = ?`)
+    search.push(`integers = $${count}`)
+    count++
     hasil.push(req.query.Integer)
   }
 
   if (req.query.Float) {
-    search.push(`Floats = ?`)
+    search.push(`floats = $${count}`)
+    count++
     hasil.push(req.query.Float)
   }
 
   if (req.query.Date && req.query.Date2) {
-    search.push(`Dates BETWEEN ? AND ?`)
+    search.push(`dates BETWEEN ${count} AND $${count + 1}`)
+    count++
+    count++
     hasil.push(req.query.Date, req.query.Date2)
   } else if (req.query.Date) {
-    search.push(`Dates > ?`)
+    search.push(`dates > $${count}`)
+    count++
     hasil.push(req.query.Date)
   } else if (req.query.Date2) {
-    search.push(`Dates < ?`)
+    search.push(`dates < $${count}`)
+    count++
     hasil.push(req.query.Date2)
   }
 
   if(req.query.Boolean) {
-    search.push(`Booleans = ?`)
+    search.push(`booleans = $${count}`)
+    count++
     hasil.push(req.query.Boolean)
   }
 
   //format command Searching
-  let sql = 'SELECT COUNT(*) AS total FROM Ch20';
+  let sql = 'SELECT COUNT(*) AS total FROM ch21';
   if (search.length > 0) {
     sql += ` WHERE ${search.join(' and ')}`
   }
 
-  db.all(sql, hasil, (err, data) => {
-    const pages = Math.ceil(data[0].total / limit)
+  pool.query(sql, hasil, (err, data) => {
+    if (err) console.log(err)
+    
+    console.log(data)
+    const pages = Math.ceil(data.rows[0].total / limit)
+    
 
-    sql = 'SELECT * FROM Ch20'
+    sql = 'SELECT * FROM ch21'
     if (search.length > 0) {
       sql += ` WHERE  ${search.join(' and  ')}`
     }
 
-    sql += ' LIMIT ? OFFSET ?'
-    db.all(sql, [...hasil, limit, offset], (err, data) => {
-      res.render('list', { list: data, pages, page, offset, moment, url, query: req.query })
+    sql += ` LIMIT $${count} OFFSET $${count + 1}`
+    pool.query(sql, [...hasil, limit, offset], (err, data) => {
+      console.log(sql)
+      res.render('list', { list: data.rows, pages, page, offset, moment, url, query: req.query })
     })
   })
 })
@@ -69,48 +88,55 @@ router.get('/', (req, res) => {
 router.get('/add', (req, res) => {
   res.render('add')
 })
-
+var count2 = 1
 router.post('/add', (req, res) => {
-  db.run('INSERT INTO Ch20 (Strings, Integers, Floats, Dates, Booleans) VALUES (?,?,?,?,?)',
-    [[req.body.String],
+  pool.query(`INSERT INTO ch21 (strings, integers, floats, dates, booleans) VALUES ($${count2},$${count2 + 1},$${count2 + 2},$${count2 + 3},$${count2 + 4})`,
+    [req.body.String],
     [req.body.Integer],
     [req.body.Float],
     [req.body.Date],
-    [req.body.Boolean]]
+    [req.body.Boolean]
   )
   res.redirect('/')
 })
 
 router.get('/delete/:id', (req, res) => {
   let id = req.params.id
-  db.run(`DELETE FROM Ch20 WHERE id= ${id}`
-  )
+  var count3 = 1
+  let sql = `DELETE FROM ch21 WHERE id= $${count3}`
+  
+  pool.query(sql, [id])
   res.redirect('/')
 })
 
 router.get('/update/:id', (req, res) => {
   let id = req.params.id
-  let sql = `SELECT * FROM Ch20 WHERE id=${id}`;
-
-  db.all(sql, (err, data) => {
+  var count4 = 1
+  
+  let sql = `SELECT * FROM ch21 WHERE id= $${count4}`;
+  pool.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err)
     } else {
-      res.render('edit', { item: data[0] })
+      res.render('edit', { item: data.rows[0] })
     }
   })
 })
 
 router.post('/update/:id', (req, res) => {
-  let sql = `UPDATE Ch20 SET 
-  Strings = '${req.body.Strings}',
-  Integers = ${req.body.Integers},
-  Floats = ${req.body.Floats},
-  Dates = '${req.body.Dates}',
-  Booleans = '${req.body.Booleans}'
-  WHERE id = ${req.params.id}
+  let sql = `UPDATE ch21 SET 
+  strings = $${count4},
+  integers = $${count4 + 1},
+  floats = $${count4 + 2},
+  dates = $${count4 + 3},
+  booleans = $${count4 + 4}
+  WHERE id = $${count4 + 5}
   `
-  db.run(sql, (err) => {
+  pool.query(sql, [req.body.String,
+    req.body.Integer,
+    req.body.Float,
+    req.body.Date,
+    req.body.Boolean], (err) => {
     if (err) {
       return res.send(err)
     }
@@ -118,4 +144,5 @@ router.post('/update/:id', (req, res) => {
   })
 
 })
-module.exports = router;
+return router;
+}

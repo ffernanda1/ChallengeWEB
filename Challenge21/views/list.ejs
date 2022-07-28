@@ -319,19 +319,19 @@
                                 <%= offset + index + 1 %>
                             </td>
                             <td>
-                                <%= item.Strings %>
+                                <%= item.strings %>
                             </td>
                             <td>
-                                <%= item.Integers %>
+                                <%= item.integers %>
                             </td>
                             <td>
-                                <%= item.Floats %>
+                                <%= item.floats %>
                             </td>
                             <td>
-                                <%= moment(item.Dates).format('DD MMM YYYY') %>
+                                <%= moment(item.dates).format('DD MMM YYYY') %>
                             </td>
                             <td>
-                                <%= item.Booleans %>
+                                <%= item.booleans %>
                             </td>
                             <td>
                                 <a href="/delete/<%= item.id%>" class="tombol tomboldelete">Delete</a>
