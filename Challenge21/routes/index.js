@@ -39,18 +39,19 @@ router.get('/', (req, res) => {
   }
 
   if (req.query.Date && req.query.Date2) {
-    search.push(`dates BETWEEN ${count} AND $${count + 1}`)
+    search.push(`dates BETWEEN $${count} AND $${count + 1}`)
     count++
     count++
-    hasil.push(req.query.Date, req.query.Date2)
+    hasil.push(`${req.query.Date}`,`${req.query.Date2}`)
+    console.log(hasil)
   } else if (req.query.Date) {
-    search.push(`dates > $${count}`)
+    search.push(`dates >= $${count}`)
     count++
-    hasil.push(req.query.Date)
+    hasil.push(`${req.query.Date}`)
   } else if (req.query.Date2) {
-    search.push(`dates < $${count}`)
+    search.push(`dates <= $${count}`)
     count++
-    hasil.push(req.query.Date2)
+    hasil.push(`${req.query.Date2}`)
   }
 
   if(req.query.Boolean) {
@@ -68,9 +69,7 @@ router.get('/', (req, res) => {
   pool.query(sql, hasil, (err, data) => {
     if (err) console.log(err)
     
-    console.log(data)
     const pages = Math.ceil(data.rows[0].total / limit)
-    
 
     sql = 'SELECT * FROM ch21'
     if (search.length > 0) {
@@ -88,22 +87,30 @@ router.get('/', (req, res) => {
 router.get('/add', (req, res) => {
   res.render('add')
 })
+
 var count2 = 1
 router.post('/add', (req, res) => {
   pool.query(`INSERT INTO ch21 (strings, integers, floats, dates, booleans) VALUES ($${count2},$${count2 + 1},$${count2 + 2},$${count2 + 3},$${count2 + 4})`,
-    [req.body.String],
-    [req.body.Integer],
-    [req.body.Float],
-    [req.body.Date],
-    [req.body.Boolean]
-  )
+  [req.body.Strings,
+    parseInt(req.body.Integers),
+    parseFloat(req.body.Floats),
+    `${moment(req.body.Dates).format('YYYY-MM-DD')}`,
+    req.body.Booleans]
+  ) 
+
+  [req.body.Strings,
+    parseInt(req.body.Integers),
+    parseFloat(req.body.Floats),
+    `${moment(req.body.Dates).format('YYYY-MM-DD')}`,
+    req.body.Booleans]
   res.redirect('/')
+  
 })
 
 router.get('/delete/:id', (req, res) => {
   let id = req.params.id
-  var count3 = 1
-  let sql = `DELETE FROM ch21 WHERE id= $${count3}`
+  
+  let sql = `DELETE FROM ch21 WHERE id= $1`
   
   pool.query(sql, [id])
   res.redirect('/')
@@ -112,31 +119,36 @@ router.get('/delete/:id', (req, res) => {
 router.get('/update/:id', (req, res) => {
   let id = req.params.id
   var count4 = 1
-  
   let sql = `SELECT * FROM ch21 WHERE id= $${count4}`;
+
   pool.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err)
     } else {
-      res.render('edit', { item: data.rows[0] })
+      res.render('edit', { item: data.rows[0], moment })
+      
     }
   })
 })
 
 router.post('/update/:id', (req, res) => {
+  var count4 = 1
+  
   let sql = `UPDATE ch21 SET 
-  strings = $${count4},
-  integers = $${count4 + 1},
-  floats = $${count4 + 2},
-  dates = $${count4 + 3},
-  booleans = $${count4 + 4}
-  WHERE id = $${count4 + 5}
-  `
-  pool.query(sql, [req.body.String,
-    req.body.Integer,
-    req.body.Float,
-    req.body.Date,
-    req.body.Boolean], (err) => {
+  strings = $1,
+  integers = $2,
+  floats = $3,
+  dates = $4,
+  booleans = $5
+  WHERE id = $6`
+
+  pool.query(sql, 
+    [req.body.Strings,
+    parseInt(req.body.Integers),
+    parseFloat(req.body.Floats),
+    req.body.Dates,
+    req.body.Booleans,
+    req.params.id], (err) => {
     if (err) {
       return res.send(err)
     }

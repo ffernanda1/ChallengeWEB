@@ -328,7 +328,7 @@
                                 <%= item.floats %>
                             </td>
                             <td>
-                                <%= moment(item.dates).format('DD MMM YYYY') %>
+                                <%= moment(item.dates).format("DD MMMM YYYY") %>
                             </td>
                             <td>
                                 <%= item.booleans %>
@@ -347,7 +347,6 @@
         <div class="div1">
             <a href="/add" class="tombol tomboltambah"> Tambah</a>
         </div>
-
         <div class="pagination">
             <a
                 href="<%= page == 1 ? url : url.includes(`&page=${page}`) ? url.replace(`&page=${page}`, `&page=${(page - 1)}`) : `/?page=${(page - 1)}` %>">Previous</a>
@@ -356,7 +355,6 @@
                     <%=i%>
                 </a>
                 <%}%>
-
                     <a
                         href="<%= page == pages ? url : url.includes(`&page=${page}`) ? url.replace(`&page=${page}`, `&page=${(1 + page)}`) : `/?page=${(1 + page)}` %>">Next</a>
         </div>
