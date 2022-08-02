@@ -9,7 +9,13 @@ module.exports = function(pool) {
 
 /* GET home page. */
 router.get('/', (req, res) => {
-  const url = req.url == '/' ? '/?page=1' : req.url
+  const sortBy = req.query.sortBy || 'Strings'
+  const sortMode = req.query.sortMode || 'asc'
+  
+  console.log(sortBy)
+  console.log(sortMode)
+
+  const url = req.url == '/' ? '/?page=1&sortBy=Strings&sortMode=asc' : req.url
   const page = parseInt(req.query.page) || 1
   const limit = 3
   const offset = (page - 1) * limit
@@ -21,7 +27,7 @@ router.get('/', (req, res) => {
 
   //Searching
   if (req.query.String) {
-    search.push(`strings ILIKE '%'||$${count}||'%' `)
+    search.push(`strings ILIKE '%'||$${count}||'%'`)
     count++
     hasil.push(req.query.String)
   }
@@ -76,10 +82,18 @@ router.get('/', (req, res) => {
       sql += ` WHERE  ${search.join(' and  ')}`
     }
 
-    sql += ` LIMIT $${count} OFFSET $${count + 1}`
-    pool.query(sql, [...hasil, limit, offset], (err, data) => {
-      console.log(sql)
+    // sorting
+ 
+    // sql += ` ORDER BY Strings ASC`
+    
+    sql += ` ORDER BY ${sortBy} ${sortMode} LIMIT $${count} OFFSET $${count + 1}`
+    console.log(sql, [...hasil, sortBy, limit, offset])
+    pool.query(sql, [...hasil,  limit, offset], (err, data) => {
+      if(err) {
+        console.log(err)
+      }
       res.render('list', { list: data.rows, pages, page, offset, moment, url, query: req.query })
+     
     })
   })
 })

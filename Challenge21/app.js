@@ -19,7 +19,11 @@ const pool = new Pool({
 var indexRouter = require('./routes/index')(pool);
 var usersRouter = require('./routes/users');
 
+
 var app = express();
+
+//Public engine setup
+app.use(express.static(path.join(__dirname, 'public')))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
