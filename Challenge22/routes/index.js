@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var pool = require('pg')
 var moment = require('moment')
 
-module.exports = function(pool) {
+module.exports = function(db) {
 
 
 
@@ -11,9 +10,6 @@ module.exports = function(pool) {
 router.get('/', (req, res) => {
   const sortBy = req.query.sortBy || 'Strings'
   const sortMode = req.query.sortMode || 'asc'
-  
-  console.log(sortBy)
-  console.log(sortMode)
 
   const url = req.url == '/' ? '/?page=1&sortBy=Strings&sortMode=asc' : req.url
   const page = parseInt(req.query.page) || 1

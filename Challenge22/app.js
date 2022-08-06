@@ -6,28 +6,40 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 
-var indexRouter = require('./routes/index')(pool);
-var usersRouter = require('./routes/users');
-
 const { MongoClient } = require('mongodb');
+
+const url = 'mongodb://localhost:27017';
+const client = new MongoClient(url);
 // or as an es module:
 // import { MongoClient } from 'mongodb'
 
-// Connection URL
-const url = 'mongodb://localhost:27017';
-const client = new MongoClient(url);
 
-// Database Name
-const dbName = 'mchallenge22db';
 
 async function main() {
   // Use connect method to connect to the server
   try {
+    // Connection URL
+    const url = 'mongodb://localhost:27017';
+    const client = new MongoClient(url);
+
+    // Database Name
+    const dbName = 'challenge22db';
+
     await client.connect();
     console.log('Connected successfully to server');
     const db = client.db(dbName);
     const collection = db.collection('documents');
 
+   
+  } catch (err) {
+    throw "gagal"
+  }
+}
+
+main()
+  .then((db) => {
+    var indexRouter = require('./routes/index')(db);
+    var usersRouter = require('./routes/users');
 
     var app = express();
 
@@ -48,88 +60,88 @@ async function main() {
     app.use('/users', usersRouter);
 
     var debug = require('debug')('challenge22:server');
-var http = require('http');
+    var http = require('http');
 
-/**
- * Get port from environment and store in Express.
- */
+    /**
+     * Get port from environment and store in Express.
+     */
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+    var port = normalizePort(process.env.PORT || '3000');
+    app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+    /**
+     * Create HTTP server.
+     */
 
-var server = http.createServer(app);
+    var server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+    /**
+     * Listen on provided port, on all network interfaces.
+     */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
 
-/**
- * Normalize a port into a number, string, or false.
- */
+    /**
+     * Normalize a port into a number, string, or false.
+     */
 
-function normalizePort(val) {
-  var port = parseInt(val, 10);
+    function normalizePort(val) {
+      var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+      if (isNaN(port)) {
+        // named pipe
+        return val;
+      }
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+      if (port >= 0) {
+        // port number
+        return port;
+      }
 
-  return false;
-}
+      return false;
+    }
 
-/**
- * Event listener for HTTP server "error" event.
- */
+    /**
+     * Event listener for HTTP server "error" event.
+     */
 
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+    function onError(error) {
+      if (error.syscall !== 'listen') {
+        throw error;
+      }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+      var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
+      // handle specific listen errors with friendly messages
+      switch (error.code) {
+        case 'EACCES':
+          console.error(bind + ' requires elevated privileges');
+          process.exit(1);
+          break;
+        case 'EADDRINUSE':
+          console.error(bind + ' is already in use');
+          process.exit(1);
+          break;
+        default:
+          throw error;
+      }
+    }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
+    /**
+     * Event listener for HTTP server "listening" event.
+     */
 
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+    function onListening() {
+      var addr = server.address();
+      var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+      debug('Listening on ' + bind);
+    }
 
 
     // catch 404 and forward to error handler
@@ -148,13 +160,7 @@ function onListening() {
       res.render('error');
     });
 
-  } catch (err) {
-    throw "gagal"
-  }
-}
-
-main()
-  .then(console.log)
+  })
   .catch(console.error)
   .finally(() => client.close());
 
