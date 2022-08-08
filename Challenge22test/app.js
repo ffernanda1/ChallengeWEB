@@ -10,7 +10,7 @@ const { MongoClient } = require('mongodb');
 // Connection URL
 
 async function main() {
-  const url = 'mongodb://localhost:27017';
+  const url = 'mongodb://localhost:3000';
   const client = new MongoClient(url);
   const dbName = 'challenge22db';
 
@@ -31,6 +31,7 @@ main().then((db) => {
   var indexRouter = require('./routes/index')(db);
   var usersRouter = require('./routes/users')(db);
 
+  
   var app = express();
 
   app.use(logger('dev'));
@@ -56,7 +57,7 @@ main().then((db) => {
    * Create HTTP server.
    */
 
-  var server = http.createServer(app);
+  var server = http.createServer(app).listen(3000);
 
   /**
    * Listen on provided port, on all network interfaces.
