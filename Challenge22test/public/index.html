@@ -1,0 +1,320 @@
+<html>
+
+<head>
+    <title>BREADS Apps</title>
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dukun Fix GOL</h1>
+        <form id="form-search">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Form Pencarian</h2>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row mb-3">
+                        <label for="searchName" class="col-sm-2 col-form-label">String</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="searchstrings" name="searchstrings">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="searchinteger" class="col-sm-2 col-form-label">Integer</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="searchintegers" name="searchinteger"
+                                step="any">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="searchfloat" class="col-sm-2 col-form-label">Float</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="searchfloats" name="searchfloat" step=0.01>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="searchdate" class="col-sm-2 col-form-label">Date</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="searchdates" name="searchdate">
+                        </div>
+                    </div>
+                    <fieldset class="row mb-3">
+                        <legend class="col-form-label col-sm-2 pt-0">Boolean</legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="booleans" id="booleans1"
+                                    value="false" checked>
+                                <label class="form-check-label" for="booleans1">
+                                    False
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="booleans" id="booleans2"
+                                    value="true">
+                                <label class="form-check-label" for="booleans2">
+                                    True
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>No_index.</th>
+                    <th>String</th>
+                    <th>Integer</th>
+                    <th>Float</th>
+                    <th>Date</th>
+                    <th>Boolean</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <form id="form-user">
+            <input type="hidden" id="id" name="id" value="">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Form Challenge</h2>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row mb-3">
+                        <label for="strings" class="col-sm-2 col-form-label">String</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="strings" name="strings" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="integers" class="col-sm-2 col-form-label">Integer</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="integers" name="integers" step="any" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="floats" class="col-sm-2 col-form-label">Float</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="floats" name="floats" step=0.01 required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="dates" class="col-sm-2 col-form-label">Date</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="dates" name="dates" required>
+                        </div>
+                    </div>
+                    <fieldset class="row mb-3">
+                        <legend class="col-form-label col-sm-2 pt-0">Boolean</legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="booleans" id="booleans1"
+                                    value="false" checked>
+                                <label class="form-check-label" for="booleans1">
+                                    false
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="booleans" id="booleans2"
+                                    value="true">
+                                <label class="form-check-label" for="booleans2">
+                                    true
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+<script>
+    const readData = (params) => {
+        fetch(`http://localhost:3000/users?${new URLSearchParams(params).toString()}`).then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        }).then((response) => {
+            let html = ''
+            response.data.forEach((item, index) => {
+                html += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${item.strings}</td>
+          <td>${item.integers}</td>
+          <td>${item.floats}</td>
+          <td>${item.dates}</td>
+          <td>${item.booleans}</td>
+          <td>
+            <button type="button" class="btn btn-success btn-sm" onClick="editData('${item._id}')"><i class="fa-solid fa-pencil"></i></button>
+            <button type="button" class="btn btn-danger btn-sm" onClick="deleteData('${item._id}')"><i class="fa-solid fa-trash-can"></i></button>
+          </td>
+        </tr>
+        `
+            });
+            document.querySelector('table tbody').innerHTML = html
+            pagination();
+        });
+    }
+
+    const saveData = (id, strings, integers, floats, dates, booleans) => {
+        if (id) {
+            fetch(`http://localhost:3000/users/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ strings, integers, floats, dates, booleans })
+            }).then((response) => {
+
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            }).then((response) => {
+                readData()
+                document.getElementById('id').value = ''
+                document.getElementById("form-user").reset();
+            });
+        } else {
+            fetch("http://localhost:3000/users", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ strings, integers, floats, dates, booleans })
+            }).then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            }).then((response) => {
+                readData()
+                document.getElementById("form-user").reset();
+            });
+        }
+    }
+
+    const editData = (id) => {
+        fetch(`http://localhost:3000/users/${id}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        }).then((response) => {
+            document.getElementById('id').value = response._id
+            document.getElementById('strings').value = response.strings
+            document.getElementById('integers').value = response.integers
+            document.getElementById('floats').value = response.floats
+            document.getElementById('dates').value = response.dates
+            document.querySelector(`input[value="${response.booleans}"]`).checked = true
+        });
+    }
+
+    const deleteData = (id) => {
+        fetch(`http://localhost:3000/users/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        }).then((response) => {
+            readData()
+        });
+    }
+
+    readData()
+
+    document.getElementById('form-user').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const id = document.getElementById('id').value
+        console.log(id)
+        const strings = document.getElementById('strings').value
+        const integers = document.getElementById('integers').value
+        const floats = document.getElementById('floats').value
+        const dates = document.getElementById('dates').value
+        const booleans = document.querySelector('input[name="booleans"]:checked').value
+        saveData(id, strings, integers, floats, dates, booleans)
+    })
+
+    document.getElementById('form-search').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const strings = document.getElementById('searchstrings').value
+        const integers = document.getElementById('searchintegers').value
+        const floats = document.getElementById('searchfloats').value
+        const dates = document.getElementById('searchdates').value
+        const booleans = document.querySelector('input[name="booleans"]:checked').value
+        readData({ strings, integers, floats, dates, booleans })
+    })
+
+
+    // const pagination = () => {
+    //     const collection = db.collection('challenge22');
+    //     const limit = 3
+    //     const page = req.query.page || 1
+    //     const offset = limit == 'all' ? 0 : (page - 1) * limit
+    //     const totalData = collection.find().count()
+    //     const totalPages = limit == 'all' ? 1 : Math.ceil(totalData / limit)
+    //     const limitation = limit == 'all' ? {} : { limit: parseInt(limit), skip: offset }
+
+    //     let pagination = `<ul class="pagination">
+    //                         <li class="page-item${page == 1 ? ' disabled' : ''}">
+    //                             <a class="page-link" href="#" datapage="${page - 1}" aria-label="Previous">
+    //                                 <span aria-hidden="true">&laquo;</span>
+    //                             </a>
+    //                         </li>`
+
+    //     for (let i = 1; i <= totalPages; i++) {
+    //         pagination += `
+    //         <li class="page-item${i == page ? ' active' : ''}"><a class="page-link" href="#" datapage="${i}">${i}</a></li>
+    //         `
+    //     }
+
+    //     pagination += `<li class="page-item${page == totalPages ? ' disabled' : ''}">
+    //                             <a class="page-link" href="#" datapage="${page + 1}" aria-label="Next">
+    //                                 <span aria-hidden="true">&raquo;</span>
+    //                             </a>
+    //                         </li>
+    //                     </ul>`
+    //     document.querySelector('#pagination').innerHTML = pagination
+    // }
+
+
+
+
+</script>
+
+</html>

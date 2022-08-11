@@ -4,7 +4,7 @@ const mongodb = require('mongodb')
 
 module.exports = function (db) {
 
-  const collection = db.collection('challenge');
+  const collection = db.collection('challenge22');
 
   router.get('/', async function (req, res, next) {
     const limit = req.query.display
@@ -27,12 +27,14 @@ module.exports = function (db) {
 
     if (req.query.floats) {
       const regexName = new RegExp(req.query.floats, `i`);
-      searchParams['integers'] = regexName
+      searchParams['floats'] = regexName
     }
+
+    if (req.query)
 
 
     try {
-      const collection = db.collection('challenge');
+      const collection = db.collection('challenge22');
 
       const totalData = await collection.find(searchParams).count()
       const totalPages = limit == 'all' ? 1 : Math.ceil(totalData / limit)
@@ -45,6 +47,7 @@ module.exports = function (db) {
         display: limit,
         page: parseInt(page)
       })
+      console.log(totalPages)
 
     } catch (e) {
       res.status(500).json({ message: "error pengambilan data" })
@@ -53,7 +56,7 @@ module.exports = function (db) {
 
   router.get('/:id', async function (req, res, next) {
     try {
-      const collection = db.collection('challenge');
+      const collection = db.collection('challenge22');
       const isidata = await collection.findOne({ _id: mongodb.ObjectId(req.params.id) })
       res.status(200).json(isidata)
     } catch (err) {
@@ -64,7 +67,7 @@ module.exports = function (db) {
 
   router.post('/', async function (req, res, next) {
     try {
-      const collection = db.collection('challenge');
+      const collection = db.collection('challenge22');
       const returnDocument = await collection.insertOne({
         strings: req.body.strings,
         integers: req.body.integers,
@@ -82,7 +85,7 @@ module.exports = function (db) {
 
   router.put('/:id', async function (req, res, next) {
     try {
-      const collection = db.collection('challenge');
+      const collection = db.collection('challenge22');
       await collection.updateOne({
         _id: mongodb.ObjectId(req.params.id)
       }, {
@@ -90,6 +93,7 @@ module.exports = function (db) {
           strings: req.body.strings,
           integers: req.body.integers,
           floats: parseFloat(req.body.floats),
+          dates: req.body.dates,
           booleans: JSON.parse(req.body.booleans)
         }
       });
@@ -103,15 +107,15 @@ module.exports = function (db) {
 
   router.delete('/:id', async function (req, res, next) {
     try {
-      const collection = db.collection('challenge');
+      const collection = db.collection('challenge22');
       const isidata = await collection.findOne({ _id: mongodb.ObjectId(req.params.id) })
-      await collection.deleteMany({
+      const hapus = await collection.deleteOne({
         _id: mongodb.ObjectId(req.params.id)
       });
-      res.status(200).json(isidata)
+      res.status(200).json(hapus)
     } catch (err) {
-      console.log(err)
-      res.status(500).json({ message: "error delete data" })
+      console.log("ini error nya", err)
+      res.status(500).json({ message: "error delete data"})
     }
   });
 
