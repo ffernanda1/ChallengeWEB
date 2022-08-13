@@ -18,16 +18,33 @@ module.exports = function (db) {
     if (req.query.strings) {
       const regexName = new RegExp(`${req.query.strings}`, `i`);
       searchParams['strings'] = regexName
+      console.log('searchParams1',searchParams)
+      console.log('regex1',regexName)
     }
 
     if (req.query.integers) {
-      const regexName = new RegExp(req.query.integers, `i`);
+      const regexName = new RegExp(req.query.integers);
       searchParams['integers'] = regexName
     }
 
     if (req.query.floats) {
-      const regexName = new RegExp(req.query.floats, `i`);
+      const regexName = new RegExp(req.query.floats);
       searchParams['floats'] = regexName
+    }
+
+    if (req.query.dates1) {
+      const regexName = new RegExp(`$lt`, req.query.dates1);
+      searchParams['dates'] = regexName
+      console.log('searchParams2',searchParams)
+      console.log('regex2',regexName)
+    }
+
+    if (req.query.dates2) {
+      const regexName = new RegExp(`$gt`, req.query.dates2);
+      searchParams['dates'] = regexName
+      console.log('searchParams3',searchParams)
+      console.log('regex3',regexName)
+     
     }
 
     if (req.query.booleans) {
@@ -42,6 +59,7 @@ module.exports = function (db) {
       const totalPages = limit == 'all' ? 1 : Math.ceil(totalData / limit)
       const limitation = limit == 'all' ? {} : { limit: parseInt(limit), skip: offset }
       const isidata = await collection.find(searchParams, limitation).toArray();
+      console.log('test', searchParams)
       res.status(200).json({
         data: isidata,
         totalData,

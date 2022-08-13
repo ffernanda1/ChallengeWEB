@@ -39,9 +39,16 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="searchdate" class="col-sm-2 col-form-label">Date</label>
+                        <label for="searchdate1" class="col-sm-2 col-form-label">Date</label>
                         <div class="col-sm-10">
-                            <input type="date" class="form-control" id="searchdates" name="searchdate">
+                            <input type="date" class="form-control" id="searchdates1" name="searchdate1">
+                        </div>
+                    </div>
+                        <p>to</p>
+                    <div class="row mb-3">
+                        <label for="searchdate2" class="col-sm-2 col-form-label">Date</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="searchdates2" name="searchdate2">
                         </div>
                     </div>
                     <fieldset class="row mb-3">
@@ -56,7 +63,7 @@
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="booleans" id="booleans2"
-                                    value="true">
+                                    value="true" checked>
                                 <label class="form-check-label" for="booleans2">
                                     True
                                 </label>
@@ -172,7 +179,7 @@
         `
             });
             document.querySelector('table tbody').innerHTML = html
-            pagination();
+            // pagination();
         });
     }
 
@@ -275,9 +282,10 @@
         const strings = document.getElementById('searchstrings').value
         const integers = document.getElementById('searchintegers').value
         const floats = document.getElementById('searchfloats').value
-        const dates = document.getElementById('searchdates').value
+        const dates1 = document.getElementById('searchdates1').value
+        const dates2 = document.getElementById('searchdates2').value
         const booleans = document.querySelector('input[name="booleans"]:checked').value
-        readData({ strings, integers, floats, dates, booleans })
+        readData({ strings, integers, floats, dates1, dates2, booleans })
     })
 
 
