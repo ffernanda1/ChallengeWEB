@@ -30,7 +30,9 @@ module.exports = function (db) {
       searchParams['floats'] = regexName
     }
 
-    if (req.query)
+    if (req.query.booleans) {
+      searchParams['booleans'] = JSON.parse(req.query.booleans)
+    }
 
 
     try {
