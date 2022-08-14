@@ -33,14 +33,14 @@ module.exports = function (db) {
     }
 
     if (req.query.dates1) {
-      const regexName = new RegExp(`$lt`, req.query.dates1);
-      searchParams['dates'] = regexName
+      const regexName = new Date(req.query.dates1);
+      searchParams['dates'] = `$gte: ${regexName}`
       console.log('searchParams2',searchParams)
       console.log('regex2',regexName)
     }
 
     if (req.query.dates2) {
-      const regexName = new RegExp(`$gt`, req.query.dates2);
+      const regexName = new Date(req.query.dates2);
       searchParams['dates'] = regexName
       console.log('searchParams3',searchParams)
       console.log('regex3',regexName)
