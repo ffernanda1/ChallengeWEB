@@ -72,6 +72,7 @@
                     </fieldset>
                 </div>
                 <div class="card-footer">
+                    <a href="/" class="btn btn-primary">Clear</a>
                     <button type="submit" class="btn btn-primary">Cari</button>
                 </div>
             </div>
@@ -146,6 +147,7 @@
                     </fieldset>
                 </div>
                 <div class="card-footer">
+                    <a href="/" class="btn btn-primary">Clear</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </div>
@@ -183,7 +185,7 @@
         });
     }
 
-    const saveData = (id, strings, integers, floats, dates, booleans) => {
+    const saveData = (id, strings, integers, floats, dates1, dates2, booleans) => {
         if (id) {
             fetch(`http://localhost:3000/users/${id}`, {
                 method: 'PUT',
@@ -191,7 +193,7 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ strings, integers, floats, dates, booleans })
+                body: JSON.stringify({ strings, integers, floats, dates1, dates2, booleans })
             }).then((response) => {
 
                 console.log(response)
@@ -211,7 +213,7 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ strings, integers, floats, dates, booleans })
+                body: JSON.stringify({ strings, integers, floats, dates1, dates2, booleans })
             }).then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -269,12 +271,12 @@
         event.preventDefault();
         const id = document.getElementById('id').value
         console.log(id)
-        const strings = document.getElementById('strings').value
-        const integers = document.getElementById('integers').value
-        const floats = document.getElementById('floats').value
-        const dates = document.getElementById('dates').value
-        const booleans = document.querySelector('input[name="booleans"]:checked').value
-        saveData(id, strings, integers, floats, dates, booleans)
+        const strings1 = document.getElementById('strings').value
+        const integers1 = document.getElementById('integers').value
+        const floats1 = document.getElementById('floats').value
+        const dates1 = document.getElementById('dates').value
+        const booleans1 = document.querySelector('input[name="booleans"]:checked').value
+        saveData(id, strings1, integers1, floats1, dates1, booleans1)
     })
 
     document.getElementById('form-search').addEventListener('submit', function (event) {

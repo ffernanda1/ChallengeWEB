@@ -11,55 +11,74 @@ module.exports = function (db) {
     const page = req.query.page || 1
 
     const offset = limit == 'all' ? 0 : (page - 1) * limit
-    const searchParams = {}
+    const searchParams1 = {}
+    const searchParams2 = []
+
+
 
     //searching
 
     if (req.query.strings) {
       const regexName = new RegExp(`${req.query.strings}`, `i`);
-      searchParams['strings'] = regexName
-      console.log('searchParams1',searchParams)
-      console.log('regex1',regexName)
+      searchParams1['strings'] = regexName
     }
 
     if (req.query.integers) {
       const regexName = new RegExp(req.query.integers);
-      searchParams['integers'] = regexName
+      searchParams1['integers'] = regexName
     }
 
     if (req.query.floats) {
       const regexName = new RegExp(req.query.floats);
-      searchParams['floats'] = regexName
+      searchParams1['floats'] = regexName
     }
 
-    if (req.query.dates1) {
-      const regexName = new Date(req.query.dates1);
-      searchParams['dates'] = `$gte: ${regexName}`
-      console.log('searchParams2',searchParams)
-      console.log('regex2',regexName)
+    if (req.query.dates1 && req.query.dates2) {
+      const regexName = [{$gte: req.query.dates1, $lt: req.query.dates2}]
+      searchParams1['dates'] = regexName.reduce(function(result, item) {
+        var key = Object.keys(item)[0]; //first property: a, b, c
+        result[key] = item[key];
+        return result;
+      }, {});
+    } else if(req.query.dates1) {
+      const regexName = [{$gte: req.query.dates1}]
+      searchParams1['dates'] = regexName.reduce(function(result, item) {
+        var key = Object.keys(item)[0]; //first property: a, b, c
+        result[key] = item[key];
+        return result;
+      }, {});
+    } else if(req.query.dates2) {
+      const regexName = [{$lt: req.query.dates2}]
+      searchParams1['dates'] = regexName.reduce(function(result, item) {
+        var key = Object.keys(item)[0]; //first property: a, b, c
+        result[key] = item[key];
+        return result;
+      }, {});
     }
 
     if (req.query.dates2) {
       const regexName = new Date(req.query.dates2);
-      searchParams['dates'] = regexName
-      console.log('searchParams3',searchParams)
-      console.log('regex3',regexName)
-     
+
     }
 
     if (req.query.booleans) {
-      searchParams['booleans'] = JSON.parse(req.query.booleans)
+      searchParams1['booleans'] = JSON.parse(req.query.booleans)
     }
+
+    // if(searchParams2.length > 0) {
+    // let searchParams1 = Object.assign(searchParams1, searchParams2)
+    // console.log('object gabung', searchParams1)
+    // }
 
 
     try {
       const collection = db.collection('challenge22');
 
-      const totalData = await collection.find(searchParams).count()
+      const totalData = await collection.find(searchParams1).count()
       const totalPages = limit == 'all' ? 1 : Math.ceil(totalData / limit)
       const limitation = limit == 'all' ? {} : { limit: parseInt(limit), skip: offset }
-      const isidata = await collection.find(searchParams, limitation).toArray();
-      console.log('test', searchParams)
+      const isidata = await collection.find(searchParams1, limitation).toArray();
+      console.log('test', searchParams1)
       res.status(200).json({
         data: isidata,
         totalData,
@@ -67,7 +86,6 @@ module.exports = function (db) {
         display: limit,
         page: parseInt(page)
       })
-      console.log(totalPages)
 
     } catch (e) {
       res.status(500).json({ message: "error pengambilan data" })
@@ -135,7 +153,7 @@ module.exports = function (db) {
       res.status(200).json(hapus)
     } catch (err) {
       console.log("ini error nya", err)
-      res.status(500).json({ message: "error delete data"})
+      res.status(500).json({ message: "error delete data" })
     }
   });
 
