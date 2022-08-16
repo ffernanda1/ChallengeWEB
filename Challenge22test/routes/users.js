@@ -12,7 +12,7 @@ module.exports = function (db) {
 
     const offset = limit == 'all' ? 0 : (page - 1) * limit
     const searchParams1 = {}
-    const searchParams2 = []
+    
 
 
 
@@ -36,40 +36,29 @@ module.exports = function (db) {
     if (req.query.dates1 && req.query.dates2) {
       const regexName = [{$gte: req.query.dates1, $lt: req.query.dates2}]
       searchParams1['dates'] = regexName.reduce(function(result, item) {
-        var key = Object.keys(item)[0]; //first property: a, b, c
+        var key = Object.keys(item)[0]; 
         result[key] = item[key];
         return result;
       }, {});
     } else if(req.query.dates1) {
       const regexName = [{$gte: req.query.dates1}]
       searchParams1['dates'] = regexName.reduce(function(result, item) {
-        var key = Object.keys(item)[0]; //first property: a, b, c
+        var key = Object.keys(item)[0]; 
         result[key] = item[key];
         return result;
       }, {});
     } else if(req.query.dates2) {
       const regexName = [{$lt: req.query.dates2}]
       searchParams1['dates'] = regexName.reduce(function(result, item) {
-        var key = Object.keys(item)[0]; //first property: a, b, c
+        var key = Object.keys(item)[0]; 
         result[key] = item[key];
         return result;
       }, {});
     }
 
-    if (req.query.dates2) {
-      const regexName = new Date(req.query.dates2);
-
-    }
-
     if (req.query.booleans) {
       searchParams1['booleans'] = JSON.parse(req.query.booleans)
     }
-
-    // if(searchParams2.length > 0) {
-    // let searchParams1 = Object.assign(searchParams1, searchParams2)
-    // console.log('object gabung', searchParams1)
-    // }
-
 
     try {
       const collection = db.collection('challenge22');
