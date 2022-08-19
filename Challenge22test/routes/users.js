@@ -13,9 +13,6 @@ module.exports = function (db) {
     const offset = limit == 'all' ? 0 : (page - 1) * limit
     const searchParams1 = {}
     
-
-
-
     //searching
 
     if (req.query.strings) {

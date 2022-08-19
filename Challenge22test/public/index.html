@@ -186,7 +186,7 @@
         });
     }
 
-    const saveData = (id, strings, integers, floats, dates1, dates2, booleans) => {
+    const saveData = (id, strings1, integers1, floats1, dates1, booleans1) => {
         if (id) {
             fetch(`http://localhost:3000/users/${id}`, {
                 method: 'PUT',
@@ -194,7 +194,7 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ strings, integers, floats, dates1, dates2, booleans })
+                body: JSON.stringify({ strings, integers, floats, dates1, booleans })
             }).then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -212,7 +212,7 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ strings, integers, floats, dates1, dates2, booleans })
+                body: JSON.stringify({ strings, integers, floats, dates1, booleans })
             }).then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -263,7 +263,6 @@
             readData()
         });
     }
-
     readData()
 
     document.getElementById('form-user').addEventListener('submit', function (event) {
