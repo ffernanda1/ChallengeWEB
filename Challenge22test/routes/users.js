@@ -9,6 +9,14 @@ module.exports = function (db) {
   router.get('/', async function (req, res, next) {
     const limit = req.query.display
     const page = req.query.page || 1
+    const sortBy = req.query.sortBy || "strings"
+    const sortMode = req.query.sortMode || '1'
+    const sorting = {}
+    sorting[`${sortBy}`] = sortMode
+
+    const url = req.url
+
+    console.log('url', req.url)
 
     const offset = limit == 'all' ? 0 : (page - 1) * limit
     const searchParams1 = {}
@@ -21,20 +29,24 @@ module.exports = function (db) {
     }
 
     if (req.query.integers) {
-      const regexName = new RegExp(req.query.integers);
+      const regexName = parseInt(req.query.integers);
+  
       searchParams1['integers'] = regexName
     }
 
     if (req.query.floats) {
-      const regexName = new RegExp(req.query.floats);
+      const regexName = parseFloat(req.query.floats);
+     
       searchParams1['floats'] = regexName
     }
 
     if (req.query.dates1 && req.query.dates2) {
       const regexName = [{$gte: req.query.dates1, $lt: req.query.dates2}]
       searchParams1['dates'] = regexName.reduce(function(result, item) {
-        var key = Object.keys(item)[0]; 
-        result[key] = item[key];
+        var key1 = Object.keys(item)[0];
+        var key2 = Object.keys(item)[1]
+        result[key1] = item[key1];
+        result[key2] = item[key2];
         return result;
       }, {});
     } else if(req.query.dates1) {
@@ -56,16 +68,15 @@ module.exports = function (db) {
     if (req.query.booleans) {
       searchParams1['booleans'] = JSON.parse(req.query.booleans)
     }
-
+    
     try {
       const collection = db.collection('challenge22');
-
       const totalData = await collection.find(searchParams1).count()
       const totalPages = limit == 'all' ? 1 : Math.ceil(totalData / limit)
       const limitation = limit == 'all' ? {} : { limit: parseInt(limit), skip: offset }
-      const isidata = await collection.find(searchParams1, limitation).toArray();
-      console.log('test', searchParams1)
+      const isidata = await collection.find(searchParams1, limitation).sort(sorting).toArray();
       res.status(200).json({
+        url,
         data: isidata,
         totalData,
         totalPages,
@@ -94,7 +105,7 @@ module.exports = function (db) {
       const collection = db.collection('challenge22');
       const returnDocument = await collection.insertOne({
         strings: req.body.strings,
-        integers: req.body.integers,
+        integers: parseInt(req.body.integers),
         floats: parseFloat(req.body.floats),
         dates: req.body.dates,
         booleans: JSON.parse(req.body.booleans)
@@ -115,7 +126,7 @@ module.exports = function (db) {
       }, {
         $set: {
           strings: req.body.strings,
-          integers: req.body.integers,
+          integers: parseInt(req.body.integers),
           floats: parseFloat(req.body.floats),
           dates: req.body.dates,
           booleans: JSON.parse(req.body.booleans)

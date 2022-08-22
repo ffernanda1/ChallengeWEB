@@ -6,6 +6,43 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <style>
+        section{
+            width: 90%;
+            height: auto;
+            margin: auto;
+        }
+
+        ul{
+            height: 50px;
+            padding: 0px 5px;
+            width: auto;
+            float: right;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        ul li{
+            list-style: none;
+            padding: 5px 10px;
+            font-weight: bold;
+            border: 1px solid #ccc;
+        }
+
+        select{
+            width: 126px;
+            padding: 6px;
+            margin: 5px 0px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -35,7 +72,7 @@
                     <div class="row mb-3">
                         <label for="searchfloat" class="col-sm-2 col-form-label">Float</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="searchfloats" name="searchfloat" step=0.01>
+                            <input type="number" class="form-control" id="searchfloats" name="searchfloat" step='any'>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -55,17 +92,17 @@
                         <legend class="col-form-label col-sm-2 pt-0">Boolean</legend>
                         <div class="col-sm-10">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="booleans" id="booleans1"
+                                <input class="form-check-input" type="radio" name="searchBooleans" id="booleans1"
                                     value="false" checked>
                                 <label class="form-check-label" for="booleans1">
-                                    False
+                                    false
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="booleans" id="booleans2" value="true"
-                                    checked>
+                                <input class="form-check-input" type="radio" name="searchBooleans" id="booleans2"
+                                    value="true">
                                 <label class="form-check-label" for="booleans2">
-                                    True
+                                    true
                                 </label>
                             </div>
                         </div>
@@ -77,6 +114,8 @@
                 </div>
             </div>
         </form>
+
+
 
         <table class="table table-striped">
             <thead>
@@ -93,11 +132,31 @@
             <tbody>
             </tbody>
         </table>
+        <section>
+            <div>
+                <p>View item in a page</p>
+                <select name="" id="">
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="8">8</option>
+                </select>
+                <ul class="pagination">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </ul>
+            </div>
+        </section>
+
         <form id="form-user">
             <input type="hidden" id="id" name="id" value="">
             <div class="card">
                 <div class="card-header">
-                    <h2>Form Challenge</h2>
+                    <h2>Form Add/Edit</h2>
                 </div>
 
                 <div class="card-body">
@@ -137,8 +196,10 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-label" for="booleans2">
-                                true
+                                <input class="form-check-input" type="radio" name="booleans" id="booleans2"
+                                    value="true">
+                                <label class="form-check-label" for="booleans2">
+                                    true
                                 </label>
                             </div>
                         </div>
@@ -162,9 +223,6 @@
             return response.json();
         }).then((response) => {
             let html = ''
-
-
-
             response.data.forEach((item, index) => {
                 html += `
         <tr>
@@ -182,11 +240,82 @@
         `
             });
             document.querySelector('table tbody').innerHTML = html
-            // pagination();
+
+            let tbody = document.querySelector('tbody');
+            let tr = tbody.getElementsByTagName('tr');
+            let select = document.querySelector('select');
+            let ul = document.querySelector('.pagination');
+
+            let arrayTr = [];
+
+            for (let i = 0; i < tr.length; i++) {
+                arrayTr.push(tr[i])
+            }
+            select.onchange = rowCount;
+
+            function rowCount(e) {
+                let neil = ul.querySelectorAll('.list');
+                neil.forEach(n=>n.remove());
+                let limit = parseInt(e.target.value);
+             
+                displayPage(limit)
+            }
+
+            function displayPage(limit) {
+                tbody.innerHTML = '';
+                for (let i = 0; i < limit; i++) {
+                    tbody.appendChild(arrayTr[i])
+         
+                }
+                buttonGenerator(limit)
+            }
+            displayPage(2);
+
+
+            function buttonGenerator(limit){
+                const noTr = arrayTr.length;
+                if(noTr <= limit){
+                    ul.style.display = 'none';
+                } else {
+                    ul.style.display = 'flex';
+                    const noPage = Math.ceil(noTr/limit);
+
+                    for(i=1; i <= noPage; i++){
+                        let li = document.createElement('li');
+                        li.className = 'list';
+                        let a = document.createElement('a');
+                        a.href = '#';
+                        a.setAttribute('data-page', i);
+                        li.appendChild(a);
+                        a.innerText = i;
+                        ul.insertBefore(li, ul.querySelector('.next'));
+
+                        a.onclick = e => {
+                            let x = e.target.getAttribute('data-page');
+        
+                            tbody.innerHTML = '';
+                            x--;
+                            let start = limit * x;
+                            let end =start + limit;
+                            let page = arrayTr.slice(start, end);
+    
+                            for(let i=0; i<page.length; i++){
+                                let item = page[i];
+                                tbody.appendChild(item);
+                            }
+                        }
+
+                    }
+                }
+            }
+
         });
+
+
     }
 
-    const saveData = (id, strings1, integers1, floats1, dates1, booleans1) => {
+    const saveData = (id, strings, integers, floats, dates, booleans) => {
+     
         if (id) {
             fetch(`http://localhost:3000/users/${id}`, {
                 method: 'PUT',
@@ -194,7 +323,7 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ strings, integers, floats, dates1, booleans })
+                body: JSON.stringify({ strings, integers, floats, dates, booleans })
             }).then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -212,7 +341,7 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ strings, integers, floats, dates1, booleans })
+                body: JSON.stringify({ strings, integers, floats, dates, booleans })
             }).then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -263,18 +392,27 @@
             readData()
         });
     }
-    readData()
+
+    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+    readData();
+
+    const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+    //pagination
+
 
     document.getElementById('form-user').addEventListener('submit', function (event) {
         event.preventDefault();
         const id = document.getElementById('id').value
-        console.log(id)
-        const strings1 = document.getElementById('strings').value
-        const integers1 = document.getElementById('integers').value
-        const floats1 = document.getElementById('floats').value
-        const dates1 = document.getElementById('dates').value
-        const booleans1 = document.querySelector('input[name="booleans"]:checked').value
-        saveData(id, strings1, integers1, floats1, dates1, booleans1)
+        const strings = document.getElementById('strings').value
+        const integers = document.getElementById('integers').value
+        const floats = document.getElementById('floats').value
+        const dates = document.getElementById('dates').value
+        const booleans = document.querySelector('input[name="booleans"]:checked').value
+        saveData(id, strings, integers, floats, dates, booleans)
+
     })
 
     document.getElementById('form-search').addEventListener('submit', function (event) {
@@ -284,44 +422,16 @@
         const floats = document.getElementById('searchfloats').value
         const dates1 = document.getElementById('searchdates1').value
         const dates2 = document.getElementById('searchdates2').value
-        const booleans = document.querySelector('input[name="booleans"]:checked').value
+        const booleans = document.querySelector('input[name="searchBooleans"]:checked').value
         readData({ strings, integers, floats, dates1, dates2, booleans })
     })
 
-
-    // const pagination = () => {
-    //     const collection = db.collection('challenge22');
-    //     const limit = 3
-    //     const page = req.query.page || 1
-    //     const offset = limit == 'all' ? 0 : (page - 1) * limit
-    //     const totalData = collection.find().count()
-    //     const totalPages = limit == 'all' ? 1 : Math.ceil(totalData / limit)
-    //     const limitation = limit == 'all' ? {} : { limit: parseInt(limit), skip: offset }
-
-    //     let pagination = `<ul class="pagination">
-    //                         <li class="page-item${page == 1 ? ' disabled' : ''}">
-    //                             <a class="page-link" href="#" datapage="${page - 1}" aria-label="Previous">
-    //                                 <span aria-hidden="true">&laquo;</span>
-    //                             </a>
-    //                         </li>`
-
-    //     for (let i = 1; i <= totalPages; i++) {
-    //         pagination += `
-    //         <li class="page-item${i == page ? ' active' : ''}"><a class="page-link" href="#" datapage="${i}">${i}</a></li>
-    //         `
-    //     }
-
-    //     pagination += `<li class="page-item${page == totalPages ? ' disabled' : ''}">
-    //                             <a class="page-link" href="#" datapage="${page + 1}" aria-label="Next">
-    //                                 <span aria-hidden="true">&raquo;</span>
-    //                             </a>
-    //                         </li>
-    //                     </ul>`
-    //     document.querySelector('#pagination').innerHTML = pagination
-    // }
-
-
-
+    // document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+    //     const table = th.closest('table');
+    //     Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+    //         .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+    //         .forEach(tr => table.appendChild(tr));
+    // })))
 
 </script>
 

@@ -34,19 +34,19 @@
                     <div class="row mb-3">
                         <label for="searchFloats" class="col-sm-2 col-form-label">Float</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="searchFloats" name="searchFloats" step="0.01">
+                            <input type="number" class="form-control" id="searchFloats" name="searchFloats" step="any">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="searchDates1" class="col-sm-2 col-form-label">Tanggal Awal</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="searchDates1" name="searchDates1" step="any">
+                            <input type="date" class="form-control" id="searchDates1" name="searchDates1" step="any">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="searchDates2" class="col-sm-2 col-form-label">Tanggal Akhir</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="searchDates2" name="searchDates2" step="any">
+                            <input type="date" class="form-control" id="searchDates2" name="searchDates2" step="any">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -123,7 +123,7 @@
                     <div class="row mb-3">
                         <label for="integers" class="col-sm-2 col-form-label">Integer</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="integers" name="integers" step="any" required>
+                            <input type="number" class="form-control" id="integers" name="integers" required>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -141,19 +141,12 @@
                     <fieldset class="row mb-3">
                         <legend class="col-form-label col-sm-2 pt-0">Boolean</legend>
                         <div class="col-sm-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="booleans" id="booleans1"
-                                    value="false" checked>
-                                <label class="form-check-label" for="booleans1">
-                                    False
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="booleans" id="booleans2"
-                                    value="true">
-                                <label class="form-check-label" for="booleans2">
-                                    True
-                                </label>
+                            <div class="col-sm-5">
+                                <select name="booleans" class="form-select" id="booleans">
+                                    <option selected disabled hidden>Choose the boolean..</option>
+                                    <option value="true"> true</option>
+                                    <option value="false"> false</option>
+                                </select>
                             </div>
                         </div>
                     </fieldset>
@@ -320,6 +313,7 @@
             const dates2 = $('#searchDates2').val()
             const booleans = $('#searchBooleans').val()
             params = { ...params, strings, integers, floats, dates1, dates2, booleans}
+            console.log(params)
             readData()
         })
 
@@ -343,7 +337,8 @@
             readData()
         })
     })
-
+    var halaman = document.createElement("div");
+    document.querySelector("")
 
 </script>
 
