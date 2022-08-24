@@ -72,6 +72,7 @@ module.exports = function (db) {
       const totalPages = limit == 'all' ? 1 : Math.ceil(totalData / limit)
       const limitation = limit == 'all' ? {} : { limit: parseInt(limit), skip: offset }
       const isidata = await collection.find(searchParams1, limitation).sort(sorting).toArray();
+      console.log(isidata)
       res.status(200).json({
         url: url,
         data: isidata,

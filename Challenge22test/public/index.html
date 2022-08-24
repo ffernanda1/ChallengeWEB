@@ -89,25 +89,16 @@
                             <input type="date" class="form-control" id="searchdates2" name="searchdate2">
                         </div>
                     </div>
-                    <fieldset class="row mb-3">
-                        <legend class="col-form-label col-sm-2 pt-0">Boolean</legend>
+                    <div class="row mb-3">
+                        <label for="searchBooleans" class="col-sm-2 col-form-label">Booelan</label>
                         <div class="col-sm-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="searchBooleans" id="booleans1"
-                                    value="false" checked>
-                                <label class="form-check-label" for="booleans1">
-                                    false
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="searchBooleans" id="booleans2"
-                                    value="true">
-                                <label class="form-check-label" for="booleans2">
-                                    true
-                                </label>
-                            </div>
+                            <select name="searchBooleans" id="searchBooleans" class="form-control">
+                                <option value="">--pilih status--</option>
+                                <option value="false">False</option>
+                                <option value="true">True</option>
+                            </select>
                         </div>
-                    </fieldset>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <a href="/" class="btn btn-primary" id="clear">Clear</a>
@@ -142,7 +133,6 @@
                             <option value="3">3</option>
                             <option value="5">5</option>
                             <option value="10">10</option>
-                            <option value="all">all</option>
                         </select>
                     </div>
                 </div>
@@ -181,25 +171,16 @@
                             <input type="date" class="form-control" id="dates" name="dates" required>
                         </div>
                     </div>
-                    <fieldset class="row mb-3">
-                        <legend class="col-form-label col-sm-2 pt-0">Boolean</legend>
+                    <div class="row mb-3">
+                        <label for="booleans" class="col-sm-2 col-form-label">Booelan</label>
                         <div class="col-sm-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="booleans" id="booleans1"
-                                    value="false" checked>
-                                <label class="form-check-label" for="booleans1">
-                                    false
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="booleans" id="booleans2"
-                                    value="true">
-                                <label class="form-check-label" for="booleans2">
-                                    true
-                                </label>
-                            </div>
+                            <select name="booleans" id="booleans" class="form-control">
+                                <option value="">--pilih status--</option>
+                                <option value="false">False</option>
+                                <option value="true">True</option>
+                            </select>
                         </div>
-                    </fieldset>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <a href="/" class="btn btn-primary">Clear</a>
@@ -403,7 +384,7 @@
         const integers = parseInt(document.getElementById('integers').value)
         const floats = parseFloat(document.getElementById('floats').value)
         const dates = document.getElementById('dates').value
-        const booleans = document.querySelector('input[name="booleans"]:checked').value
+        const booleans = document.getElementById('booleans').value
         saveData(id, strings, integers, floats, dates, booleans)
         console.log(integers)
     })
@@ -415,8 +396,8 @@
         const floats = document.getElementById('searchfloats').value
         const dates1 = document.getElementById('searchdates1').value
         const dates2 = document.getElementById('searchdates2').value
-        const booleans = document.querySelector('input[name="searchBooleans"]:checked').value
-        file = { ...file, strings, integers, floats, dates1, dates2, booleans }
+        const booleans = document.getElementById('searchBooleans').value
+        file = { ...file, strings, integers, floats, dates1, dates2, booleans, page: 1 }
         readData()
     })
 
@@ -428,12 +409,6 @@
     document.getElementById('pagination').onclick = e => {
         e.preventDefault()
         file = { ...file, page: parseInt(e.target.getAttribute('datapage')) };
-        readData()
-    }
-
-   const sortfunction = () => {
-        sort = sort == '' ? true : !sort
-        file = { ...file, sortBy: 'strings', sortMode: sort == true ? '1' : '-1' };
         readData()
     }
 
