@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
 
     <style>
-        section{
+        section {
             width: 90%;
             height: auto;
             margin: auto;
         }
 
-        ul{
+        ul {
             height: 50px;
             padding: 0px 5px;
             width: auto;
@@ -24,21 +24,22 @@
             align-items: center;
         }
 
-        ul li{
+        ul li {
             list-style: none;
             padding: 5px 10px;
             font-weight: bold;
             border: 1px solid #ccc;
         }
 
-        select{
+        select {
             width: 126px;
             padding: 6px;
             margin: 5px 0px;
             border: 1px solid #ccc;
             cursor: pointer;
         }
-        a{
+
+        a {
             text-decoration: none;
         }
     </style>
@@ -65,14 +66,14 @@
                     <div class="row mb-3">
                         <label for="searchinteger" class="col-sm-2 col-form-label">Integer</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="searchintegers" name="searchinteger"
+                            <input type="number" class="form-control" id="searchintegers" name="searchintegers"
                                 step="any">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="searchfloat" class="col-sm-2 col-form-label">Float</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="searchfloats" name="searchfloat" step='any'>
+                            <input type="number" class="form-control" id="searchfloats" name="searchfloats" step='any'>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -109,7 +110,7 @@
                     </fieldset>
                 </div>
                 <div class="card-footer">
-                    <a href="/" class="btn btn-primary">Clear</a>
+                    <a href="/" class="btn btn-primary" id="clear">Clear</a>
                     <button type="submit" class="btn btn-primary">Cari</button>
                 </div>
             </div>
@@ -118,40 +119,36 @@
 
 
         <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>No_index.</th>
-                    <th>String</th>
-                    <th>Integer</th>
-                    <th>Float</th>
-                    <th>Date</th>
-                    <th>Boolean</th>
-                    <th>Actions</th>
-                </tr>
+            <thead id="sorting">
+                
             </thead>
             <tbody>
             </tbody>
         </table>
-        <section>
-            <div>
-                <p>View item in a page</p>
-                <select name="" id="">
-                    <option value="2">2</option>
-                    <option value="4">4</option>
-                    <option value="6">6</option>
-                    <option value="8">8</option>
-                </select>
-                <ul class="pagination">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
+
+        <div class="row">
+            <div class="col-6">
+                <ul aria-label="Page navigation" id="pagination">
                 </ul>
             </div>
-        </section>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-8">
+                        <p class="text-right" style="margin-top: 0.5rem;text-align: right;">showing 1 to 10 of 57
+                            entries | display</p>
+                    </div>
+                    <div class="col-4">
+                        <select id="display" class="form-control">
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="all">all</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
+        </div>
         <form id="form-user">
             <input type="hidden" id="id" name="id" value="">
             <div class="card">
@@ -160,7 +157,6 @@
                 </div>
 
                 <div class="card-body">
-
                     <div class="row mb-3">
                         <label for="strings" class="col-sm-2 col-form-label">String</label>
                         <div class="col-sm-10">
@@ -176,7 +172,7 @@
                     <div class="row mb-3">
                         <label for="floats" class="col-sm-2 col-form-label">Float</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="floats" name="floats" step=0.01 required>
+                            <input type="number" class="form-control" id="floats" name="floats" step="0.01" required>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -215,18 +211,32 @@
 </body>
 
 <script>
-    const readData = (params) => {
-        fetch(`http://localhost:3000/users?${new URLSearchParams(params).toString()}`).then((response) => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        }).then((response) => {
-            let html = ''
-            response.data.forEach((item, index) => {
-                html += `
+    var file = {
+        display: 3,
+        page: 1
+    }
+
+    var sortstring = 'a'
+    var sortinteger = 'a'
+    var sortfloat = 'a'
+    var sortdate = 'a'
+    var sortboolean = 'a'
+
+    const readData = () => {
+        fetch(`http://localhost:3000/users?${new URLSearchParams(file).toString()}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            }).then((response) => {
+                file = { ...file, totalPages: response.totalPages }
+
+                let html = ''
+                response.data.forEach((item, index) => {
+                    html += `
         <tr>
-          <td>${index + 1}</td>
+          <td>${index + 1 + ((file.page - 1) * file.display)}</td>
           <td>${item.strings}</td>
           <td>${item.integers}</td>
           <td>${item.floats}</td>
@@ -238,84 +248,18 @@
           </td>
         </tr>
         `
+                });
+                document.querySelector('table tbody').innerHTML = html;
+                pagination(file);
+                sorter()
+
             });
-            document.querySelector('table tbody').innerHTML = html
-
-            let tbody = document.querySelector('tbody');
-            let tr = tbody.getElementsByTagName('tr');
-            let select = document.querySelector('select');
-            let ul = document.querySelector('.pagination');
-
-            let arrayTr = [];
-
-            for (let i = 0; i < tr.length; i++) {
-                arrayTr.push(tr[i])
-            }
-            select.onchange = rowCount;
-
-            function rowCount(e) {
-                let neil = ul.querySelectorAll('.list');
-                neil.forEach(n=>n.remove());
-                let limit = parseInt(e.target.value);
-             
-                displayPage(limit)
-            }
-
-            function displayPage(limit) {
-                tbody.innerHTML = '';
-                for (let i = 0; i < limit; i++) {
-                    tbody.appendChild(arrayTr[i])
-         
-                }
-                buttonGenerator(limit)
-            }
-            displayPage(2);
-
-
-            function buttonGenerator(limit){
-                const noTr = arrayTr.length;
-                if(noTr <= limit){
-                    ul.style.display = 'none';
-                } else {
-                    ul.style.display = 'flex';
-                    const noPage = Math.ceil(noTr/limit);
-
-                    for(i=1; i <= noPage; i++){
-                        let li = document.createElement('li');
-                        li.className = 'list';
-                        let a = document.createElement('a');
-                        a.href = '#';
-                        a.setAttribute('data-page', i);
-                        li.appendChild(a);
-                        a.innerText = i;
-                        ul.insertBefore(li, ul.querySelector('.next'));
-
-                        a.onclick = e => {
-                            let x = e.target.getAttribute('data-page');
-        
-                            tbody.innerHTML = '';
-                            x--;
-                            let start = limit * x;
-                            let end =start + limit;
-                            let page = arrayTr.slice(start, end);
-    
-                            for(let i=0; i<page.length; i++){
-                                let item = page[i];
-                                tbody.appendChild(item);
-                            }
-                        }
-
-                    }
-                }
-            }
-
-        });
 
 
     }
 
     const saveData = (id, strings, integers, floats, dates, booleans) => {
-     
+
         if (id) {
             fetch(`http://localhost:3000/users/${id}`, {
                 method: 'PUT',
@@ -393,26 +337,75 @@
         });
     }
 
-    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
-    readData();
 
-    const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
-        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
-    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
 
-    //pagination
+    const pagination = (file) => {
+        let pagination = `<ul class="pagination">
+                            <li class="page-item${file.page == 1 ? ' disabled' : ''}">
+                                <a class="page-link" href="#" datapage="${parseInt(file.page) - 1}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>`
 
+        for (let i = 1; i <= file.totalPages; i++) {
+            pagination += `
+            <li class="page-item${i == file.page ? ' active' : ''}"><a class="page-link" href="#" datapage="${i}">${i}</a></li>
+            `
+        }
+
+        pagination += `<li class="page-item${file.page == file.totalPages ? ' disabled' : ''}">
+                                <a class="page-link" href="#" datapage="${parseInt(file.page) + 1}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>`
+
+        document.getElementById('pagination').innerHTML = pagination
+    }
+
+    const sorter = () => {
+        let html = `<tr>
+                    <th>No_index.</th>
+
+                    <th><a href="#" id="string" datapage="strings">
+                        <i class="fa-solid fa-${sortstring == 'a' ? `sort` : sortstring == true ? `sort-up` : `sort-down` }"></i>
+                        String</a>
+                    </th>
+                    <th><a href="#" id="integer" datapage="integers">
+                        <i class="fa-solid fa-${sortinteger == 'a' ? `sort` : sortinteger == true ? `sort-up` : `sort-down` }"></i>
+                            Integer</a>
+                    </th>
+                    <th><a href="#" id="float" datapage="floats">
+                        <i class="fa-solid fa-${sortfloat == 'a' ? `sort` : sortfloat == true ? `sort-up` : `sort-down` }"></i>
+                            Float</a>
+                    </th>
+                    <th><a href="#" id="date" datapage="dates">
+                        <i class="fa-solid fa-${sortdate == 'a' ? `sort` : sortdate == true ? `sort-up` : `sort-down` }"></i>
+                            Date</a>
+                    </th>
+                    <th><a href="#" id="boolean" datapage="booleans">
+                        <i class="fa-solid fa-${sortboolean == 'a' ? `sort` : sortboolean == true ? `sort-up` : `sort-down` }"></i>
+                            Boolean</a>
+                    </th>
+                    <th>Actions</th>
+                </tr>`
+
+        
+        
+
+            document.querySelector('table thead').innerHTML = html;
+    }
 
     document.getElementById('form-user').addEventListener('submit', function (event) {
         event.preventDefault();
         const id = document.getElementById('id').value
         const strings = document.getElementById('strings').value
-        const integers = document.getElementById('integers').value
-        const floats = document.getElementById('floats').value
+        const integers = parseInt(document.getElementById('integers').value)
+        const floats = parseFloat(document.getElementById('floats').value)
         const dates = document.getElementById('dates').value
         const booleans = document.querySelector('input[name="booleans"]:checked').value
         saveData(id, strings, integers, floats, dates, booleans)
-
+        console.log(integers)
     })
 
     document.getElementById('form-search').addEventListener('submit', function (event) {
@@ -423,15 +416,74 @@
         const dates1 = document.getElementById('searchdates1').value
         const dates2 = document.getElementById('searchdates2').value
         const booleans = document.querySelector('input[name="searchBooleans"]:checked').value
-        readData({ strings, integers, floats, dates1, dates2, booleans })
+        file = { ...file, strings, integers, floats, dates1, dates2, booleans }
+        readData()
     })
 
-    // document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
-    //     const table = th.closest('table');
-    //     Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
-    //         .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
-    //         .forEach(tr => table.appendChild(tr));
-    // })))
+    document.getElementById('display').addEventListener('change', function () {
+        file = { ...file, display: parseInt(document.querySelector('#display').value), page: 1 }
+        readData()
+    });
+
+    document.getElementById('pagination').onclick = e => {
+        e.preventDefault()
+        file = { ...file, page: parseInt(e.target.getAttribute('datapage')) };
+        readData()
+    }
+
+   const sortfunction = () => {
+        sort = sort == '' ? true : !sort
+        file = { ...file, sortBy: 'strings', sortMode: sort == true ? '1' : '-1' };
+        readData()
+    }
+
+    document.getElementById('sorting').onclick = e => {
+        e.preventDefault()
+        if(e.target.getAttribute('datapage') == 'strings'){
+        sortstring = sortstring == 'a' ? true : !sortstring
+        file = { ...file, sortBy: e.target.getAttribute('datapage'), sortMode:  sortstring == true ? '1' : '-1' };
+        sortinteger = 'a'
+        sortfloat = 'a'
+        sortdate = 'a'
+        sortboolean = 'a'
+        readData()
+        } else if(e.target.getAttribute('datapage') == 'integers'){
+        sortinteger = sortinteger == 'a' ? true : !sortinteger
+        file = { ...file, sortBy: e.target.getAttribute('datapage'), sortMode:  sortinteger == true ? '1' : '-1' };
+        sortstring = 'a'
+        sortfloat = 'a'
+        sortdate = 'a'
+        sortboolean = 'a'
+        readData()
+        } else if(e.target.getAttribute('datapage') == 'floats'){
+        sortfloat = sortfloat == 'a' ? true : !sortfloat
+        file = { ...file, sortBy: e.target.getAttribute('datapage'), sortMode:  sortfloat == true ? '1' : '-1' };
+        sortstring = 'a'
+        sortinteger = 'a'
+        sortdate = 'a'
+        sortboolean = 'a'
+        readData()
+        } else if(e.target.getAttribute('datapage') == 'dates'){
+        sortdate = sortdate == 'a' ? true : !sortdate
+        file = { ...file, sortBy: e.target.getAttribute('datapage'), sortMode:  sortdate == true ? '1' : '-1' };
+        sortstring = 'a'
+        sortinteger = 'a'
+        sortfloat = 'a'
+        sortboolean = 'a'
+        readData()
+        } else if(e.target.getAttribute('datapage') == 'booleans'){
+        sortboolean = sortboolean == 'a' ? true : !sortboolean
+        file = { ...file, sortBy: e.target.getAttribute('datapage'), sortMode:  sortboolean == true ? '1' : '-1' };
+        sortstring = 'a'
+        sortinteger = 'a'
+        sortfloat= 'a'
+        sortdate = 'a'
+        readData()
+        }
+    }
+
+
+    readData()
 
 </script>
 

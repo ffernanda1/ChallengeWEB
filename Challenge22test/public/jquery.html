@@ -28,19 +28,20 @@
                     <div class="row mb-3">
                         <label for="searchIntegers" class="col-sm-2 col-form-label">Integer</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="searchIntegers" name="searchIntegers" step="any">
+                            <input type="number" class="form-control" id="searchIntegers" name="searchIntegers"
+                                step="any">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="searchFloats" class="col-sm-2 col-form-label">Float</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="searchFloats" name="searchFloats" step="any">
+                            <input type="number" class="form-control" id="searchFloats" name="searchFloats" step="0.01">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="searchDates1" class="col-sm-2 col-form-label">Tanggal Awal</label>
                         <div class="col-sm-10">
-                            <input type="date" class="form-control" id="searchDates1" name="searchDates1" step="any">
+                            <input type="date" class="form-control" id="searchDates1" name="searchDates1">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -68,16 +69,8 @@
         </form>
 
         <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>String</th>
-                    <th>Integer</th>
-                    <th>Float</th>
-                    <th>Date</th>
-                    <th>Boolean</th>
-                    <th>Action</th>
-                </tr>
+            <thead id="sorting">
+
             </thead>
             <tbody>
             </tbody>
@@ -141,12 +134,19 @@
                     <fieldset class="row mb-3">
                         <legend class="col-form-label col-sm-2 pt-0">Boolean</legend>
                         <div class="col-sm-10">
-                            <div class="col-sm-5">
-                                <select name="booleans" class="form-select" id="booleans">
-                                    <option selected disabled hidden>Choose the boolean..</option>
-                                    <option value="true"> true</option>
-                                    <option value="false"> false</option>
-                                </select>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="booleans" id="booleans1"
+                                    value="false" checked>
+                                <label class="form-check-label" for="booleans1">
+                                    False
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="booleans" id="booleans2"
+                                    value="true">
+                                <label class="form-check-label" for="booleans2">
+                                    True
+                                </label>
                             </div>
                         </div>
                     </fieldset>
@@ -165,6 +165,12 @@
         page: 1
     }
 
+    var sortstring = 'a'
+    var sortinteger = 'a'
+    var sortfloat = 'a'
+    var sortdate = 'a'
+    var sortboolean = 'a'
+
     const readData = () => {
         $.ajax({
             method: "GET",
@@ -177,7 +183,7 @@
             response.data.forEach((item, index) => {
                 html += `
         <tr>
-          <td>${index + 1}</td>
+          <td>${index + 1 + ((params.page - 1) * params.display)}</td>
           <td>${item.strings}</td>
           <td>${item.integers}</td>
           <td>${item.floats}</td>
@@ -192,9 +198,41 @@
             });
             $('table tbody').html(html)
             pagination();
+            sorter()
+
         }).fail(function (err) {
             alert('gagal jquery')
         })
+    }
+
+    const sorter = () => {
+        let html = `<tr>
+                    <th>No_index.</th>
+
+                    <th><a href="#" class="sort" id="string" datapage="strings">
+                        <i class="fa-solid fa-${sortstring == 'a' ? `sort` : sortstring == true ? `sort-up` : `sort-down`}"></i>
+                        String</a>
+                    </th>
+                    <th><a href="#" class="sort" id="integer" datapage="integers">
+                        <i class="fa-solid fa-${sortinteger == 'a' ? `sort` : sortinteger == true ? `sort-up` : `sort-down`}"></i>
+                            Integer</a>
+                    </th>
+                    <th><a href="#" class="sort" id="float" datapage="floats">
+                        <i class="fa-solid fa-${sortfloat == 'a' ? `sort` : sortfloat == true ? `sort-up` : `sort-down`}"></i>
+                            Float</a>
+                    </th>
+                    <th><a href="#" class="sort" id="date" datapage="dates">
+                        <i class="fa-solid fa-${sortdate == 'a' ? `sort` : sortdate == true ? `sort-up` : `sort-down`}"></i>
+                            Date</a>
+                    </th>
+                    <th><a href="#" class="sort" id="boolean" datapage="booleans">
+                        <i class="fa-solid fa-${sortboolean == 'a' ? `sort` : sortboolean == true ? `sort-up` : `sort-down`}"></i>
+                            Boolean</a>
+                    </th>
+                    <th>Actions</th>
+                </tr>`
+
+        $('table thead').html(html)
     }
 
     const saveData = (id, strings, integers, floats, dates, booleans) => {
@@ -203,25 +241,25 @@
                 method: "PUT",
                 url: `http://localhost:3000/users/${id}`,
                 dataType: "json",
-                data: {strings, integers, floats, dates, booleans }
+                data: { strings, integers, floats, dates, booleans }
             }).done(function (response) {
                 readData()
                 $('#id').val('')
                 $("#form-user").trigger("reset");
             }).fail(function (err) {
-                alert('gagal pake jquery')
+                alert('gagal pake jquery save')
             })
         } else {
             $.ajax({
                 method: "POST",
                 url: `http://localhost:3000/users`,
                 dataType: "json",
-                data: { strings, integers, floats, dates, booleans}
+                data: { strings, integers, floats, dates, booleans }
             }).done(function (response) {
                 readData()
                 $("#form-user").trigger("reset");
             }).fail(function (err) {
-                alert('gagal pake jquery')
+                alert('gagal pake jquery save')
             })
         }
     }
@@ -312,7 +350,7 @@
             const dates1 = $('#searchDates1').val()
             const dates2 = $('#searchDates2').val()
             const booleans = $('#searchBooleans').val()
-            params = { ...params, strings, integers, floats, dates1, dates2, booleans}
+            params = { ...params, strings, integers, floats, dates1, dates2, booleans }
             console.log(params)
             readData()
         })
@@ -336,10 +374,52 @@
             params = { ...params, page: $(this).attr('datapage') }
             readData()
         })
-    })
-    var halaman = document.createElement("div");
-    document.querySelector("")
 
+        $('#sorting').on('click', '.sort', function (event) {
+            event.preventDefault()
+            if ($(this).attr('datapage') == 'strings') {
+                sortstring = sortstring == 'a' ? true : !sortstring
+                params = { ...params, sortBy: $(this).attr('datapage'), sortMode: sortstring == true ? '1' : '-1' };
+                sortinteger = 'a'
+                sortfloat = 'a'
+                sortdate = 'a'
+                sortboolean = 'a'
+                readData()
+            } else if ($(this).attr('datapage') == 'integers') {
+                sortinteger = sortinteger == 'a' ? true : !sortinteger
+                params = { ...params, sortBy: $(this).attr('datapage'), sortMode: sortinteger == true ? '1' : '-1' };
+                sortstring = 'a'
+                sortfloat = 'a'
+                sortdate = 'a'
+                sortboolean = 'a'
+                readData()
+            } else if ($(this).attr('datapage') == 'floats') {
+                sortfloat = sortfloat == 'a' ? true : !sortfloat
+                params = { ...params, sortBy: $(this).attr('datapage'), sortMode: sortfloat == true ? '1' : '-1' };
+                sortstring = 'a'
+                sortinteger = 'a'
+                sortdate = 'a'
+                sortboolean = 'a'
+                readData()
+            } else if ($(this).attr('datapage') == 'dates') {
+                sortdate = sortdate == 'a' ? true : !sortdate
+                params = { ...params, sortBy: $(this).attr('datapage'), sortMode: sortdate == true ? '1' : '-1' };
+                sortstring = 'a'
+                sortinteger = 'a'
+                sortfloat = 'a'
+                sortboolean = 'a'
+                readData()
+            } else if ($(this).attr('datapage') == 'booleans') {
+                sortboolean = sortboolean == 'a' ? true : !sortboolean
+                params = { ...params, sortBy: $(this).attr('datapage'), sortMode: sortboolean == true ? '1' : '-1' };
+                sortstring = 'a'
+                sortinteger = 'a'
+                sortfloat = 'a'
+                sortdate = 'a'
+                readData()
+            }
+        })
+    })
 </script>
 
 </html>
