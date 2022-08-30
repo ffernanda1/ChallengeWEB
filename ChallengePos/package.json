@@ -6,11 +6,28 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@mdi/font": "^7.0.96",
+    "bootstrap": "^5.2.0",
+    "chart.js": "^3.9.1",
+    "codemirror": "^6.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "flag-icon-css": "^4.1.7",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "jquery": "^3.6.1",
+    "jvectormap": "^2.0.4",
+    "moment": "^2.29.4",
+    "morgan": "~1.9.1",
+    "owl.carousel": "^2.3.4",
+    "perfect-scrollbar": "^1.5.5",
+    "pg": "^8.8.0",
+    "popper.js": "^1.16.1",
+    "progressbar.js": "^1.1.0",
+    "select2": "^4.1.0-rc.0",
+    "select2-bootstrap-theme": "^0.1.0-beta.10",
+    "twbs-pagination": "^1.4.2",
+    "typeahead.js": "^0.11.1"
   }
 }
