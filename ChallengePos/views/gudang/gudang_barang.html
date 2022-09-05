@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Soppeng Admin</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../../public/assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../public/assets/vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="../../public/assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="../../public/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <!-- endinject -->
+  <!-- Layout styles -->
+  <link rel="stylesheet" href="../../public/assets/css/style.css">
+  <!-- End layout styles -->
+  <link rel="shortcut icon" href="../../public/assets/images/favicon.png" />
+</head>
+
+<body>
+  <!-- form -->
+  <div class="container-scroller">
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Gudang Barang</h4>
+              <form class="forms-sample">
+                <div class="form-group">
+                  <label for="id_gudang">ID Gudang</label>
+                  <input type="text" class="form-control" id="id_gudang" placeholder="ID Gudang">
+                </div>
+                <div class="form-group">
+                  <label for="nama_gudang">Nama Gudang</label>
+                  <input type="text" class="form-control" id="nama_gudang" placeholder="Nama Gudang">
+                </div>
+                <div class="form-group">
+                    <label for="alamat_gudang">Alamat Gudang</label>
+                    <textarea class="form-control" id="alamat_gudang" rows="4"></textarea>
+                  </div>
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button class="btn btn-dark">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- table -->
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Daftar Gudang</h4>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th> ID Gudang </th>
+                    <th> Nama Gudang</th>
+                    <th> Alamat Gudang</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>G001</td>
+                    <td>Gudang Garam</td>
+                    <td>Jl.Protokol Veterani</td>
+                    <td>
+                      <button type="button" class="btn btn-success btn-sm btn-edit" iddata="#"><i>Edit</i></button>
+                      <button type="button" class="btn btn-danger btn-sm btn-delete" iddata="#"><i>Delete</i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</body>
+
+<script src="../../public/assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="../../public/assets/vendors/select2/select2.min.js"></script>
+<script src="../../public/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../../public/assets/js/off-canvas.js"></script>
+<script src="../../public/assets/js/hoverable-collapse.js"></script>
+<script src="../../public/assets/js/misc.js"></script>
+<script src="../../public/assets/js/settings.js"></script>
+<script src="../../public/assets/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<script src="../../public/assets/js/file-upload.js"></script>
+<script src="../../public/assets/js/typeahead.js"></script>
+<script src="../../public/assets/js/select2.js"></script>
+<!-- End custom js for this page -->
+
+</html>
