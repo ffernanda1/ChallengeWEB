@@ -31,5 +31,8 @@
     "select2-bootstrap-theme": "^0.1.0-beta.10",
     "twbs-pagination": "^1.4.2",
     "typeahead.js": "^0.11.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }

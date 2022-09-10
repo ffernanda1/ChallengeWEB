@@ -39,7 +39,7 @@ module.exports = function (pool) {
     }
   })
 
-  router.put('/barang/:id_barang', async function (req, res) {
+  router.post('/barang/:id_barang', async function (req, res) {
     try {
       let sql = `UPDATE ch21 SET 
       nama_barang = $1,
@@ -55,7 +55,7 @@ module.exports = function (pool) {
     }
   })
 
-  router.delete('/barang/:id_barang', async function (req, res) {
+  router.get('/barang/:id_barang', async function (req, res) {
     try {
       let id = req.params.id_barang
       let sql = `DELETE FROM barang WHERE id_barang= $1`;
