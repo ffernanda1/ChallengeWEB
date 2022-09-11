@@ -7,7 +7,7 @@ var expressLayouts = require('express-ejs-layouts')
 
 const {Pool} = require('pg')
 const pool = new Pool({
-  user: 'postgres',
+  user: 'nanda',
   host: 'localhost',
   database: 'pos',
   password: '1234',
@@ -29,7 +29,7 @@ var barangRouter = require('./routes/barang')(pool);
 // var satuanRouter = require('./routes/satuan')(pool);
 // var supplierRouter = require('./routes/supplier')(pool);
 // var varianRouter = require('./routes/varian')(pool);
-// var gudangRouter = require('./routes/gudang_barang')(pool);;
+var gudangRouter = require('./routes/gudang_barang')(pool);;
 // var pembelianRouter = require('./routes/pembelian_barang')(pool);
 // var pembeliandetailRouter = require('./routes/pembelian_detail')(pool);
 // var penjualanRouter = require('./routes/penjualan_barang')(pool);
@@ -58,7 +58,7 @@ app.use('/barang', barangRouter);
 // app.use('/satuan', satuanRouter);
 // app.use('/supplier', supplierRouter);
 // app.use('/varian', varianRouter);
-// app.use('/gudang', gudangRouter);
+app.use('/gudang', gudangRouter);
 // app.use('/pembelian', pembelianRouter);
 // app.use('/pembelian_router', pembeliandetailRouter);
 // app.use('/penjualan', penjualanRouter);
