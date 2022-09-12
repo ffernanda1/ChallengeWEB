@@ -3,44 +3,80 @@ var router = express.Router();
 var pool = require('pg')
 var moment = require('moment')
 
-
-router.get('/', function(req, res) {
-  res.render('supplier');
-  
-})
-
-// module.exports = function(pool) {
+module.exports = function (pool) {
 
 
 
-// /* GET home page. */
-// router.get('/supplier', (req, res) => {
-//   res.render('supplier');
-  
-// })
+  /* GET home page. */
+  router.get('/', async function (req, res) {
+    try {
+      let sql = 'SELECT * FROM supplier'
+      const get = await pool.query(sql)
+      res.status(200).json(get.rows)
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "error tampilkan data" })
+    }
+  })
 
-// router.get('/add_supplier', (req, res) => {
-//   res.render('add')
-// })
+  router.post('/', async function (req, res) {
+    try {
+      let sql = `INSERT INTO supplier (id_supplier, nama_supplier, alamat_supplier, telepon, email) VALUES ($1,$2,$3, $4, $5)`
+      const post = await pool.query(sql, [req.body.id_supplier, req.body.nama_supplier, req.body.alamat_supplier, req.body.telepon, req.body.email])
+      res.status(200).json(post)
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "error add supplier" })
+    }
+  });
 
+  router.get('/:id_supplier', async function (req, res) {
+    try {
+      let id = req.params.id_supplier
+      let sql = 'SELECT * FROM supplier WHERE id_supplier= $1'
+      const editGet = await pool.query(sql, [id])
+      res.status(200).json(editGet)
+    } catch (error) {
+      res.status(500).json({ message: 'tidak mendapatkan data' })
+    }
+  })
 
-// router.post('/add_supplier', (req, res) => {
-  
-// })
+  router.put('/:id_supplier', async function (req, res) {
+    try {
+      let sql = `UPDATE supplier SET 
+      nama_supplier = $1,
+      alamat_supplier = $2,
+      telepon = $3,
+      email = $4
+      WHERE id_supplier = $5`
 
-// router.get('/delete_supplier/:id', (req, res) => {
- 
-// })
+      const edit = await pool.query(sql,
+        [req.body.nama_supplier,
+        req.body.alamat_supplier,
+        req.body.telepon,
+        req.body.email,
+        req.params.id_supplier
+        ]);
 
-// router.get('/update__supplier/:id', (req, res) => {
- 
-// })
+      res.status(200).json(edit)
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "error edit supplier" })
+    }
+  })
 
-// router.post('/update_supplier/:id', (req, res) => {
- 
+  router.delete('/:id_supplier', async function (req, res) {
+    try {
+      let id = req.params.id_supplier
+      let sql = `DELETE FROM supplier WHERE id_supplier= $1`;
 
-// })
-// return router;
-// }
+      const hapus = await pool.query(sql, [id])
+      res.status(200).json(hapus)
+    } catch (error) {
+      res.status(500)
+    }
 
-module.exports = router;
+  })
+
+  return router;
+}

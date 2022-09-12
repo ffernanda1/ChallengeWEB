@@ -3,35 +3,75 @@ var router = express.Router();
 var pool = require('pg')
 var moment = require('moment')
 
-module.exports = function(pool) {
+module.exports = function (pool) {
 
 
 
-/* GET home page. */
-router.get('/', (req, res) => {
-  
-})
+  /* GET home page. */
+  router.get('/', async function (req, res) {
+    try {
+      let sql = 'SELECT * FROM satuan'
+      const get = await pool.query(sql)
+      res.status(200).json(get.rows)
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "error tampilkan data" })
+    }
+  })
 
-router.get('/add_satuan', (req, res) => {
-  res.render('add')
-})
+  router.post('/', async function (req, res) {
+    try {
+      let sql = `INSERT INTO satuan (id_satuan, nama_satuan, keterangan) VALUES ($1,$2,$3)`
+      const post = await pool.query(sql, [req.body.id_satuan, req.body.nama_satuan, req.body.keterangan])
+      res.status(200).json(post)
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "error add satuan" })
+    }
+  });
 
+  router.get('/:id_satuan', async function (req, res) {
+    try {
+      let id = req.params.id_satuan
+      let sql = 'SELECT * FROM satuan WHERE id_satuan= $1'
+      const editGet = await pool.query(sql, [id])
+      res.status(200).json(editGet)
+    } catch (error) {
+      res.status(500).json({ message: 'tidak mendapatkan data' })
+    }
+  })
 
-router.post('/add_satuan', (req, res) => {
-  
-})
+  router.put('/:id_satuan', async function (req, res) {
+    try {
+      let sql = `UPDATE satuan SET 
+      nama_satuan = $1,
+      keterangan = $2
+      WHERE id_satuan = $3`
 
-router.get('/delete_satuan/:id', (req, res) => {
- 
-})
+      const edit = await pool.query(sql,
+        [req.body.nama_satuan,
+        req.body.keterangan,
+        req.params.id_satuan]);
 
-router.get('/update__satuan/:id', (req, res) => {
- 
-})
+      res.status(200).json(edit)
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "error edit satuan" })
+    }
+  })
 
-router.post('/update_satuan/:id', (req, res) => {
- 
+  router.delete('/:id_satuan', async function (req, res) {
+    try {
+      let id = req.params.id_satuan
+      let sql = `DELETE FROM satuan WHERE id_satuan= $1`;
 
-})
-return router;
+      const hapus = await pool.query(sql, [id])
+      res.status(200).json(hapus)
+    } catch (error) {
+      res.status(500)
+    }
+
+  })
+
+  return router;
 }
