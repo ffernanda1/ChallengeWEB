@@ -18,7 +18,7 @@
     "express-ejs-layouts": "^2.5.1",
     "flag-icon-css": "^4.1.7",
     "http-errors": "~1.6.3",
-    "jquery": "^3.6.1",
+    "jquery": "^3.6.0",
     "jvectormap": "^2.0.4",
     "moment": "^2.29.4",
     "morgan": "~1.9.1",

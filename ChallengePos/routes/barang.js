@@ -9,66 +9,96 @@ module.exports = function (pool) {
 
   /* GET home page. */
   router.get('/', async function (req, res) {
+    const { json } = req.headers
+
+
     try {
-      let sql = 'SELECT * FROM satuan'
-      const get = await pool.query(sql)
-      res.status(200).json(get.rows)
+      let sql = 'SELECT * FROM barang'
+      const { rows } = await pool.query(sql)
+      if (json == 'true') {
+        res.status(200).json(rows)
+      } else {
+        res.render('barang')
+      }
     } catch (error) {
       console.log(error)
-      res.status(500).json({message: "error tampilkan data"})
+      res.status(500).json({ message: "error tampilkan data" })
     }
   })
 
   router.post('/', async function (req, res) {
+    const { json } = req.headers
     try {
-      let sql = `INSERT INTO satuan (id_satuan, nama_satuan, keterangan) VALUES ($1,$2,$3)`
-      const post = await pool.query(sql, [req.body.id_satuan, req.body.nama_satuan, req.body.keterangan])
-      res.status(200).json(post)
+      let sql = `INSERT INTO barang (id_barang, nama_barang) VALUES ($1,$2)`
+      const post = await pool.query(sql, [req.body.id_barang, req.body.nama_barang])
+      if (json == 'true') {
+        res.status(200).json(post)
+      } else {
+        res.render('barang')
+      }
     } catch (error) {
       console.log(error)
-      res.status(500).json({ message: "error add satuan" })
+      res.status(500).json({ message: "error add barang" })
     }
   });
 
-  router.get('/:id_satuan', async function (req, res) {
+  router.get('/:id_barang', async function (req, res) {
+    const { json } = req.headers
     try {
-      let id = req.params.id_satuan
-      let sql = 'SELECT * FROM satuan WHERE id_satuan= $1'
-      const editGet = await pool.query(sql, [id])
-      res.status(200).json(editGet)
+      let id = req.params.id_barang
+      let sql = 'SELECT * FROM barang WHERE id_barang= $1'
+      const {rows} = await pool.query(sql, [id])
+      console.log('isi edit', rows)
+      if (json == 'true') {
+        res.status(200).json(rows)
+      } else {
+        res.render('barang')
+      }
+
     } catch (error) {
-      res.status(500).json({message: 'tidak mendapatkan data'})
+      res.status(500).json({ message: 'tidak mendapatkan data' })
     }
   })
 
-  router.put('/:id_satuan', async function (req, res) {
+  router.put('/:id_barang', async function (req, res) {
+    const { json } = req.headers
+
     try {
-      let sql = `UPDATE satuan SET 
-      nama_satuan = $1,
-      keterangan = $2
-      WHERE id_satuan = $3`
+      let sql = `UPDATE barang SET 
+      nama_barang = $1
+      WHERE id_barang = $2`
 
       const edit = await pool.query(sql,
-        [req.body.nama_satuan,
-          req.body.keterangan,
-        req.params.id_satuan]);
+        [req.body.nama_barang,
+        req.params.id_barang]);
 
-      res.status(200).json(edit)
+      if (json == 'true') {
+        res.status(200).json(edit)
+      } else {
+        res.render('barang')
+      }
     } catch (error) {
       console.log(error)
-      res.status(500).json({ message: "error edit satuan" })
+      res.status(500).json({ message: "error edit barang" })
     }
   })
 
-  router.delete('/:id_satuan', async function (req, res) {
+  router.delete('/:id_barang', async function (req, res) {
+    const { json } = req.headers
+
     try {
-      let id = req.params.id_satuan
-      let sql = `DELETE FROM satuan WHERE id_satuan= $1`;
+      let id = req.params.id_barang
+      let sql = `DELETE FROM barang WHERE id_barang= $1`;
 
       const hapus = await pool.query(sql, [id])
-      res.status(200).json(hapus)
+      console.log(hapus)
+      if (json == 'true') {
+        res.status(200).json(hapus)
+      } else {
+        res.render('barang')
+      }
     } catch (error) {
-      res.status(500).json({ message: "error hapus satuan"})
+      res.status(500)
     }
 
   })
