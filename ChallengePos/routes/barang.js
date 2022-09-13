@@ -48,7 +48,6 @@ module.exports = function (pool) {
       let id = req.params.id_barang
       let sql = 'SELECT * FROM barang WHERE id_barang= $1'
       const {rows} = await pool.query(sql, [id])
-      console.log('isi edit', rows)
       if (json == 'true') {
         res.status(200).json(rows)
       } else {
@@ -91,7 +90,6 @@ module.exports = function (pool) {
       let sql = `DELETE FROM barang WHERE id_barang= $1`;
 
       const hapus = await pool.query(sql, [id])
-      console.log(hapus)
       if (json == 'true') {
         res.status(200).json(hapus)
       } else {

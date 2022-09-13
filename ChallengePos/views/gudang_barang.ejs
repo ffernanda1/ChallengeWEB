@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Soppeng Admin</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../../public/assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../public/assets/vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="../../public/assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="../../public/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <!-- endinject -->
+  <!-- Layout styles -->
+  <link rel="stylesheet" href="../../public/assets/css/style.css">
+  <!-- End layout styles -->
+  <link rel="shortcut icon" href="../../public/assets/images/favicon.png" />
+</head>
+
+<body>
+ 
+  <div class="container-scroller">
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <!-- form Tambah -->
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Tambah Gudang</h4>
+              <form class="form-sample" id="form-tambah">
+                <div class="form-group">
+                  <label for="id_gudang">ID Gudang</label>
+                  <input type="text" class="form-control" id="id_gudang" placeholder="ID Gudang">
+                </div>
+                <div class="form-group">
+                  <label for="nama_gudang">Nama Gudang</label>
+                  <input type="text" class="form-control" id="nama_gudang" placeholder="Nama Gudang">
+                </div>
+                <div class="form-group">
+                    <label for="alamat_gudang">Alamat Gudang</label>
+                    <textarea class="form-control" id="alamat_gudang" rows="4"></textarea>
+                  </div>
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- form Edit -->
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Edit Gudang</h4>
+              <form class="form-sample" id="form-edit">
+                <div class="form-group">
+                  <label for="id_gudang">ID Gudang</label>
+                  <input type="text" class="form-control" id="id_gudangedit">
+                </div>
+                <div class="form-group">
+                  <label for="nama_gudang">Nama Gudang</label>
+                  <input type="text" class="form-control" id="nama_gudangedit">
+                </div>
+                <div class="form-group">
+                    <label for="alamat_gudang">Alamat Gudang</label>
+                    <textarea class="form-control" id="alamat_gudangedit" rows="4"></textarea>
+                  </div>
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button type="button" id="reset-form-edit" class="btn btn-dark">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- table -->
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Daftar Gudang</h4>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th> ID Gudang </th>
+                    <th> Nama Gudang</th>
+                    <th> Alamat Gudang</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</body>
+
+<script src="../../public/assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="../../public/assets/vendors/select2/select2.min.js"></script>
+<script src="../../public/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../../public/assets/js/off-canvas.js"></script>
+<script src="../../public/assets/js/hoverable-collapse.js"></script>
+<script src="../../public/assets/js/misc.js"></script>
+<script src="../../public/assets/js/settings.js"></script>
+<script src="../../public/assets/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<script src="../../public/assets/js/file-upload.js"></script>
+<script src="../../public/assets/js/typeahead.js"></script>
+<script src="../../public/assets/js/select2.js"></script>
+<!-- End custom js for this page -->
+
+<script>
+  const readData = () => {
+    $.ajax({
+      method: "GET",
+      url: "http://localhost:3001/gudang",
+      dataType: "json",
+      headers: {
+        json: true
+      }
+    }).done(function (data) {
+
+      let html = ''
+      data.forEach((item, index) => {
+        html += `
+        <tr>
+          <td>${item.id_gudang}</td>
+          <td>${item.nama_gudang}</td>
+          <td>${item.alamat_gudang}</td>
+          <td>
+            <button type="button" class="btn btn-success btn-icon-text" id_data="${item.id_gudang}"><i class="mdi mdi-file-check btn-icon-append"></i></button>
+            <button type="button" class="btn btn-danger btn-icon-delete" id_data="${item.id_gudang}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
+          </td>
+        </tr>
+        `
+      });
+      $('table tbody').html(html)
+    }).fail(function (err) {
+      console.log("error", err)
+      alert('gagal jquery')
+    })
+  }
+
+  const saveData = (id_gudang, nama_gudang, alamat_gudang) => {
+    $.ajax({
+      method: "POST",
+      url: `http://localhost:3001/gudang`,
+      dataType: "json",
+      headers: {
+        json: true
+      },
+      data: { id_gudang, nama_gudang, alamat_gudang }
+    }).done(function (response) {
+      readData()
+      $("#form-tambah").trigger("reset");
+    }).fail(function (err) {
+      alert('gagal pake jquery save')
+    })
+  }
+  const saveEdit = (id_gudang, nama_gudang, alamat_gudang) => {
+    $.ajax({
+      method: "PUT",
+      url: `http://localhost:3001/gudang/${id_gudang}`,
+      dataType: "json",
+      headers: {
+        json: true
+      },
+      data: { nama_gudang, alamat_gudang }
+    }).done(function (response) {
+      readData()
+      $('#id_gudang').val('')
+      $("#form-edit").trigger("reset");
+    }).fail(function (err) {
+      alert('gagal pake jquery save')
+    })
+  }
+
+  const editData = (id) => {
+    $.ajax({
+      method: "GET",
+      url: `http://localhost:3001/gudang/${id}`,
+      dataType: "json",
+      headers: {
+        json: true
+      }
+    }).done(function (data) {
+      $('#id_gudangedit').val(data[0].id_gudang)
+      $('#nama_gudangedit').val(data[0].nama_gudang)
+      $('#alamat_gudangedit').val(data[0].alamat_gudang)
+    }).fail(function (err) {
+      alert('gagal pake jquery')
+    })
+  }
+
+  const deleteData = (id) => {
+    $.ajax({
+      method: "DELETE",
+      url: `http://localhost:3001/gudang/${id}`,
+      dataType: "json",
+      headers: {
+        json: true
+      }
+
+    }).done(function (response) {
+      readData()
+    }).fail(function (err) {
+      alert('gagal pake jquery')
+    })
+  }
+
+  $(document).ready(function () {
+    readData()
+
+    $('#form-tambah').submit(function (event) {
+      event.preventDefault();
+      const id_gudang = $('#id_gudang').val()
+      const nama_gudang = $('#nama_gudang').val()
+      const alamat_gudang = $('#alamat_gudang').val()
+      console.log(alamat_gudang)
+      saveData(id_gudang, nama_gudang, alamat_gudang)
+    })
+
+    $('#form-edit').submit(function (event) {
+      event.preventDefault();
+      const id_gudang = $('#id_gudangedit').val()
+      const nama_gudang = $('#nama_gudangedit').val()
+      const alamat_gudang = $('#alamat_gudangedit').val()
+      saveEdit(id_gudang, nama_gudang, alamat_gudang)
+    })
+
+    $('table tbody').on('click', '.btn-icon-text', function () {
+      const id = $(this).attr('id_data')
+      editData(id)
+     
+    })
+
+    $('table tbody').on('click', '.btn-icon-delete', function () {
+      const id = $(this).attr('id_data')
+      deleteData(id)
+    })
+
+    $('#reset-form-tambah').click(function () {
+      $("#form-tambah").trigger("reset");
+      readData()
+    })
+
+    $('#reset-form-edit').click(function () {
+      $("#form-edit").trigger("reset");
+      readData()
+    })
+
+
+  })
+</script>
+
+</html>
