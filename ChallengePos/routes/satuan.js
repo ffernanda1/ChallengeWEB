@@ -9,10 +9,17 @@ module.exports = function (pool) {
 
   /* GET home page. */
   router.get('/', async function (req, res) {
+    const { json } = req.headers
+
     try {
       let sql = 'SELECT * FROM satuan'
       const get = await pool.query(sql)
-      res.status(200).json(get.rows)
+      if (json == "true") {
+        res.status(200).json(get.rows)
+      } else {
+        res.render('satuan')
+      }
+
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: "error tampilkan data" })
@@ -20,10 +27,17 @@ module.exports = function (pool) {
   })
 
   router.post('/', async function (req, res) {
+    const { json } = req.headers
+
     try {
       let sql = `INSERT INTO satuan (id_satuan, nama_satuan, keterangan) VALUES ($1,$2,$3)`
       const post = await pool.query(sql, [req.body.id_satuan, req.body.nama_satuan, req.body.keterangan])
-      res.status(200).json(post)
+      if (json == 'true') {
+        res.status(200).json(post)
+      } else {
+        res.render('satuan')
+      }
+
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: "error add satuan" })
@@ -31,17 +45,26 @@ module.exports = function (pool) {
   });
 
   router.get('/:id_satuan', async function (req, res) {
+    const { json } = req.headers
+
     try {
       let id = req.params.id_satuan
       let sql = 'SELECT * FROM satuan WHERE id_satuan= $1'
       const editGet = await pool.query(sql, [id])
-      res.status(200).json(editGet)
+      if (json == 'true') {
+        res.status(200).json(editGet.rows)
+      } else {
+        res.render('satuan')
+      }
+
     } catch (error) {
       res.status(500).json({ message: 'tidak mendapatkan data' })
     }
   })
 
   router.put('/:id_satuan', async function (req, res) {
+    const { json } = req.headers
+
     try {
       let sql = `UPDATE satuan SET 
       nama_satuan = $1,
@@ -53,7 +76,12 @@ module.exports = function (pool) {
         req.body.keterangan,
         req.params.id_satuan]);
 
-      res.status(200).json(edit)
+      if (json == 'true') {
+        res.status(200).json(edit)
+      } else {
+        res.render('satuan')
+      }
+
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: "error edit satuan" })
@@ -61,12 +89,18 @@ module.exports = function (pool) {
   })
 
   router.delete('/:id_satuan', async function (req, res) {
+    const { json } = req.headers
+
     try {
       let id = req.params.id_satuan
       let sql = `DELETE FROM satuan WHERE id_satuan= $1`;
-
       const hapus = await pool.query(sql, [id])
-      res.status(200).json(hapus)
+      if (json == 'true') {
+        res.status(200).json(hapus)
+      } else {
+        res.render('satuan')
+      }
+
     } catch (error) {
       res.status(500)
     }

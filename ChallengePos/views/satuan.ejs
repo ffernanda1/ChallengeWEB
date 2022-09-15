@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Soppeng Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../public/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../public/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="../../public/assets/vendors/select2/select2.min.css">
+    <link rel="stylesheet" href="../../public/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../public/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../../public/assets/images/favicon.png" />
+</head>
+
+<body>
+
+    <div class="container-scroller">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <!-- form tambah -->
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Tambah Satuan</h4>
+                            <form class="forms-sample" id="form-tambah">
+                                <div class="form-group">
+                                    <label for="id_satuan">ID Satuan</label>
+                                    <input type="text" class="form-control" id="id_satuan" placeholder="ID satuan">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nama_satuan">Nama satuan</label>
+                                    <input type="text" class="form-control" id="nama_satuan" placeholder="Nama satuan">
+                                </div>
+                                <div class="form-group">
+                                    <label for="keterangan">Keterangan</label>
+                                    <textarea class="form-control" id="keterangan_satuan" rows="4"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                <button class="btn btn-dark">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- form edit -->
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Edit Satuan</h4>
+                            <form class="forms-sample" id="form-edit">
+                                <div class="form-group">
+                                    <label for="id_satuan">ID Satuan</label>
+                                    <input type="text" class="form-control" id="id_satuanedit">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nama_satuan">Nama satuan</label>
+                                    <input type="text" class="form-control" id="nama_satuanedit">
+                                </div>
+                                <div class="form-group">
+                                    <label for="keterangan">Keterangan</label>
+                                    <textarea class="form-control" id="keteranganedit" rows="4"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                <button class="btn btn-dark">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- table -->
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Daftar Satuan</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th> ID Satuan </th>
+                                        <th> Nama Satuan</th>
+                                        <th> Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script src="../../public/assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="../../public/assets/vendors/select2/select2.min.js"></script>
+<script src="../../public/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../../public/assets/js/off-canvas.js"></script>
+<script src="../../public/assets/js/hoverable-collapse.js"></script>
+<script src="../../public/assets/js/misc.js"></script>
+<script src="../../public/assets/js/settings.js"></script>
+<script src="../../public/assets/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<script src="../../public/assets/js/file-upload.js"></script>
+<script src="../../public/assets/js/typeahead.js"></script>
+<script src="../../public/assets/js/select2.js"></script>
+<!-- End custom js for this page -->
+
+<script>
+    const readData = () => {
+        $.ajax({
+            method: "GET",
+            url: "http://localhost:3001/satuan",
+            dataType: "json",
+            headers: {
+                json: true
+            }
+        }).done(function (data) {
+
+            let html = ''
+            data.forEach((item, index) => {
+                html += `
+        <tr>
+          <td>${item.id_satuan}</td>
+          <td>${item.nama_satuan}</td>
+          <td>${item.keterangan}</td>
+          <td>
+            <button type="button" class="btn btn-success btn-icon-text" id_data="${item.id_satuan}"><i class="mdi mdi-file-check btn-icon-append"></i></button>
+            <button type="button" class="btn btn-danger btn-icon-delete" id_data="${item.id_satuan}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
+          </td>
+        </tr>
+        `
+            });
+            $('table tbody').html(html)
+        }).fail(function (err) {
+            console.log("error", err)
+            alert('gagal jquery')
+        })
+    }
+
+    const saveData = (id_satuan, nama_satuan, keterangan) => {
+        $.ajax({
+            method: "POST",
+            url: `http://localhost:3001/satuan`,
+            dataType: "json",
+            headers: {
+                json: true
+            },
+            data: { id_satuan, nama_satuan, keterangan }
+        }).done(function (response) {
+            readData()
+            $("#form-tambah").trigger("reset");
+        }).fail(function (err) {
+            alert('gagal pake jquery save')
+        })
+    }
+    const saveEdit = (id_satuan, nama_satuan, keterangan) => {
+        $.ajax({
+            method: "PUT",
+            url: `http://localhost:3001/satuan/${id_satuan}`,
+            dataType: "json",
+            headers: {
+                json: true
+            },
+            data: { nama_satuan, keterangan }
+        }).done(function (response) {
+            readData()
+            $('#id_satuanedit').val('')
+            $("#form-edit").trigger("reset");
+        }).fail(function (err) {
+            alert('gagal pake jquery save')
+        })
+    }
+
+    const editData = (id) => {
+        $.ajax({
+            method: "GET",
+            url: `http://localhost:3001/satuan/${id}`,
+            dataType: "json",
+            headers: {
+                json: true
+            }
+        }).done(function (data) {
+            $('#id_satuanedit').val(data[0].id_satuan)
+            $('#nama_satuanedit').val(data[0].nama_satuan)
+            $('#keteranganedit').val(data[0].keterangan)
+        }).fail(function (err) {
+            alert('gagal pake jquery')
+        })
+    }
+
+    const deleteData = (id) => {
+        $.ajax({
+            method: "DELETE",
+            url: `http://localhost:3001/satuan/${id}`,
+            dataType: "json",
+            headers: {
+                json: true
+            }
+
+        }).done(function (response) {
+            readData()
+        }).fail(function (err) {
+            alert('gagal pake jquery')
+        })
+    }
+
+    $(document).ready(function () {
+        readData()
+
+        $('#form-tambah').submit(function (event) {
+            event.preventDefault();
+            const id_satuan = $('#id_satuan').val()
+            const nama_satuan = $('#nama_satuan').val()
+            const keterangan = $('#keterangan_satuan').val()
+            saveData(id_satuan, nama_satuan, keterangan)
+        })
+
+        $('#form-edit').submit(function (event) {
+            event.preventDefault();
+            const id_satuan = $('#id_satuanedit').val()
+            const nama_satuan = $('#nama_satuanedit').val()
+            const keterangan = $('#keteranganedit').val()
+            saveEdit(id_satuan, nama_satuan, keterangan)
+        })
+
+        $('table tbody').on('click', '.btn-icon-text', function () {
+            const id = $(this).attr('id_data')
+            editData(id)
+
+        })
+
+        $('table tbody').on('click', '.btn-icon-delete', function () {
+            const id = $(this).attr('id_data')
+            deleteData(id)
+        })
+
+        $('#reset-form-tambah').click(function () {
+            $("#form-tambah").trigger("reset");
+            readData()
+        })
+
+        $('#reset-form-edit').click(function () {
+            $("#form-edit").trigger("reset");
+            readData()
+        })
+
+    })
+</script>
+
+
+
+</html>

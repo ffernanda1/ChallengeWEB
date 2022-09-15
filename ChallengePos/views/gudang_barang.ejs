@@ -183,7 +183,7 @@
       data: { nama_gudang, alamat_gudang }
     }).done(function (response) {
       readData()
-      $('#id_gudang').val('')
+      $('#id_gudangedit').val('')
       $("#form-edit").trigger("reset");
     }).fail(function (err) {
       alert('gagal pake jquery save')
