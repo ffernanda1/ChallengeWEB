@@ -2,10 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
 
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -28,33 +25,56 @@
 </head>
 
 <body>
-  <!-- form -->
+
   <div class="container-scroller">
     <div class="main-panel">
       <div class="content-wrapper">
+        <!-- form tambah -->
         <div class="col-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Supplier Barang</h4>
-              <form class="forms-sample">
+              <h4 class="card-title">Tambah Supplier Barang</h4>
+              <form class="forms-sample" id="form-tambah">
+                <input type="hidden" id="id_supplier" name="id" value="">
                 <div class="form-group">
-                  <label for="nama_gudang">Nama Supplier</label>
-                  <input type="text" class="form-control" id="nama_gudang" placeholder="Nama Supplier">
+                  <label for="nama_supplier">Nama Supplier</label>
+                  <input type="text" class="form-control" id="nama_supplier" placeholder="Nama Supplier">
                 </div>
                 <div class="form-group">
                   <label for="nomor_hp">Nomor HP</label>
-                  <input type="tel" class="form-control" id="nomor_hp" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}">
+                  <input type="tel" class="form-control" id="nomor_hp" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}" placeholder="08xx-xxxx-xxxx">
                 </div>
                 <div class="form-group">
-                    <label for="email_supplier">E-mail Supplier</label>
-                    <input type="email" class="form-control" id="email_supplier" placeholder="E-mail">
-                  </div>
-                <div class="form-group">
-                    <label for="alamat_Supplier">Alamat Supplier</label>
-                    <textarea class="form-control" id="alamat_Supplier" rows="4"></textarea>
-                  </div>
+                  <label for="alamat_Supplier">Alamat Supplier</label>
+                  <textarea class="form-control" id="alamat_supplier" rows="4"></textarea>
+                </div>
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                <button class="btn btn-dark">Cancel</button>
+                <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- form edit -->
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Edit Supplier Barang</h4>
+              <form class="forms-sample" id="form-edit">
+                <input type="hidden" id="id_supplieredit" name="id" value="">
+                <div class="form-group">
+                  <label for="nama_supplier">Nama Supplier</label>
+                  <input type="text" class="form-control" id="nama_supplieredit" placeholder="Nama Supplier">
+                </div>
+                <div class="form-group">
+                  <label for="nomor_hp">Nomor HP</label>
+                  <input type="tel" class="form-control" id="nomor_hpedit" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}" placeholder="08xx-xxxx-xxxx">
+                </div>
+                <div class="form-group">
+                  <label for="alamat_Supplier">Alamat Supplier</label>
+                  <textarea class="form-control" id="alamat_supplieredit" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button type="button" id="reset-form-edit" class="btn btn-dark">Cancel</button>
               </form>
             </div>
           </div>
@@ -76,17 +96,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td> S001</td>
-                    <td> Kelelawar Garam</td>
-                    <td> 0823151230499</td>
-                    <td> heriltelaco@gmail.com</td>
-                    <th> Soppeng</th>
-                    <td>
-                      <button type="button" class="btn btn-success btn-sm btn-edit" iddata="#"><i>Edit</i></button>
-                      <button type="button" class="btn btn-danger btn-sm btn-delete" iddata="#"><i>Delete</i></button>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
@@ -118,5 +127,153 @@
 <script src="../../public/assets/js/typeahead.js"></script>
 <script src="../../public/assets/js/select2.js"></script>
 <!-- End custom js for this page -->
+
+<script>
+  const readData = () => {
+    $.ajax({
+      method: "GET",
+      url: "http://localhost:3001/supplier",
+      dataType: "json",
+      headers: {
+        json: true
+      }
+    }).done(function (data) {
+
+      let html = ''
+      data.forEach((item, index) => {
+        html += `
+        <tr>
+          <td>${item.id_supplier}</td>
+          <td>${item.nama}</td>
+          <td>${item.alamat}</td>
+          <td>${item.telp}</td>
+          <td>
+            <button type="button" class="btn btn-success btn-icon-text" id_data="${item.id_supplier}"><i class="mdi mdi-file-check btn-icon-append"></i></button>
+            <button type="button" class="btn btn-danger btn-icon-delete" id_data="${item.id_supplier}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
+          </td>
+        </tr>
+        `
+      });
+      $('table tbody').html(html)
+    }).fail(function (err) {
+      console.log("error", err)
+      alert('gagal jquery')
+    })
+  }
+
+  const saveData = (id_supplier ,nomor_hp, nama_supplier, alamat_supplier) => {
+    $.ajax({
+      method: "POST",
+      url: `http://localhost:3001/supplier`,
+      dataType: "json",
+      headers: {
+        json: true
+      },
+      data: { nomor_hp, nama_supplier, alamat_supplier }
+    }).done(function (response) {
+      readData()
+      $("#form-tambah").trigger("reset");
+    }).fail(function (err) {
+      alert('gagal pake jquery save')
+    })
+  }
+  const saveEdit = (id_supplier, nama_supplier, alamat_supplier, nomor_hp) => {
+    $.ajax({
+      method: "PUT",
+      url: `http://localhost:3001/supplier/${id_supplier}`,
+      dataType: "json",
+      headers: {
+        json: true
+      },
+      data: { nama_supplier, alamat_supplier, nomor_hp }
+    }).done(function (response) {
+      readData()
+      $('#id_supplieredit').val('')
+      $("#form-edit").trigger("reset");
+    }).fail(function (err) {
+      alert('gagal pake jquery save edit')
+    })
+  }
+
+  const editData = (id) => {
+    $.ajax({
+      method: "GET",
+      url: `http://localhost:3001/supplier/${id}`,
+      dataType: "json",
+      headers: {
+        json: true
+      }
+    }).done(function (data) {
+      console.log(data)
+      $('#id_supplieredit').val(data[0].id_supplier)
+      $('#nama_supplieredit').val(data[0].nama)
+      $('#alamat_supplieredit').val(data[0].alamat)
+      $('#nomor_hpedit').val(data[0].telp)
+    }).fail(function (err) {
+      alert('gagal pake jquery')
+    })
+  }
+
+  const deleteData = (id) => {
+    $.ajax({
+      method: "DELETE",
+      url: `http://localhost:3001/supplier/${id}`,
+      dataType: "json",
+      headers: {
+        json: true
+      }
+
+    }).done(function (response) {
+      readData()
+    }).fail(function (err) {
+      alert('gagal pake jquery')
+    })
+  }
+
+  $(document).ready(function () {
+    readData()
+
+    $('#form-tambah').submit(function (event) {
+      event.preventDefault();
+      const id_supplier = $('#id_supplier').val()
+      const nomor_hp = $('#nomor_hp').val()
+      const nama_supplier = $('#nama_supplier').val()
+      const alamat_supplier = $('#alamat_supplier').val()
+      saveData(id_supplier ,nomor_hp, nama_supplier, alamat_supplier)
+    })
+
+    $('#form-edit').submit(function (event) {
+      event.preventDefault();
+      const id_supplier = $('#id_supplieredit').val()
+      const nama_supplier = $('#nama_supplieredit').val()
+      const alamat_supplier = $('#alamat_supplieredit').val()
+      const nomor_hp = $('#nomor_hpedit').val()
+      saveEdit(id_supplier, nama_supplier, alamat_supplier, nomor_hp)
+    })
+
+    $('table tbody').on('click', '.btn-icon-text', function () {
+      const id = $(this).attr('id_data')
+      editData(id)
+
+    })
+
+    $('table tbody').on('click', '.btn-icon-delete', function () {
+      const id = $(this).attr('id_data')
+      deleteData(id)
+    })
+
+    $('#reset-form-tambah').click(function () {
+      $("#form-tambah").trigger("reset");
+      readData()
+    })
+
+    $('#reset-form-edit').click(function () {
+      $("#form-edit").trigger("reset");
+      readData()
+    })
+
+
+  })
+</script>
 
 </html>

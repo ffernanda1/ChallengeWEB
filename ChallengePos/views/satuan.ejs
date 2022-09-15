@@ -48,7 +48,7 @@
                                     <textarea class="form-control" id="keterangan_satuan" rows="4"></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                <button class="btn btn-dark">Cancel</button>
+                                <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
                             </form>
                         </div>
                     </div>
@@ -59,10 +59,7 @@
                         <div class="card-body">
                             <h4 class="card-title">Edit Satuan</h4>
                             <form class="forms-sample" id="form-edit">
-                                <div class="form-group">
-                                    <label for="id_satuan">ID Satuan</label>
-                                    <input type="text" class="form-control" id="id_satuanedit">
-                                </div>
+                                    <input type="hidden" class="form-control" id="id_satuanedit">
                                 <div class="form-group">
                                     <label for="nama_satuan">Nama satuan</label>
                                     <input type="text" class="form-control" id="nama_satuanedit">
@@ -72,7 +69,7 @@
                                     <textarea class="form-control" id="keteranganedit" rows="4"></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                <button class="btn btn-dark">Cancel</button>
+                                <button type="button" id="reset-form-edit" class="btn btn-dark">Cancel</button>
                             </form>
                         </div>
                     </div>
@@ -197,6 +194,7 @@
                 json: true
             }
         }).done(function (data) {
+            console.log(data)
             $('#id_satuanedit').val(data[0].id_satuan)
             $('#nama_satuanedit').val(data[0].nama_satuan)
             $('#keteranganedit').val(data[0].keterangan)
