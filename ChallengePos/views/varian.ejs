@@ -2,138 +2,131 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Soppeng Admin</title>
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="../../public/assets/vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="../../public/assets/vendors/css/vendor.bundle.base.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="../../public/assets/vendors/select2/select2.min.css">
-    <link rel="stylesheet" href="../../public/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
-    <link rel="stylesheet" href="../../public/assets/css/style.css">
-    <!-- End layout styles -->
-    <link rel="shortcut icon" href="../../public/assets/images/favicon.png" />
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Soppeng Admin</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../../public/assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../public/assets/vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="../../public/assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="../../public/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <!-- endinject -->
+  <!-- Layout styles -->
+  <link rel="stylesheet" href="../../public/assets/css/style.css">
+  <!-- End layout styles -->
+  <link rel="shortcut icon" href="../../public/assets/images/favicon.png" />
 </head>
 
 <body>
-    <!-- form -->
-    <div class="col-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Variasi Barang</h4>
-                <form class="forms-sample">
-                    <div class="form-group">
-                        <label for="id_varian">ID Varian</label>
-                        <input type="text" class="form-control" id="id_varian" placeholder="id_varian">
-                    </div>
-                    <div class="form-group">
-                        <label for="nama_varian">Nama Varian</label>
-                        <input type="text" class="form-control" id="nama_varian" placeholder="Name">
-                    </div>
-                    <div class="form-group">
-                        <label for="nama_varian">Harga Varian</label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text bg-primary text-white">Rp</span>
-                          </div>
-                          <input type="text" class="form-control" aria-label="Amount">
-                          <div class="input-group-append">
-                            <span class="input-group-text">.00</span>
-                          </div>
-                        </div>
-                      </div>
-                    <div class="form-group">
-                        <label for="stok_varian">Stok Varian</label>
-                        <input type="number" class="form-control" id="stok_varian" placeholder="Stok Varian">
-                    </div>
-                    <div class="form-group">
-                        <label>Gambar Varian</label>
-                        <input type="file" name="img[]" class="file-upload-default">
-                        <div class="input-group col-xs-12">
-                            <input type="text" class="form-control file-upload-info" disabled
-                                placeholder="Upload Image">
-                            <span class="input-group-append">
-                                <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_gudang">ID Gudang</label>
-                        <select class="form-control" id="id_gudang">
-                            <option>G001</option>
-                            <option>G002</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_barang">ID Barang</label>
-                        <select class="form-control" id="id_barang">
-                            <option>B001</option>
-                            <option>B002</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_satuan">ID Satuan</label>
-                        <select class="form-control" id="id_satuan">
-                            <option>SA001</option>
-                            <option>SA002</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                    <button class="btn btn-dark">Cancel</button>
-                </form>
-            </div>
-        </div>
-    </div>
 
-    <!-- table -->
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Daftar Varian</h4>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th> Gambar Varian</th>
-                            <th> ID Varian </th>
-                            <th> Nama Varian</th>
-                            <th> Harga Varian</th>
-                            <th> Stok Varian</th>
-                            <th> ID Gudang</th>
-                            <th> ID Barang</th>
-                            <th> ID Satuan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td> V001</td>
-                            <td> Nike Zero 01</td>
-                            <td> 900.000</td>
-                            <td> 50</td>
-                            <th> G001</th>
-                            <th> B001</th>
-                            <th> SA01</th>
-                            <td>
-                                <button type="button" class="btn btn-success btn-sm btn-edit"
-                                    iddata="#"><i>Edit</i></button>
-                                <button type="button" class="btn btn-danger btn-sm btn-delete"
-                                    iddata="#"><i>Delete</i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+  <div class="container-scroller">
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <!-- form tambah -->
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Tambah Varian</h4>
+              <form class="forms-sample" id="form-tambah">
+                <div class="form-group">
+                  <label for="barcode">ID Varian</label>
+                  <input type="text" class="form-control" id="barcode" placeholder="ID varian">
+                </div>
+                <div class="form-group">
+                  <label for="nama_varian">Nama varian</label>
+                  <input type="text" class="form-control" id="nama_varian" placeholder="Nama varian">
+                </div>
+                <div class="form-group">
+                  <label for="stok">Stock</label>
+                  <input type="integer" class="form-control" id="stok" placeholder="Stok varian">
+                </div>
+                <div class="form-group">
+                  <label for="buy_price">Harga Beli</label>
+                  <input type="integer" class="form-control" id="buy_price" placeholder="Buy varian">
+                </div>
+                <div class="form-group">
+                  <label for="sell_price">Harga Jual</label>
+                  <input type="integer" class="form-control" id="sell_price" placeholder="Sell varian">
+                </div>
+                <div class="form-group">
+                  <label for="id_barang">ID Barang</label>
+                  <select class="form-control" id="id_barang">
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="upload">Gambar Varian</label>
+                  <input name="file" type="file" id="upload"/>
+                </div>
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
+              </form>
             </div>
+          </div>
         </div>
+        <!-- form edit -->
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Edit varian Barang</h4>
+              <form class="forms-sample" id="form-edit">
+                <input type="hidden" id="barcodeedit" name="id" value="">
+                <div class="form-group">
+                  <label for="nama_varian">Nama varian</label>
+                  <input type="text" class="form-control" id="nama_varianedit" placeholder="Nama varian">
+                </div>
+                <div class="form-group">
+                  <label for="nomor_hp">Nomor HP</label>
+                  <input type="tel" class="form-control" id="nomor_hpedit" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}"
+                    placeholder="08xx-xxxx-xxxx">
+                </div>
+                <div class="form-group">
+                  <label for="alamat_varian">Alamat varian</label>
+                  <textarea class="form-control" id="alamat_varianedit" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button type="button" id="reset-form-edit" class="btn btn-dark">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- table -->
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Daftar varian</h4>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th> Barcode </th>
+                    <th> ID Barang</th>
+                    <th> Nama Barang</th>
+                    <th> Nama Varian</th>
+                    <th> Stok</th>
+                    <th> Picture</th>
+                    <th> Harga Jual</th>
+                    <th> Harga Beli</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+
+
+
 </body>
 
 <script src="../../public/assets/vendors/js/vendor.bundle.base.js"></script>
@@ -154,5 +147,218 @@
 <script src="../../public/assets/js/typeahead.js"></script>
 <script src="../../public/assets/js/select2.js"></script>
 <!-- End custom js for this page -->
+
+<script>
+  const readData = () => {
+    $.ajax({
+      method: "GET",
+      url: "http://localhost:3001/varian",
+      dataType: "json",
+      headers: {
+        json: true
+      }
+    }).done(function (data) {
+
+      let html = ''
+      data.forEach((item, index) => {
+        html += `
+        <tr>
+          <td>${item.barcode}</td>
+          <td>${item.id_barang}</td>
+          <td>${item.nama_barang}</td>
+          <td>${item.varian_name}</td>
+          <td>${item.stok}</td>
+          <td> <img src="../public/images/${item.picture}" alt="image" /> </td>
+          <td>${item.buy_price}</td>
+          <td>${item.sell_price}</td>
+          <td>
+            <button type="button" class="btn btn-success btn-icon-text" id_data="${item.barcode}"><i class="mdi mdi-file-check btn-icon-append"></i></button>
+            <button type="button" class="btn btn-danger btn-icon-delete" id_data="${item.barcode}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
+          </td>
+        </tr>
+        `
+      });
+      $('table tbody').html(html)
+    }).fail(function (err) {
+      console.log("error", err)
+      alert('gagal jquery')
+    })
+  }
+
+  const readSelect = () => {
+    $.ajax({
+      method: "GET",
+      url: "http://localhost:3001/varian/select",
+      dataType: "json",
+      headers: {
+        json: true
+      }
+    }).done(function (rows) {
+
+      let html = ''
+      rows.forEach((item, index) => {
+        html += `
+        <option value="${item.id_barang}">
+         ${item.id_barang} - ${item.nama_barang}
+        </option>
+        `
+      });
+      $('form select').html(html)
+    }).fail(function (err) {
+      console.log("error", err)
+      alert('gagal jquery tambah salah satu ID')
+    })
+  }
+
+  const saveData = (barcode, nama_varian, stok, harga_beli, harga_jual, id_barang) => {
+    $.ajax({
+      method: "POST",
+      url: `http://localhost:3001/varian`,
+      dataType: "json",
+      headers: {
+        json: true
+      },
+      data: { barcode, nama_varian, stok, harga_beli, harga_jual, id_barang }
+    }).done(function (response) {
+      readData()
+      $("#form-tambah").trigger("reset");
+    }).fail(function (err) {
+      console.log(err, "gagal")
+      alert('gagal pake jquery save')
+    })
+  }
+  const saveEdit = (barcode, nama_varian, alamat_varian, nomor_hp) => {
+    $.ajax({
+      method: "PUT",
+      url: `http://localhost:3001/varian/${barcode}`,
+      dataType: "json",
+      headers: {
+        json: true
+      },
+      data: { nama_varian, alamat_varian, nomor_hp }
+    }).done(function (response) {
+      readData()
+      $('#barcodeedit').val('')
+      $("#form-edit").trigger("reset");
+    }).fail(function (err) {
+      alert('gagal pake jquery save edit')
+    })
+  }
+
+  const editData = (id) => {
+    $.ajax({
+      method: "GET",
+      url: `http://localhost:3001/varian/${id}`,
+      dataType: "json",
+      headers: {
+        json: true
+      }
+    }).done(function (data) {
+      console.log(data)
+      $('#barcodeedit').val(data[0].barcode)
+      $('#nama_varianedit').val(data[0].nama)
+      $('#alamat_varianedit').val(data[0].alamat)
+      $('#nomor_hpedit').val(data[0].telp)
+    }).fail(function (err) {
+      alert('gagal pake jquery')
+    })
+  }
+
+  const deleteData = (id) => {
+    $.ajax({
+      method: "DELETE",
+      url: `http://localhost:3001/varian/${id}`,
+      dataType: "json",
+      headers: {
+        json: true
+      }
+
+    }).done(function (response) {
+      readData()
+    }).fail(function (err) {
+      alert('gagal pake jquery')
+    })
+  }
+
+  $(document).ready(function () {
+    readData()
+    readSelect()
+
+    $('#form-tambah').submit(function (event) {
+      event.preventDefault();
+      const barcode = $('#barcode').val()
+      const nama_varian = $('#nama_varian').val()
+      const stok = $('#stok').val()
+      const harga_beli = $('#buy_price').val()
+      const harga_jual = $('#sell_price').val()
+      const id_barang = $('#id_barang').val()
+      saveData(barcode, nama_varian, stok, harga_beli, harga_jual, id_barang)
+    })
+
+    $('#form-edit').submit(function (event) {
+      event.preventDefault();
+      const barcode = $('#barcodeedit').val()
+      const nama_varian = $('#nama_varianedit').val()
+      const alamat_varian = $('#alamat_varianedit').val()
+      const nomor_hp = $('#nomor_hpedit').val()
+      saveEdit(barcode, nama_varian, alamat_varian, nomor_hp)
+    })
+
+    $('table tbody').on('click', '.btn-icon-text', function () {
+      const id = $(this).attr('id_data')
+      editData(id)
+
+    })
+
+    $('table tbody').on('click', '.btn-icon-delete', function () {
+      const id = $(this).attr('id_data')
+      deleteData(id)
+    })
+
+    $('#reset-form-tambah').click(function () {
+      $("#form-tambah").trigger("reset");
+      readData()
+    })
+
+    $('#reset-form-edit').click(function () {
+      $("#form-edit").trigger("reset");
+      readData()
+    })
+
+    $(':file').on('change', function () {
+      var file = this.files[0];
+
+      if (file.size > 1000024) {
+        alert('max upload size is 1k');
+      }
+
+      // Also see .name, .type
+    });
+
+    $('#form-tambah').submit(function () {
+      event.preventDefault()
+      $.ajax({
+        // Your server script to process the upload
+        url: `http://localhost:3001/varian`,
+        type: 'POST',
+
+        // Form data
+        data: new FormData($('#upload')[0]),
+
+        // Tell jQuery not to process data or worry about content-type
+        // You *must* include these options!
+        cache: false,
+        contentType: false,
+        processData: false,
+
+      }).then((data) => {
+        alert(picture)
+      }).fail((err) => {
+        console.log(err)
+      })
+    });
+
+  })
+</script>
 
 </html>
