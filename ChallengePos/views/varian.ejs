@@ -37,32 +37,32 @@
               <form class="forms-sample" id="form-tambah">
                 <div class="form-group">
                   <label for="barcode">ID Varian</label>
-                  <input type="text" class="form-control" id="barcode" placeholder="ID varian">
+                  <input type="text" class="form-control" name="barcode" id="barcode" placeholder="ID varian">
                 </div>
                 <div class="form-group">
                   <label for="nama_varian">Nama varian</label>
-                  <input type="text" class="form-control" id="nama_varian" placeholder="Nama varian">
+                  <input type="text" class="form-control" name="nama_varian" id="nama_varian" placeholder="Nama varian">
                 </div>
                 <div class="form-group">
                   <label for="stok">Stock</label>
-                  <input type="integer" class="form-control" id="stok" placeholder="Stok varian">
+                  <input type="integer" class="form-control" name="stok" id="stok" placeholder="Stok varian">
                 </div>
                 <div class="form-group">
                   <label for="buy_price">Harga Beli</label>
-                  <input type="integer" class="form-control" id="buy_price" placeholder="Buy varian">
+                  <input type="integer" class="form-control" name="buy_price" id="buy_price" placeholder="Buy varian">
                 </div>
                 <div class="form-group">
                   <label for="sell_price">Harga Jual</label>
-                  <input type="integer" class="form-control" id="sell_price" placeholder="Sell varian">
+                  <input type="integer" class="form-control" name="sell_price" id="sell_price" placeholder="Sell varian">
                 </div>
                 <div class="form-group">
                   <label for="id_barang">ID Barang</label>
-                  <select class="form-control" id="id_barang">
+                  <select class="form-control" name="id_barang" id="id_barang">
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="upload">Gambar Varian</label>
-                  <input name="file" type="file" id="upload"/>
+                  <label class="col-sm-12 " for="gambar" style="text-align: center; padding: 15px;"> Upload Image </label>
+                  <input type="file" name="gambar" id="gambar" class="form-control" required />
                 </div>
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
                 <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
@@ -76,22 +76,37 @@
             <div class="card-body">
               <h4 class="card-title">Edit varian Barang</h4>
               <form class="forms-sample" id="form-edit">
-                <input type="hidden" id="barcodeedit" name="id" value="">
                 <div class="form-group">
-                  <label for="nama_varian">Nama varian</label>
-                  <input type="text" class="form-control" id="nama_varianedit" placeholder="Nama varian">
+                  <label for="barcodeedit">ID Varian</label>
+                  <input type="text" class="form-control" name="barcodeedit" id="barcodeedit" >
                 </div>
                 <div class="form-group">
-                  <label for="nomor_hp">Nomor HP</label>
-                  <input type="tel" class="form-control" id="nomor_hpedit" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}"
-                    placeholder="08xx-xxxx-xxxx">
+                  <label for="nama_varianedit">Nama varian</label>
+                  <input type="text" class="form-control" name="nama_varianedit" id="nama_varianedit" >
                 </div>
                 <div class="form-group">
-                  <label for="alamat_varian">Alamat varian</label>
-                  <textarea class="form-control" id="alamat_varianedit" rows="4"></textarea>
+                  <label for="stokedit">Stock</label>
+                  <input type="integer" class="form-control" name="stokedit" id="stokedit" >
+                </div>
+                <div class="form-group">
+                  <label for="buy_priceedit">Harga Beli</label>
+                  <input type="integer" class="form-control" name="buy_priceedit" id="buy_priceedit" >
+                </div>
+                <div class="form-group">
+                  <label for="sell_priceedit">Harga Jual</label>
+                  <input type="integer" class="form-control" name="sell_priceedit" id="sell_priceedit" >
+                </div>
+                <div class="form-group">
+                  <label for="id_barangedit">ID Barang</label>
+                  <select class="form-control" name="id_barangedit" id="id_barangedit">
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-12 " for="gambaredit" style="text-align: center; padding: 15px;"> Upload Image </label>
+                  <input type="file" name="gambaredit" id="gambaredit" class="form-control" required />
                 </div>
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                <button type="button" id="reset-form-edit" class="btn btn-dark">Cancel</button>
+                <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
               </form>
             </div>
           </div>
@@ -161,6 +176,7 @@
 
       let html = ''
       data.forEach((item, index) => {
+        console.log(item.picture)
         html += `
         <tr>
           <td>${item.barcode}</td>
@@ -210,23 +226,6 @@
     })
   }
 
-  const saveData = (barcode, nama_varian, stok, harga_beli, harga_jual, id_barang) => {
-    $.ajax({
-      method: "POST",
-      url: `http://localhost:3001/varian`,
-      dataType: "json",
-      headers: {
-        json: true
-      },
-      data: { barcode, nama_varian, stok, harga_beli, harga_jual, id_barang }
-    }).done(function (response) {
-      readData()
-      $("#form-tambah").trigger("reset");
-    }).fail(function (err) {
-      console.log(err, "gagal")
-      alert('gagal pake jquery save')
-    })
-  }
   const saveEdit = (barcode, nama_varian, alamat_varian, nomor_hp) => {
     $.ajax({
       method: "PUT",
@@ -256,9 +255,12 @@
     }).done(function (data) {
       console.log(data)
       $('#barcodeedit').val(data[0].barcode)
-      $('#nama_varianedit').val(data[0].nama)
-      $('#alamat_varianedit').val(data[0].alamat)
-      $('#nomor_hpedit').val(data[0].telp)
+      $('#nama_varianedit').val(data[0].varian_name)
+      $('#stokedit').val(data[0].stok)
+      $('#gambaredit').val(data[0].picture)
+      $('#sell_priceedit').val(data[0].sell_price)
+      $('#buy_priceedit').val(data[0].buy_price)
+      $('#id_barangedit').val(data[0].id_barang)
     }).fail(function (err) {
       alert('gagal pake jquery')
     })
@@ -286,13 +288,52 @@
 
     $('#form-tambah').submit(function (event) {
       event.preventDefault();
-      const barcode = $('#barcode').val()
-      const nama_varian = $('#nama_varian').val()
-      const stok = $('#stok').val()
-      const harga_beli = $('#buy_price').val()
-      const harga_jual = $('#sell_price').val()
-      const id_barang = $('#id_barang').val()
-      saveData(barcode, nama_varian, stok, harga_beli, harga_jual, id_barang)
+      $.ajax({
+        url: `http://localhost:3001/varian`,
+        type: 'POST',
+        headers: {
+          json: true
+        },
+        // Form data
+        data: new FormData($('#form-tambah')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+
+      }).then((data) => {
+       
+        $("#form-tambah").trigger("reset");
+        alert('data berhasil tersave');
+        readData()
+      }).fail((err) => {
+        alert('data gagal tersave')
+        
+      })
+    })
+
+    $('#form-tambah').submit(function (event) {
+      event.preventDefault();
+      $.ajax({
+        url: `http://localhost:3001/varian`,
+        type: 'POST',
+        headers: {
+          json: true
+        },
+        // Form data
+        data: new FormData($('#form-tambah')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+
+      }).then((data) => {
+       
+        $("#form-tambah").trigger("reset");
+        alert('data berhasil tersave');
+        readData()
+      }).fail((err) => {
+        alert('data gagal tersave')
+        
+      })
     })
 
     $('#form-edit').submit(function (event) {
@@ -324,40 +365,6 @@
       $("#form-edit").trigger("reset");
       readData()
     })
-
-    $(':file').on('change', function () {
-      var file = this.files[0];
-
-      if (file.size > 1000024) {
-        alert('max upload size is 1k');
-      }
-
-      // Also see .name, .type
-    });
-
-    $('#form-tambah').submit(function () {
-      event.preventDefault()
-      $.ajax({
-        // Your server script to process the upload
-        url: `http://localhost:3001/varian`,
-        type: 'POST',
-
-        // Form data
-        data: new FormData($('#upload')[0]),
-
-        // Tell jQuery not to process data or worry about content-type
-        // You *must* include these options!
-        cache: false,
-        contentType: false,
-        processData: false,
-
-      }).then((data) => {
-        alert(picture)
-      }).fail((err) => {
-        console.log(err)
-      })
-    });
-
   })
 </script>
 

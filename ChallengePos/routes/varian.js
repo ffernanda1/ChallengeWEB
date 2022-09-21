@@ -86,7 +86,7 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE var.id_barang = $1`
 
   });
 
-  router.get('/info/:id', async function (req, res) {
+  router.get('/:id', async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -114,8 +114,10 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
 
   });
 
-  router.post('/', function (req, res) {
+  router.post('/', async function (req, res) {
+    // console.log(req.body, req.files)
     const { json } = req.headers
+    // console.log(req.headers)
 
     try {
       let picture;
@@ -125,32 +127,36 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
         return res.status(400).send('No files were uploaded.');
       }
       // The name of the input field (i.e. "pictures") is used to retrieve the uploaded file
-      picture = req.files.picture;
-      console.log(picture.name)
+      picture = req.files.gambar;
+
       const filename = `A${Date.now()}-${picture.name}`
       uploadPath = path.join(__dirname, '../public', 'images', filename);
+
       console.log(uploadPath)
       // Use the mv() method to place the file somewhere on your server
-      pictures.mv(uploadPath, function (err) {
-        if (err)
-          return res.status(500).send(err);
-        const { barcode, nama, stok, harga_jual, harga_beli, id_barang } = req.body
-        console.log(barcode, nama, stok, harga_jual, harga_beli, id_barang)
 
-        const { rows } = pool.query(`INSERT INTO varian(barcode, varian_name,
-                     stok, picture, sell_price,
-                      buy_price, id_barang) 
-     VALUES ($1, $2, $3, $4, $5, $6, $7)`, [barcode, nama, stok, filename, harga_jual, harga_beli, id_barang])
-        if (err) {
-          return console.error(err.message);
-        }
+      picture.mv(uploadPath, function (err) {
+        const { barcode, nama_varian, stok, buy_price, sell_price, id_barang } = req.body
+
+        const filename1 = `{${filename}}`
+
+        const rows = pool.query(`INSERT INTO varian( barcode, varian_name, stok, picture, sell_price, buy_price, id_barang) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+          [barcode, nama_varian, stok, filename1, sell_price, buy_price, id_barang])
+
         if (json == 'true') {
           res.status(200).json(rows)
         } else {
-          res.render(500).json({ message: 'syntax add error' })
+          res.render('varian')
         }
-      }
-      )
+
+        if (err)
+          return res.status(500).send(err);
+
+        if (err) {
+          return console.error(err.message);
+        }
+      })
+
     } catch (err) {
       res.status(500).json({ message: "gagal add data" })
     }
@@ -165,27 +171,27 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
                     var.varian_name,
                     bar.id_barang,
                     bar.nama_barang,
-                      var.stock,
+                      var.stok,
                       var.buy_price,
                       var.sell_price,
-                      var.pictures
+                      var.picture
 FROM varian var
 INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
       const { rows } = await pool.query(sql, [id])
       if (json == 'true') {
         res.status(200).json(rows)
       } else {
-        res.render('varian_edit')
+        res.render('varian')
       }
     } catch (e) {
       console.log(e)
-      res.status(500).json({ message: 'ini eror' })
+      res.status(500).json({ message: 'error get edit' })
     }
 
   });
 
 
-  router.post('/edit/:id', async function (req, res) {
+  router.put('/edit/:id', async function (req, res) {
     const { json } = req.headers
 
     const { custom_input, nama, stok, saved_pictures, harga_jual, harga_beli, barang } = req.body
