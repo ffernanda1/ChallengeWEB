@@ -22,6 +22,11 @@
   <link rel="stylesheet" href="../../public/assets/css/style.css">
   <!-- End layout styles -->
   <link rel="shortcut icon" href="../../public/assets/images/favicon.png" />
+  <style>
+    input {
+      cursor: not-allowded;
+    }
+  </style>
 </head>
 
 <body>
@@ -53,7 +58,8 @@
                 </div>
                 <div class="form-group">
                   <label for="sell_price">Harga Jual</label>
-                  <input type="integer" class="form-control" name="sell_price" id="sell_price" placeholder="Sell varian">
+                  <input type="integer" class="form-control" name="sell_price" id="sell_price"
+                    placeholder="Sell varian">
                 </div>
                 <div class="form-group">
                   <label for="id_barang">ID Barang</label>
@@ -61,7 +67,8 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-12 " for="gambar" style="text-align: center; padding: 15px;"> Upload Image </label>
+                  <label class="col-sm-12 " for="gambar" style="text-align: center; padding: 15px;"> Upload Image
+                  </label>
                   <input type="file" name="gambar" id="gambar" class="form-control" required />
                 </div>
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
@@ -78,23 +85,23 @@
               <form class="forms-sample" id="form-edit">
                 <div class="form-group">
                   <label for="barcodeedit">ID Varian</label>
-                  <input type="text" class="form-control" name="barcodeedit" id="barcodeedit" >
+                  <input type="text" readonly="readonly" class="form-control" name="barcodeedit" id="barcodeedit">
                 </div>
                 <div class="form-group">
                   <label for="nama_varianedit">Nama varian</label>
-                  <input type="text" class="form-control" name="nama_varianedit" id="nama_varianedit" >
+                  <input type="text" class="form-control" name="nama_varianedit" id="nama_varianedit">
                 </div>
                 <div class="form-group">
                   <label for="stokedit">Stock</label>
-                  <input type="integer" class="form-control" name="stokedit" id="stokedit" >
+                  <input type="integer" class="form-control" name="stokedit" id="stokedit">
                 </div>
                 <div class="form-group">
                   <label for="buy_priceedit">Harga Beli</label>
-                  <input type="integer" class="form-control" name="buy_priceedit" id="buy_priceedit" >
+                  <input type="integer" class="form-control" name="buy_priceedit" id="buy_priceedit">
                 </div>
                 <div class="form-group">
                   <label for="sell_priceedit">Harga Jual</label>
-                  <input type="integer" class="form-control" name="sell_priceedit" id="sell_priceedit" >
+                  <input type="integer" class="form-control" name="sell_priceedit" id="sell_priceedit">
                 </div>
                 <div class="form-group">
                   <label for="id_barangedit">ID Barang</label>
@@ -102,8 +109,9 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-12 " for="gambaredit" style="text-align: center; padding: 15px;"> Upload Image </label>
-                  <input type="file" name="gambaredit" id="gambaredit" class="form-control" required />
+                  <label class="col-sm-12 " for="gambaredit" style="text-align: center; padding: 15px;"> Upload Image
+                  </label>
+                  <input type="file" name="gambaredit" id="gambaredit" class="form-control" />
                 </div>
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
                 <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
@@ -184,7 +192,7 @@
           <td>${item.nama_barang}</td>
           <td>${item.varian_name}</td>
           <td>${item.stok}</td>
-          <td> <img src="../public/images/${item.picture}" alt="image" /> </td>
+          <td> <img src="../public/images/${item.picture}" id='img_${item.barcode}' alt="image" /> </td>
           <td>${item.buy_price}</td>
           <td>${item.sell_price}</td>
           <td>
@@ -226,24 +234,6 @@
     })
   }
 
-  const saveEdit = (barcode, nama_varian, alamat_varian, nomor_hp) => {
-    $.ajax({
-      method: "PUT",
-      url: `http://localhost:3001/varian/${barcode}`,
-      dataType: "json",
-      headers: {
-        json: true
-      },
-      data: { nama_varian, alamat_varian, nomor_hp }
-    }).done(function (response) {
-      readData()
-      $('#barcodeedit').val('')
-      $("#form-edit").trigger("reset");
-    }).fail(function (err) {
-      alert('gagal pake jquery save edit')
-    })
-  }
-
   const editData = (id) => {
     $.ajax({
       method: "GET",
@@ -253,32 +243,32 @@
         json: true
       }
     }).done(function (data) {
-      console.log(data)
+      console.log(data[0].sell_price)
       $('#barcodeedit').val(data[0].barcode)
       $('#nama_varianedit').val(data[0].varian_name)
       $('#stokedit').val(data[0].stok)
-      $('#gambaredit').val(data[0].picture)
-      $('#sell_priceedit').val(data[0].sell_price)
-      $('#buy_priceedit').val(data[0].buy_price)
+      $('#buy_priceedit').val(parseInt(data[0].buy_price))
+      $('#sell_priceedit').val(parseInt(data[0].sell_price))
       $('#id_barangedit').val(data[0].id_barang)
     }).fail(function (err) {
       alert('gagal pake jquery')
     })
   }
 
-  const deleteData = (id) => {
+  const deleteData = (id, imgSrc) => {
     $.ajax({
       method: "DELETE",
       url: `http://localhost:3001/varian/${id}`,
       dataType: "json",
       headers: {
         json: true
-      }
-
+      },
+      data: {path: imgSrc}
     }).done(function (response) {
+      
       readData()
     }).fail(function (err) {
-      alert('gagal pake jquery')
+      alert('gagal pake jquery delete')
     })
   }
 
@@ -301,48 +291,39 @@
         processData: false,
 
       }).then((data) => {
-       
+
         $("#form-tambah").trigger("reset");
         alert('data berhasil tersave');
         readData()
       }).fail((err) => {
         alert('data gagal tersave')
-        
-      })
-    })
 
-    $('#form-tambah').submit(function (event) {
-      event.preventDefault();
-      $.ajax({
-        url: `http://localhost:3001/varian`,
-        type: 'POST',
-        headers: {
-          json: true
-        },
-        // Form data
-        data: new FormData($('#form-tambah')[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-
-      }).then((data) => {
-       
-        $("#form-tambah").trigger("reset");
-        alert('data berhasil tersave');
-        readData()
-      }).fail((err) => {
-        alert('data gagal tersave')
-        
       })
     })
 
     $('#form-edit').submit(function (event) {
       event.preventDefault();
-      const barcode = $('#barcodeedit').val()
-      const nama_varian = $('#nama_varianedit').val()
-      const alamat_varian = $('#alamat_varianedit').val()
-      const nomor_hp = $('#nomor_hpedit').val()
-      saveEdit(barcode, nama_varian, alamat_varian, nomor_hp)
+      $.ajax({
+        url: `http://localhost:3001/varian/${barcode}`,
+        type: 'PUT',
+        headers: {
+          json: true
+        },
+        // Form data
+        data: new FormData($('#form-edit')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+
+      }).then((data) => {
+
+        $("#form-edit").trigger("reset");
+        alert('data edit berhasil tersave');
+        readData()
+      }).fail((err) => {
+        alert('data gagal tersave')
+
+      })
     })
 
     $('table tbody').on('click', '.btn-icon-text', function () {
@@ -353,7 +334,8 @@
 
     $('table tbody').on('click', '.btn-icon-delete', function () {
       const id = $(this).attr('id_data')
-      deleteData(id)
+      const imgSrc = $('#img_'+ id).attr('src')
+      deleteData(id, imgSrc)
     })
 
     $('#reset-form-tambah').click(function () {
@@ -365,6 +347,9 @@
       $("#form-edit").trigger("reset");
       readData()
     })
+
+
+
   })
 </script>
 
