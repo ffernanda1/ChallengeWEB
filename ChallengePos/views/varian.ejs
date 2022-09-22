@@ -69,7 +69,10 @@
                 <div class="form-group">
                   <label class="col-sm-12 " for="gambar" style="text-align: center; padding: 15px;"> Upload Image
                   </label>
-                  <input type="file" name="gambar" id="gambar" class="form-control" required />
+                  <img id="pict" alt="Your Picture" width="100" height="100" />
+                  <input type="file" name="gambar" id="gambar" class="form-control"
+                    onchange="document.getElementById('pict').src = window.URL.createObjectURL(this.files[0])"
+                    required />
                 </div>
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
                 <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
@@ -111,10 +114,12 @@
                 <div class="form-group">
                   <label class="col-sm-12 " for="gambaredit" style="text-align: center; padding: 15px;"> Upload Image
                   </label>
-                  <input type="file" name="gambaredit" id="gambaredit" class="form-control" />
+                  <img id="pictedit" alt="Your Picture" width="100" height="100" />
+                  <input type="file" name="gambaredit" id="gambaredit" class="form-control" 
+                  onchange="document.getElementById('pictedit').src = window.URL.createObjectURL(this.files[0])"/>
                 </div>
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                <button type="button" id="reset-form-tambah" class="btn btn-dark">Cancel</button>
+                <button type="button" id="reset-form-edit" class="btn btn-dark">Cancel</button>
               </form>
             </div>
           </div>
@@ -255,17 +260,16 @@
     })
   }
 
-  const deleteData = (id, imgSrc) => {
+  const deleteData = (id) => {
     $.ajax({
       method: "DELETE",
       url: `http://localhost:3001/varian/${id}`,
       dataType: "json",
       headers: {
         json: true
-      },
-      data: {path: imgSrc}
+      }
     }).done(function (response) {
-      
+
       readData()
     }).fail(function (err) {
       alert('gagal pake jquery delete')
@@ -334,8 +338,7 @@
 
     $('table tbody').on('click', '.btn-icon-delete', function () {
       const id = $(this).attr('id_data')
-      const imgSrc = $('#img_'+ id).attr('src')
-      deleteData(id, imgSrc)
+      deleteData(id)
     })
 
     $('#reset-form-tambah').click(function () {

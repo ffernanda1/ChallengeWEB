@@ -162,35 +162,6 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
     }
   })
 
-//   router.get('/edit/:id', async function (req, res) {
-//     const { json } = req.headers
-
-//     try {
-//       let id = req.params.id
-//       let sql = `SELECT var.barcode,
-//                     var.varian_name,
-//                     bar.id_barang,
-//                     bar.nama_barang,
-//                       var.stok,
-//                       var.buy_price,
-//                       var.sell_price,
-//                       var.picture
-// FROM varian var
-// INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
-//       const { rows } = await pool.query(sql, [id])
-//       if (json == 'true') {
-//         res.status(200).json(rows)
-//       } else {
-//         res.render('varian')
-//       }
-//     } catch (e) {
-//       console.log(e)
-//       res.status(500).json({ message: 'error get edit' })
-//     }
-
-//   });
-
-
   router.put('/:id', async function (req, res) {
     const { json } = req.headers
 
@@ -248,7 +219,7 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
     }
 
   })
-  router.get('/delete/:barcode', async function (req, res) {
+  router.delete('/:barcode', async function (req, res) {
     const { json } = req.headers
 
     try {
