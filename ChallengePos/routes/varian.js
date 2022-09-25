@@ -180,7 +180,7 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
                   sell_price = $3,
                    buy_price = $4,
                   id_barang = $5
-              WHERE barcode = $6`, [nama_varianedit, stokedit, buy_priceedit, sell_priceedit, id_barangedit, barcodeedit])
+              WHERE barcode = $6`, [nama_varianedit, stokedit, sell_priceedit, buy_priceedit,  id_barangedit, barcodeedit])
 
         if (json == 'true') {
           res.status(200).json(edit)
@@ -205,7 +205,7 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
                   sell_price = $4,
                    buy_price = $5,
                   id_barang = $6
-              WHERE barcode = $7`, [nama_varianedit, stokedit, filename1, buy_priceedit, sell_priceedit, id_barangedit, barcodeedit])
+              WHERE barcode = $7`, [nama_varianedit, stokedit, filename1, sell_priceedit, buy_priceedit,  id_barangedit, barcodeedit])
 
           if (json == 'true') {
             res.status(200).json(editfile)
