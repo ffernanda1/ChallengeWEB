@@ -50,7 +50,7 @@
                 <div class="modal-body">
                     <button type="button" class="btn btn-primary" id="generateinvoice">Generate Invoice</button>
                     <!-- form Pembelian -->
-                    <form class="form-pembelian">
+                    <form class="form-pembelian" id="form-pembelian">
                         <div class="form-group">
                             <label for="no_invoice">Invoice</label>
                             <input type="text" readonly="readonly" class="form-control" name="no_invoice"
@@ -94,7 +94,7 @@
                         </div>
                     </form>
                     <!-- form detail -->
-                    <form class="form-detail">
+                    <form class="form-detail" id="form-detail">
                         <div class="form-group" hidden>
                             <label for="no_invoice">Invoice</label>
                             <input type="text" readonly="readonly" class="form-control" name="no_invoice"
@@ -102,17 +102,18 @@
                         </div>
                         <div class="form-group">
                             <label for="barcode">Barcode</label>
-                            <select class="form-control" id="barcode" name="barcode">
+                            <select class="form-control" id="barcode" name="barcode" onchange="getAmount()">
 
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="qty">qty</label>
-                            <input type="text" class="form-control" name="qty" id="qty">
+                            <input type="text" class="form-control" name="qty" id="qty" onblur="getAmount()" value="0">
                         </div>
                         <div class="form-group">
                             <label for="harga_beli">Harga Beli</label>
-                            <input type="text" class="form-control" name="harga_beli" id="harga_beli">
+                            <input type="text" class="form-control" name="harga_beli" id="harga_beli"
+                                readonly='readonly' >
                         </div>
                         <div class="form-group">
                             <label for="total_harga">Total Harga Beli</label>
@@ -121,14 +122,14 @@
                                     <span class="input-group-text bg-primary text-white">Rp</span>
                                 </div>
                                 <input type="text" class="form-control" aria-label="amount" id="total_harga_detail"
-                                    name="total_harga_detail">
+                                    name="total_harga_detail" default="0">
                                 <div class="input-group-append">
                                     <span class="input-group-text">.00</span>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                            id="reset-form-detail">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="reset"
+                            id="reset-form-detail">Clear</button>
                         <button type="button" class="btn btn-primary" id="saveDetails">Save Details</button>
                     </form>
                     <table class="table table-striped">
@@ -227,9 +228,15 @@
                 },
                 data: params
             }).done(function (res) {
-                console.log(res)
-                let dwitel = res
+                let totalDetail = res
+                let harga = 0
+               
+                totalDetail.forEach((item) => {
+                    harga += parseInt(item.total_harga)
+                })
+                $('#total_harga').val(harga);
 
+                let dwitel = res
                 let dwi = ''
                 dwitel.forEach((item, index) => {
                     dwi += `
@@ -252,6 +259,7 @@
                 console.log("error", err)
                 alert('gagal jquery read detail pembelian modals')
             })
+
 
         } else {
             $.ajax({
@@ -354,6 +362,25 @@
 
     }
 
+    const varianValue = (barcode) => {
+
+        $.ajax({
+            method: "GET",
+            url: `http://localhost:3001/pembelian/varian/${barcode}`,
+            dataType: "json",
+            headers: {
+                json: true
+            },
+            data: params
+        }).done(function (pembelian) {
+            $("#harga_beli").val(pembelian[0].buy_price)
+
+        }).fail(function (err) {
+            console.log("error", err)
+            alert('gagal jquery read data varian harga')
+        })
+    }
+
     const saveData = (no_invoice, barcode, qty, harga_beli, total_harga_detail) => {
         $.ajax({
             method: "POST",
@@ -364,9 +391,12 @@
             },
             data: { no_invoice, barcode, qty, harga_beli, total_harga_detail }
         }).done(function (response) {
+
             let invo = response.rows[0].no_invoice
-            alert(`detail ${invo} added`)
-            $("#form-detail").trigger("reset");
+            let barcode = response.rows[0].barcode
+            
+            alert(`detail ${barcode} added`)
+            $("#form-detail").trigger('reset')
             readData(invo)
         }).fail(function (err) {
             alert('gagal pake jquery save details')
@@ -392,7 +422,7 @@
             alert('gagal pake jquery PUT', err)
         })
     }
-    
+
 
     const saveInvoice = () => {
         $.ajax({
@@ -432,21 +462,27 @@
     //     })
     // }
 
-    // const deleteData = (id) => {
-    //     $.ajax({
-    //         method: "DELETE",
-    //         url: `http://localhost:3001/pembelian/${id}`,
-    //         dataType: "json",
-    //         headers: {
-    //             json: true
-    //         }
-    //     }).done(function (response) {
+    const deleteData = (id) => {
+        $.ajax({
+            method: "DELETE",
+            url: `http://localhost:3001/pembelian/${id}`,
+            dataType: "json",
+            headers: {
+                json: true
+            }
+        }).done(function (response) {
+            readData()
+        }).fail(function (err) {
+            alert('gagal pake jquery delete')
+        })
+    }
 
-    //         readData()
-    //     }).fail(function (err) {
-    //         alert('gagal pake jquery delete')
-    //     })
-    // }
+    function getAmount() {
+        var qty = $('#qty').val();
+        var harga = $('#harga_beli').val();
+        $('#total_harga_detail').val(qty * harga);
+
+    }
 
     $(document).ready(function () {
         readData()
@@ -497,6 +533,10 @@
         $('#generateinvoice').click(function () {
             saveInvoice()
         })
+
+        $('#barcode').on('change', function () {
+            varianValue(this.value);
+        });
 
     })
 </script>

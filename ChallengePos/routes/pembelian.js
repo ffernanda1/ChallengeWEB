@@ -84,6 +84,28 @@ module.exports = function (pool) {
 
     });
 
+    router.get('/varian/:barcode', async function (req, res) {
+        const { json } = req.headers
+
+        try {
+            const barcode = req.params.barcode
+
+            const {rows} = await pool.query('SELECT buy_price FROM varian WHERE barcode = $1', [barcode]);
+
+            if (json == 'true') {
+                res.status(200).json(rows)
+
+            } else {
+                res.render('pembelian')
+            }
+
+        } catch (e) {
+            console.log('error', e)
+            res.status(500).json({ message: "error get pembelian" })
+        }
+
+    });
+
     router.post('/createinvoice', async function (req, res, next) {
         const {json} = req.headers
 
@@ -178,26 +200,38 @@ module.exports = function (pool) {
         }
     });
 
-    // router.get('/delete/:no_invoice', isLoggedIn, async function (req, res, next) {
-    //     try {
-    //         const { rows } = await pool.query('DELETE FROM pembelian WHERE no_invoice = $1', [req.params.no_invoice])
-    //         delPen = await pool.query('DELETE FROM pembelian_detail WHERE no_invoice = $1', [req.params.no_invoice])
-    //         res.redirect('/pembelian')
-    //     } catch (e) {
-    //         console.log(e)
-    //         res.render(e)
-    //     }
-    // })
+    router.delete('/:no_invoice', async function (req, res) {
+        const { json } = req.headers
+        try {
+            delPen = await pool.query('DELETE FROM detail_pembelian WHERE no_invoice = $1', [req.params.no_invoice])
+            const { rows } = await pool.query('DELETE FROM pembelian WHERE no_invoice = $1', [req.params.no_invoice])
+            
+            if (json == 'true') {
+                 res.status(200).json(rows)
+            } else {
+                res.render('pembelian')
+            }  
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({message: 'gagal delete'})
+        }
+    })
 
-    // router.delete('/delitem/:id_detail_beli', isLoggedIn, async function (req, res, next) {
-    //     try {
-    //         delDetail = await pool.query('DELETE FROM pembelian_detail WHERE id_detail_beli = $1', [req.params.id_detail_beli])
-    //         const { rows } = await pool.query('SELECT SUM(total_harga_detail_beli)  AS total FROM pembelian_detail WHERE no_invoice = $1', [req.body.no_invoice])
-    //         res.json(rows)
-    //     } catch (e) {
-    //         console.log(e)
-    //     }
-    // })
+    router.delete('/:id_detail', async function (req, res) {
+        const { json } = req.headers
+        try {
+            
+            delDetail = await pool.query('DELETE FROM detail_pembelian WHERE id_detail = $1', [req.params.id_detail])
+            const { rows } = await pool.query('SELECT SUM(total_harga)  AS total FROM detail_pembelian WHERE no_invoice = $1', [req.body.no_invoice])
+            if (json == 'true') {
+                 res.status(200).json(rows)
+            } 
+        } catch (e) {
+            res.send(e)
+        }
+
+    });
+
 
     return router;
 }
