@@ -22,54 +22,133 @@
     <link rel="stylesheet" href="../public/assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../public/assets/images/favicon.png" />
+
+
 </head>
 
 <body>
-    <!-- form -->
-    <div class="col-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Pembelian Barang</h4>
-                <form class="forms-sample">
-                    <div class="form-group">
-                        <label for="id_barang">ID Supplier</label>
-                        <select class="form-control" id="id_supplier">
 
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_gudang">ID Gudang</label>
-                        <select class="form-control" id="id_gudang">
+    <!-- The Modal detail-->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalpembelian" id="modalbutton">
+        Tambah Pembelian
+    </button>
+    <!-- Modal content -->
 
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_barang">ID Operator</label>
-                        <select class="form-control" id="id_supplier">
+    <!-- Modal -->
+    <div class="modal fade" id="modalpembelian" tabindex="-1" role="dialog" aria-labelledby="modalpembelian"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- modal header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Pembelian</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- modal body -->
+                <div class="modal-body">
+                    <button type="button" class="btn btn-primary" id="generateinvoice">Generate Invoice</button>
+                    <!-- form Pembelian -->
+                    <form class="form-pembelian">
+                        <div class="form-group">
+                            <label for="no_invoice">Invoice</label>
+                            <input type="text" readonly="readonly" class="form-control" name="no_invoice"
+                                id="no_invoice">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_barang">ID Supplier</label>
+                            <select class="form-control" id="id_supplier" name="id_supplier">
 
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="tanggal_pembelian">Tanggal Pembelian</label>
-                        <input type="date" class="form-control" id="tanggal_pembelian">
-                    </div>
-                    <div class="form-group">
-                        <label for="total_harga">Total Harga Beli</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-primary text-white">Rp</span>
-                            </div>
-                            <input type="text" class="form-control" aria-label="amount" id="total_harga">
-                            <div class="input-group-append">
-                                <span class="input-group-text">.00</span>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_gudang">ID Gudang</label>
+                            <select class="form-control" id="id_gudang" name="id_gudang">
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_barang">ID Operator</label>
+                            <select class="form-control" id="id_user" name="id_user">
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="total_harga">Total Harga Detail</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white">Rp</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="amount" id="total_harga"
+                                    name="total_harga">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">.00</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                    <button class="btn btn-dark">Cancel</button>
-                </form>
+                        <div class="modal-footer">
+                            <button hidden type="button" class="btn btn-secondary" data-dismiss="modal"
+                                id="close">Close</button>
+                            <button type="button" class="btn btn-primary" id="savePembelian">Done</button>
+                        </div>
+                    </form>
+                    <!-- form detail -->
+                    <form class="form-detail">
+                        <div class="form-group" hidden>
+                            <label for="no_invoice">Invoice</label>
+                            <input type="text" readonly="readonly" class="form-control" name="no_invoice"
+                                id="no_invoice">
+                        </div>
+                        <div class="form-group">
+                            <label for="barcode">Barcode</label>
+                            <select class="form-control" id="barcode" name="barcode">
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="qty">qty</label>
+                            <input type="text" class="form-control" name="qty" id="qty">
+                        </div>
+                        <div class="form-group">
+                            <label for="harga_beli">Harga Beli</label>
+                            <input type="text" class="form-control" name="harga_beli" id="harga_beli">
+                        </div>
+                        <div class="form-group">
+                            <label for="total_harga">Total Harga Beli</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white">Rp</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="amount" id="total_harga_detail"
+                                    name="total_harga_detail">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            id="reset-form-detail">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveDetails">Save Details</button>
+                    </form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> No.</th>
+                                <th> Barcode </th>
+                                <th> Qty</th>
+                                <th> Harga Beli</th>
+                                <th> Total Harga</th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="beli_detail">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- table -->
@@ -83,7 +162,7 @@
                             <th> No.</th>
                             <th> No.Invoice Pembelian</th>
                             <th> Tanggal Pembelian </th>
-                            <th> Total Harga Beli</th>
+                            <th> Total Harga Detail</th>
                             <th> ID Gudang</th>
                             <th> ID Supplier</th>
                             <th> ID Operator</th>
@@ -134,23 +213,64 @@
 
 
 <script>
-    const readData = () => {
-        $.ajax({
-            method: "GET",
-            url: "http://localhost:3001/pembelian",
-            dataType: "json",
-            headers: {
-                json: true
-            }
-        }).done(function (pembelian) {
-            let data1 = pembelian[0]
-            console.log(data1)
-            let html = ''
-            data1.forEach((item, index) => {
-                html += `
+
+    var params = {}
+
+    const readData = (invo) => {
+        if (invo) {
+            $.ajax({
+                method: "GET",
+                url: `http://localhost:3001/pembelian/details/${invo}`,
+                dataType: "json",
+                headers: {
+                    json: true
+                },
+                data: params
+            }).done(function (res) {
+                console.log(res)
+                let dwitel = res
+
+                let dwi = ''
+                dwitel.forEach((item, index) => {
+                    dwi += `
         <tr>
             <td>${index + 1}</td>
-            <td><a href="#">${item.no_invoice}</a></td>
+            <td>${item.barcode}</td>
+            <td>${item.qty}</td>
+            <td>${item.harga_beli}</td>
+            <td>${item.total_harga}</td>
+          <td>
+            <button type="button" class="btn btn-success btn-icon-text" id_data="${item.id_detail}"><i class="mdi mdi-file-check btn-icon-append"></i></button>
+            <button type="button" class="btn btn-danger btn-icon-delete" id_data="${item.id_detail}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
+          </td>
+        </tr>
+        `
+                });
+                $('#beli_detail').html(dwi)
+
+            }).fail(function (err) {
+                console.log("error", err)
+                alert('gagal jquery read detail pembelian modals')
+            })
+
+        } else {
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:3001/pembelian",
+                dataType: "json",
+                headers: {
+                    json: true
+                },
+                data: params
+            }).done(function (pembelian) {
+                let data1 = pembelian[0]
+
+                let html = ''
+                data1.forEach((item, index) => {
+                    html += `
+        <tr>
+            <td>${index + 1}</td>
+            <td><a href="#" class="link" id="invoice" datapage="${item.no_invoice}">${item.no_invoice}</a></td>
             <td>${item.tanggal}</td>
             <td>${item.total_harga}</td>
             <td>${item.id_supplier}</td>
@@ -162,14 +282,12 @@
           </td>
         </tr>
         `
-            });
-            
+                });
 
-            let data2 = pembelian[1]
-            console.log('data2', data2)
-            let detail = ''
-            data2.forEach((item, index) => {
-                detail += `
+                let data2 = pembelian[1]
+                let detail = ''
+                data2.forEach((item, index) => {
+                    detail += `
         <tr>
             <td>${item.id_detail}</td>
             <td>${item.no_invoice}</td>
@@ -179,182 +297,186 @@
             <td>${item.total_harga}</td>
         </tr>
         `
-            });
-            $('#detail_pembelian').html(detail)
-            $('#pembelian').html(html)
+                });
+
+                let data3 = pembelian[2]
+                let gudang = ''
+                data3.forEach((item, index) => {
+                    gudang += `
+        <option value="${item.id_gudang}">
+         ${item.id_gudang} - ${item.nama_gudang}
+        </option>
+        `
+                });
+
+                let data4 = pembelian[3]
+                let supplier = ''
+                data4.forEach((item, index) => {
+                    supplier += `
+        <option value="${item.id_supplier}">
+         ${item.id_supplier} - ${item.nama}
+        </option>
+        `
+                });
+
+                let data5 = pembelian[4]
+                let operator = ''
+                data5.forEach((item, index) => {
+                    operator += `
+        <option value="${item.user_id}">
+         ${item.user_id} - ${item.name}
+        </option>
+        `
+                });
+
+                let data6 = pembelian[5]
+                let varian = ''
+                data6.forEach((item, index) => {
+                    varian += `
+        <option value="${item.barcode}">
+         ${item.barcode} - ${item.varian_name}
+        </option>
+        `
+                });
+                $('#barcode').html(varian)
+                $('#id_user').html(operator)
+                $('#id_supplier').html(supplier)
+                $('#id_gudang').html(gudang)
+                $('#detail_pembelian').html(detail)
+                $('#pembelian').html(html)
 
 
-        }).fail(function (err) {
-            console.log("error", err)
-            alert('gagal jquery')
-        })
+            }).fail(function (err) {
+                console.log("error", err)
+                alert('gagal jquery read data')
+            })
+        }
+
     }
 
-    const saveData = (id_satuan, nama_satuan, keterangan) => {
+    const saveData = (no_invoice, barcode, qty, harga_beli, total_harga_detail) => {
         $.ajax({
             method: "POST",
-            url: `http://localhost:3001/satuan`,
+            url: `http://localhost:3001/pembelian/detail`,
             dataType: "json",
             headers: {
                 json: true
             },
-            data: { id_satuan, nama_satuan, keterangan }
+            data: { no_invoice, barcode, qty, harga_beli, total_harga_detail }
         }).done(function (response) {
+            let invo = response.rows[0].no_invoice
+            alert(`detail ${invo} added`)
+            $("#form-detail").trigger("reset");
+            readData(invo)
+        }).fail(function (err) {
+            alert('gagal pake jquery save details')
+        })
+    }
+    const saveBeli = (no_invoice, id_supplier, id_gudang, id_operator, total_harga) => {
+        $.ajax({
+            method: "PUT",
+            url: `http://localhost:3001/pembelian/pbelian/${no_invoice}`,
+            dataType: "json",
+            headers: {
+                json: true
+            },
+            data: { id_supplier, id_gudang, id_operator, total_harga }
+        }).done(function (response) {
+            alert('pembelian telah tertambah')
+            $("#form-pembelian").trigger("reset");
+            $("#form-detail").trigger("reset");
+            $("#close").trigger("click")
             readData()
-            $("#form-tambah").trigger("reset");
+        }).fail(function (err) {
+            console.log(err)
+            alert('gagal pake jquery PUT', err)
+        })
+    }
+    
+
+    const saveInvoice = () => {
+        $.ajax({
+            method: "POST",
+            url: `http://localhost:3001/pembelian/createinvoice`,
+            dataType: "json",
+            headers: {
+                json: true
+            },
+            data: {}
+        }).done(function (response) {
+            $("#no_invoice").val(response[0].no_invoice)
+            alert('Invoice Created')
         }).fail(function (err) {
             alert('gagal pake jquery save')
         })
     }
 
-    const readSelectOperator = () => {
-        $.ajax({
-            method: "GET",
-            url: "http://localhost:3001/pembelian/operator",
-            dataType: "json",
-            headers: {
-                json: true
-            }
-        }).done(function (rows) {
+    // const editData = (id) => {
+    //     $.ajax({
+    //         method: "GET",
+    //         url: `http://localhost:3001/pembelian/${id}`,
+    //         dataType: "json",
+    //         headers: {
+    //             json: true
+    //         }
+    //     }).done(function (data) {
+    //         console.log(data[0].sell_price)
+    //         $('#barcodeedit').val(data[0].barcode)
+    //         $('#nama_varianedit').val(data[0].varian_name)
+    //         $('#stokedit').val(data[0].stok)
+    //         $('#buy_priceedit').val(parseInt(data[0].buy_price))
+    //         $('#sell_priceedit').val(parseInt(data[0].sell_price))
+    //         $('#id_barangedit').val(data[0].id_barang)
+    //     }).fail(function (err) {
+    //         alert('gagal pake jquery')
+    //     })
+    // }
 
-            let html = ''
-            rows.forEach((item, index) => {
-                html += `
-        <option value="${item.id_barang}">
-         ${item.id_barang} - ${item.nama_barang}
-        </option>
-        `
-            });
-            $('form select').html(html)
-        }).fail(function (err) {
-            console.log("error", err)
-            alert('gagal jquery tambah salah satu ID')
-        })
-    }
+    // const deleteData = (id) => {
+    //     $.ajax({
+    //         method: "DELETE",
+    //         url: `http://localhost:3001/pembelian/${id}`,
+    //         dataType: "json",
+    //         headers: {
+    //             json: true
+    //         }
+    //     }).done(function (response) {
 
-    const readSelectGudang = () => {
-        $.ajax({
-            method: "GET",
-            url: "http://localhost:3001/pembelian/gudang",
-            dataType: "json",
-            headers: {
-                json: true
-            }
-        }).done(function (rows) {
-
-            let html = ''
-            rows.forEach((item, index) => {
-                html += `
-        <option value="${item.id_barang}">
-         ${item.id_barang} - ${item.nama_barang}
-        </option>
-        `
-            });
-            $('form select').html(html)
-        }).fail(function (err) {
-            console.log("error", err)
-            alert('gagal jquery tambah salah satu ID')
-        })
-    }
-
-    const readSelectSupplier = () => {
-        $.ajax({
-            method: "GET",
-            url: "http://localhost:3001/pembelian/supplier",
-            dataType: "json",
-            headers: {
-                json: true
-            }
-        }).done(function (rows) {
-
-            let html = ''
-            rows.forEach((item, index) => {
-                html += `
-        <option value="${item.id_barang}">
-         ${item.id_barang} - ${item.nama_barang}
-        </option>
-        `
-            });
-            $('form select').html(html)
-        }).fail(function (err) {
-            console.log("error", err)
-            alert('gagal jquery tambah salah satu ID')
-        })
-    }
-
-    const editData = (id) => {
-        $.ajax({
-            method: "GET",
-            url: `http://localhost:3001/pembelian/${id}`,
-            dataType: "json",
-            headers: {
-                json: true
-            }
-        }).done(function (data) {
-            console.log(data[0].sell_price)
-            $('#barcodeedit').val(data[0].barcode)
-            $('#nama_varianedit').val(data[0].varian_name)
-            $('#stokedit').val(data[0].stok)
-            $('#buy_priceedit').val(parseInt(data[0].buy_price))
-            $('#sell_priceedit').val(parseInt(data[0].sell_price))
-            $('#id_barangedit').val(data[0].id_barang)
-        }).fail(function (err) {
-            alert('gagal pake jquery')
-        })
-    }
-
-    const deleteData = (id) => {
-        $.ajax({
-            method: "DELETE",
-            url: `http://localhost:3001/pembelian/${id}`,
-            dataType: "json",
-            headers: {
-                json: true
-            }
-        }).done(function (response) {
-
-            readData()
-        }).fail(function (err) {
-            alert('gagal pake jquery delete')
-        })
-    }
+    //         readData()
+    //     }).fail(function (err) {
+    //         alert('gagal pake jquery delete')
+    //     })
+    // }
 
     $(document).ready(function () {
         readData()
         // readSelect()
 
-        $('#form-tambah').submit(function (event) {
+        $('#saveDetails').click(function (event) {
             event.preventDefault();
-            const id_satuan = $('#id_satuan').val()
-            const nama_satuan = $('#nama_satuan').val()
-            const keterangan = $('#keterangan_satuan').val()
-            saveData(id_satuan, nama_satuan, keterangan)
+            const no_invoice = $('#no_invoice').val()
+            const barcode = $('#barcode').val()
+            const qty = $('#qty').val()
+            const harga_beli = $('#harga_beli').val()
+            const total_harga_detail = $('#total_harga_detail').val()
+            saveData(no_invoice, barcode, qty, harga_beli, total_harga_detail)
 
         })
 
-        $('#form-edit').submit(function (event) {
+        $('#savePembelian').click(function (event) {
             event.preventDefault();
-            $.ajax({
-                url: `http://localhost:3001/pembelian/${barcode}`,
-                type: 'PUT',
-                headers: {
-                    json: true
-                },
-                // Form data
-                data: new FormData($('#form-edit')[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
+            const no_invoice = $('#no_invoice').val()
+            const id_supplier = $('#id_supplier').val()
+            const id_gudang = $('#id_gudang').val()
+            const id_operator = $('#id_user').val()
+            const total_harga = $('#total_harga').val()
+            saveBeli(no_invoice, id_supplier, id_gudang, id_operator, total_harga)
+        })
 
-            }).then((data) => {
-
-                $("#form-edit").trigger("reset");
-                alert('data edit berhasil tersave');
-                readData()
-            }).fail((err) => {
-                alert('data gagal tersave')
-
-            })
+        $('table tbody').on('click', '.link', function (event) {
+            event.preventDefault()
+            params = { ...params, noInvoice: $(this).attr('datapage') }
+            readData()
         })
 
         $('table tbody').on('click', '.btn-icon-text', function () {
@@ -368,19 +490,16 @@
             deleteData(id)
         })
 
-        $('#reset-form-tambah').click(function () {
-            $("#form-tambah").trigger("reset");
-            readData()
+        $('#reset-form-detail').click(function () {
+            $("#form-detail").trigger("reset");
         })
 
-        $('#reset-form-edit').click(function () {
-            $("#form-edit").trigger("reset");
-            readData()
+        $('#generateinvoice').click(function () {
+            saveInvoice()
         })
-
-
 
     })
 </script>
+
 
 </html>

@@ -60,7 +60,7 @@ app.use('/supplier', supplierRouter);
 app.use('/varian', varianRouter);
 app.use('/gudang', gudangRouter);
 app.use('/pembelian', pembelianRouter);
-// app.use('/pembelian_router', pembeliandetailRouter);
+
 // app.use('/penjualan', penjualanRouter);
 // app.use('/penjualan_router', penjualandetailRouter);
 

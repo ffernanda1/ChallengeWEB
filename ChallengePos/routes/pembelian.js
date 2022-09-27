@@ -13,7 +13,7 @@ module.exports = function (pool) {
 
         try {
             const { invoice, searchdate1, searchdate2 } = req.query
-            console.log('invoice1 ', invoice)
+
             let search = []
             let count = 1
             let syntax = []
@@ -57,22 +57,19 @@ module.exports = function (pool) {
 
             }
 
-            
-            //console.log('rows',rows)
             // const noInvoice = req.query.noInvoice ? req.query.noInvoice : rows.length > 0 ? rows[0].no_invoice : '';
-            // const gudang = await pool.query('SELECT * FROM gudang_barang ORDER BY id_gudang');
-            // const supplier = await pool.query('SELECT * FROM supplier ORDER BY id_supplier');
-            // const operator = await pool.query('SELECT user_id, name, role FROM user ORDER BY user_id');
+            const gudang = await pool.query('SELECT * FROM gudang_barang ORDER BY id_gudang');
+            const supplier = await pool.query('SELECT * FROM supplier ORDER BY id_supplier');
+            const varian = await pool.query('SELECT * FROM varian ORDER BY barcode');
+            const operator = await pool.query('SELECT * FROM pengguna ORDER BY user_id');
             const { rows } = await pool.query(sql, search);
             const noInvoice = req.query.noInvoice ? req.query.noInvoice : '';
-            console.log('req invoice2', req.query)
-
+     
             const detail = await pool.query('SELECT bd.* FROM detail_pembelian as bd WHERE bd.no_invoice = $1 ORDER BY bd.id_detail', [noInvoice]);
-  
-            const array = [rows, detail.rows]
-            console.log('noINvo3', noInvoice)
+            const array = [rows, detail.rows, gudang.rows, supplier.rows, operator.rows, varian.rows]
 
-         
+
+
             if (json == 'true') {
                 res.status(200).json(array)
 
@@ -82,60 +79,70 @@ module.exports = function (pool) {
 
         } catch (e) {
             console.log('error', e)
-            res.status(500).json({message: "error get pembelian"})
+            res.status(500).json({ message: "error get pembelian" })
         }
 
     });
 
-    // router.get('/detail', async function (req, res) {
-    //     const { json } = req.headers
+    router.post('/createinvoice', async function (req, res, next) {
+        const {json} = req.headers
 
-    //     try {
-    
-    //         //console.log('rows',rows)
-    //         //const noInvoice = req.query.noInvoice ? req.query.noInvoice : rows.length > 0 ? rows[0].no_invoice : '';
-    //         const noInvoice = req.query.noInvoice ? req.query.noInvoice : '';
-    //         console.log(req.query.noInvoice, 'noInvoice')
-    //         const detail = await pool.query('SELECT bd.* FROM detail_pembelian as bd WHERE bd.no_invoice = $1 ORDER BY bd.id_detail', [noInvoice]);
+        try {
 
-    //         const details = detail.rows
-    //         console.log(details)
-    //         if (json == 'true') {
-    //             res.json(details)
-    //         } else {
-    //             res.render('pembelian')
-    //         }
+            const { rows } = await pool.query('INSERT INTO pembelian(total_harga) VALUES(0) returning *')
+            console.log(rows)
+            if(json == 'true') {
+                res.status(200).json(rows)
+            } else {
+                res.render('pembelian')
+            }
+       
+        } catch (e) {
+            res.status(500).json({message: 'gagal create invoice'})
+        }
+    });
+
+    //v
+    router.post('/detail', async function (req, res) {
+        const {json} = req.headers
+        try {
+            const {total_harga_detail ,id_supplier, id_gudang, id_operator, no_invoice, barcode, qty, harga_beli} = req.body
+
+            const sqldetail = 'INSERT INTO detail_pembelian(no_invoice, barcode, qty, harga_beli, total_harga)VALUES ($1, $2, $3, $4, $5) returning *'
+            const sqld =  await pool.query(sqldetail, [no_invoice, barcode, qty, harga_beli, total_harga_detail])
+            if(json == 'true') {
+                res.status(200).json(sqld)
+            } else {
+                res.render('pembelian')
+            }
             
+        } catch (e) {
+            res.status(500).json({message: 'add pembelian detail gagal'})
+        }
+    });
 
-    //     } catch (e) {
-    //         console.log('error', e)
-    //         res.status(500).json({message: "error get pembelian detail"})
-    //     }
+    router.put('/pbelian/:no_invoice', async function (req, res) {
+        const {json} = req.headers
+        try {
+            const {total_harga ,id_supplier, id_gudang, id_operator, barcode, qty, harga_beli} = req.body
+            const no_invoice = req.params.no_invoice
+        
+            const sqlpembelian = 'UPDATE pembelian SET total_harga = $1, id_supplier = $2, id_gudang = $3, id_operator = $4 WHERE no_invoice = $5 returning *'
+            const sql = await pool.query(sqlpembelian, [total_harga, id_supplier, id_gudang, id_operator, no_invoice])
 
-    // });
-    // //v
-    // router.post('/', async function (req, res, next) {
-    //     try {
-    //         const { rows } = await pool.query('INSERT INTO pembelian(total_harga_beli) VALUES(0) returning *')
-    //         //res.redirect(`/pembelian/show/${rows[0].no_invoice}`)
-    //         res.json(rows[0])
-    //     } catch (e) {
-    //         res.send(e)
-    //     }
-    // });
-    // //v
+            if(json == 'true') {
+                res.status(200).json(sql)
+            } else {
+                res.render('pembelian')
+            }
+            
+        } catch (e) {
+            res.status(500).json({message: 'put pembelian gagal '})
+        }
+    });
 
     // //v
-    // router.get('/barang/:id_varian', isLoggedIn, async function (req, res, next) {
-    //     try {
-    //         const { rows } = await pool.query('SELECT var.*, b.id_barang, b.nama_barang FROM varian as var LEFT JOIN barang as b ON var.id_barang = b.id_barang WHERE id_varian = $1 ORDER BY var.id_barang', [req.params.id_varian])
-    //         res.json(rows[0])
-    //     } catch (e) {
-    //         res.send(e)
-    //     }
-    // });
-    // //v
-    // router.post('/additem', async function (req, res, next) {
+    // router.post('/additem', async function (req, res) {
     //     try {
     //         detail = await pool.query('INSERT INTO pembelian_detail(no_invoice, id_varian, qty)VALUES ($1, $2, $3) returning *', [req.body.no_invoice, req.body.id_varian, req.body.qty])
     //         const { rows } = await pool.query('SELECT * FROM pembelian WHERE no_invoice = $1', [req.body.no_invoice])
@@ -144,8 +151,8 @@ module.exports = function (pool) {
     //         res.send(e)
     //     }
     // });
-    // //v
-    // router.post('/upjual', async function (req, res, next) {
+    // // //v
+    // router.post('/upjual', async function (req, res) {
     //     try {
     //         udatejual = await pool.query('UPDATE pembelian SET id_gudang = $1, id_supplier = $2, total_harga_beli = $3, total_bayar_beli = $4, kembalian_beli = $5 WHERE no_invoice = $6 returning *', [req.body.gudangb, req.body.supplierb, req.body.total_harga_beli, req.body.total_bayar_beli, req.body.kembalian, req.body.no_invoice])
     //         const { rows } = await pool.query('SELECT * FROM pembelian WHERE no_invoice = $1', [req.body.no_invoice])
@@ -155,14 +162,21 @@ module.exports = function (pool) {
     //     }
     // });
     // //v
-    // router.get('/details/:no_invoice', isLoggedIn, async function (req, res, next) {
-    //     try {
-    //         const { rows } = await pool.query('SELECT dp.*, v.nama_varian FROM pembelian_detail as dp LEFT JOIN varian as v ON dp.id_varian = v.id_varian WHERE dp.no_invoice = $1 ORDER BY dp.id_detail_beli', [req.params.no_invoice]);
-    //         res.json(rows)
-    //     } catch (e) {
-    //         res.send(e)
-    //     }
-    // });
+    router.get('/details/:no_invoice', async function (req, res) {
+        const {json} = req.headers
+        try {
+            const isiDetail = 'SELECT dp.*, v.varian_name FROM detail_pembelian as dp LEFT JOIN varian as v ON dp.barcode = v.barcode WHERE dp.no_invoice = $1 ORDER BY dp.id_detail'
+            const { rows } = await pool.query(isiDetail, [req.params.no_invoice]);
+            
+            if(json == 'true') {
+                res.status(200).json(rows)
+            } else {
+                res.render('pembelian')
+            }
+        } catch (e) {
+            res.status(500).json({message: 'get details dengan noinvoice gagal'})
+        }
+    });
 
     // router.get('/delete/:no_invoice', isLoggedIn, async function (req, res, next) {
     //     try {
