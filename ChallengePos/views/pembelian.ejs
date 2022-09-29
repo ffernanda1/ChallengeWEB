@@ -54,7 +54,7 @@
                         <div class="form-group">
                             <label for="no_invoice">Invoice</label>
                             <input type="text" readonly="readonly" class="form-control" name="no_invoice"
-                                id="no_invoice">
+                                id="no_invoice" required>
                         </div>
                         <div class="form-group">
                             <label for="id_barang">ID Supplier</label>
@@ -81,7 +81,7 @@
                                     <span class="input-group-text bg-primary text-white">Rp</span>
                                 </div>
                                 <input type="text" class="form-control" aria-label="amount" id="total_harga"
-                                    name="total_harga">
+                                    name="total_harga" value="0">
                                 <div class="input-group-append">
                                     <span class="input-group-text">.00</span>
                                 </div>
@@ -95,10 +95,10 @@
                     </form>
                     <!-- form detail -->
                     <form class="form-detail" id="form-detail">
-                        <div class="form-group" hidden>
+                        <div class="form-group">
                             <label for="no_invoice">Invoice</label>
-                            <input type="text" readonly="readonly" class="form-control" name="no_invoice"
-                                id="no_invoice">
+                            <input type="text" readonly="readonly" class="form-control" name="no_invoice1"
+                                id="no_invoice1" required>
                         </div>
                         <div class="form-group">
                             <label for="barcode">Barcode</label>
@@ -108,12 +108,13 @@
                         </div>
                         <div class="form-group">
                             <label for="qty">qty</label>
-                            <input type="text" class="form-control" name="qty" id="qty" onblur="getAmount()" value="0">
+                            <input type="text" class="form-control" name="qty" id="qty" onblur="getAmount()"
+                                placeholder="0">
                         </div>
                         <div class="form-group">
                             <label for="harga_beli">Harga Beli</label>
                             <input type="text" class="form-control" name="harga_beli" id="harga_beli"
-                                readonly='readonly' >
+                                readonly='readonly'>
                         </div>
                         <div class="form-group">
                             <label for="total_harga">Total Harga Beli</label>
@@ -122,7 +123,7 @@
                                     <span class="input-group-text bg-primary text-white">Rp</span>
                                 </div>
                                 <input type="text" class="form-control" aria-label="amount" id="total_harga_detail"
-                                    name="total_harga_detail" default="0">
+                                    name="total_harga_detail" value="0">
                                 <div class="input-group-append">
                                     <span class="input-group-text">.00</span>
                                 </div>
@@ -164,8 +165,8 @@
                             <th> No.Invoice Pembelian</th>
                             <th> Tanggal Pembelian </th>
                             <th> Total Harga Detail</th>
-                            <th> ID Gudang</th>
                             <th> ID Supplier</th>
+                            <th> ID Gudang</th>
                             <th> ID Operator</th>
                         </tr>
                     </thead>
@@ -230,7 +231,7 @@
             }).done(function (res) {
                 let totalDetail = res
                 let harga = 0
-               
+
                 totalDetail.forEach((item) => {
                     harga += parseInt(item.total_harga)
                 })
@@ -247,8 +248,7 @@
             <td>${item.harga_beli}</td>
             <td>${item.total_harga}</td>
           <td>
-            <button type="button" class="btn btn-success btn-icon-text" id_data="${item.id_detail}"><i class="mdi mdi-file-check btn-icon-append"></i></button>
-            <button type="button" class="btn btn-danger btn-icon-delete" id_data="${item.id_detail}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
+            <button type="button" class="btn btn-danger btn-icon-delete" detail_data="${item.id_detail}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
           </td>
         </tr>
         `
@@ -303,12 +303,15 @@
             <td>${item.qty}</td>
             <td>${item.harga_beli}</td>
             <td>${item.total_harga}</td>
+            <td>
+            <button type="button" class="btn btn-danger btn-icon-delete" id_detal="${item.id_detail}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
+          </td>
         </tr>
         `
                 });
 
                 let data3 = pembelian[2]
-                let gudang = ''
+                let gudang = '<option disabled selected>Select Gudang</option>'
                 data3.forEach((item, index) => {
                     gudang += `
         <option value="${item.id_gudang}">
@@ -318,7 +321,7 @@
                 });
 
                 let data4 = pembelian[3]
-                let supplier = ''
+                let supplier = '<option disabled selected>Select Supplier</option>'
                 data4.forEach((item, index) => {
                     supplier += `
         <option value="${item.id_supplier}">
@@ -328,7 +331,8 @@
                 });
 
                 let data5 = pembelian[4]
-                let operator = ''
+
+                let operator = '<option disabled selected>Select User</option>'
                 data5.forEach((item, index) => {
                     operator += `
         <option value="${item.user_id}">
@@ -338,7 +342,7 @@
                 });
 
                 let data6 = pembelian[5]
-                let varian = ''
+                let varian = '<option disabled selected>Select Barcode</option>'
                 data6.forEach((item, index) => {
                     varian += `
         <option value="${item.barcode}">
@@ -394,7 +398,7 @@
 
             let invo = response.rows[0].no_invoice
             let barcode = response.rows[0].barcode
-            
+
             alert(`detail ${barcode} added`)
             $("#form-detail").trigger('reset')
             readData(invo)
@@ -435,32 +439,12 @@
             data: {}
         }).done(function (response) {
             $("#no_invoice").val(response[0].no_invoice)
+            $('#no_invoice1').val(response[0].no_invoice)
             alert('Invoice Created')
         }).fail(function (err) {
             alert('gagal pake jquery save')
         })
     }
-
-    // const editData = (id) => {
-    //     $.ajax({
-    //         method: "GET",
-    //         url: `http://localhost:3001/pembelian/${id}`,
-    //         dataType: "json",
-    //         headers: {
-    //             json: true
-    //         }
-    //     }).done(function (data) {
-    //         console.log(data[0].sell_price)
-    //         $('#barcodeedit').val(data[0].barcode)
-    //         $('#nama_varianedit').val(data[0].varian_name)
-    //         $('#stokedit').val(data[0].stok)
-    //         $('#buy_priceedit').val(parseInt(data[0].buy_price))
-    //         $('#sell_priceedit').val(parseInt(data[0].sell_price))
-    //         $('#id_barangedit').val(data[0].id_barang)
-    //     }).fail(function (err) {
-    //         alert('gagal pake jquery')
-    //     })
-    // }
 
     const deleteData = (id) => {
         $.ajax({
@@ -471,7 +455,47 @@
                 json: true
             }
         }).done(function (response) {
+            console.log('salah posisi delte')
             readData()
+        }).fail(function (err) {
+            alert('gagal pake jquery delete')
+        })
+
+    }
+
+    // const deleteDetal = (id) => {
+    //     $.ajax({
+    //         method: "DELETE",
+    //         url: `http://localhost:3001/pembelian/ditel/${id}`,
+    //         dataType: "json",
+    //         headers: {
+    //             json: true
+    //         }
+    //     }).done(function (response) {
+
+    //     }).fail(function (err) {
+    //         alert('gagal pake jquery delete')
+    //     })
+    // }
+
+    const deleteDetails = (id_detail) => {
+        $.ajax({
+            method: "DELETE",
+            url: `http://localhost:3001/pembelian/ditel/${id_detail}`,
+            dataType: "json",
+            headers: {
+                json: true
+            }
+        }).done(function (response) {
+            const invo = $('#no_invoice').val()
+            if (invo) {
+                alert('details deleted')
+                readData(invo)
+            } else {
+                alert('details deleted')
+                readData()
+            }
+
         }).fail(function (err) {
             alert('gagal pake jquery delete')
         })
@@ -515,28 +539,46 @@
             readData()
         })
 
-        $('table tbody').on('click', '.btn-icon-text', function () {
-            const id = $(this).attr('id_data')
-            editData(id)
-
+        $('table tbody').on('click', '.btn-icon-text', function (event) {
+            event.preventDefault()
+            alert('Anda mencoba melakukan manipulasi data, silahkan menghadap ke boss anda!')
+            readData()
         })
 
-        $('table tbody').on('click', '.btn-icon-delete', function () {
+        $('#pembelian').on('click', '.btn-icon-delete', function (event) {
+            event.preventDefault()
             const id = $(this).attr('id_data')
             deleteData(id)
         })
 
-        $('#reset-form-detail').click(function () {
+        $('#detail_pembelian').on('click', '.btn-icon-delete', function (event) {
+            event.preventDefault()
+            const id = $(this).attr('id_detal')
+            deleteDetails(id)
+        })
+
+        $('#beli_detail').on('click', '.btn-icon-delete', function (event) {
+            event.preventDefault()
+            const detail_id = $(this).attr('detail_data')
+            deleteDetails(detail_id)
+        })
+
+        $('#reset-form-detail').click(function (event) {
+            event.preventDefault()
             $("#form-detail").trigger("reset");
         })
 
-        $('#generateinvoice').click(function () {
+        $('#generateinvoice').click(function (event) {
+            event.preventDefault()
             saveInvoice()
         })
 
-        $('#barcode').on('change', function () {
+        $('#barcode').on('blur', function (event) {
+            event.preventDefault()
             varianValue(this.value);
         });
+
+
 
     })
 </script>

@@ -129,7 +129,7 @@ module.exports = function (pool) {
         const {json} = req.headers
         try {
             const {total_harga_detail ,id_supplier, id_gudang, id_operator, no_invoice, barcode, qty, harga_beli} = req.body
-
+            console.log()
             const sqldetail = 'INSERT INTO detail_pembelian(no_invoice, barcode, qty, harga_beli, total_harga)VALUES ($1, $2, $3, $4, $5) returning *'
             const sqld =  await pool.query(sqldetail, [no_invoice, barcode, qty, harga_beli, total_harga_detail])
             if(json == 'true') {
@@ -148,7 +148,7 @@ module.exports = function (pool) {
         try {
             const {total_harga ,id_supplier, id_gudang, id_operator, barcode, qty, harga_beli} = req.body
             const no_invoice = req.params.no_invoice
-        
+        console.log(id_supplier)
             const sqlpembelian = 'UPDATE pembelian SET total_harga = $1, id_supplier = $2, id_gudang = $3, id_operator = $4 WHERE no_invoice = $5 returning *'
             const sql = await pool.query(sqlpembelian, [total_harga, id_supplier, id_gudang, id_operator, no_invoice])
 
@@ -163,27 +163,6 @@ module.exports = function (pool) {
         }
     });
 
-    // //v
-    // router.post('/additem', async function (req, res) {
-    //     try {
-    //         detail = await pool.query('INSERT INTO pembelian_detail(no_invoice, id_varian, qty)VALUES ($1, $2, $3) returning *', [req.body.no_invoice, req.body.id_varian, req.body.qty])
-    //         const { rows } = await pool.query('SELECT * FROM pembelian WHERE no_invoice = $1', [req.body.no_invoice])
-    //         res.json(rows[0])
-    //     } catch (e) {
-    //         res.send(e)
-    //     }
-    // });
-    // // //v
-    // router.post('/upjual', async function (req, res) {
-    //     try {
-    //         udatejual = await pool.query('UPDATE pembelian SET id_gudang = $1, id_supplier = $2, total_harga_beli = $3, total_bayar_beli = $4, kembalian_beli = $5 WHERE no_invoice = $6 returning *', [req.body.gudangb, req.body.supplierb, req.body.total_harga_beli, req.body.total_bayar_beli, req.body.kembalian, req.body.no_invoice])
-    //         const { rows } = await pool.query('SELECT * FROM pembelian WHERE no_invoice = $1', [req.body.no_invoice])
-    //         res.json(rows)
-    //     } catch (e) {
-    //         res.send(e)
-    //     }
-    // });
-    // //v
     router.get('/details/:no_invoice', async function (req, res) {
         const {json} = req.headers
         try {
@@ -217,17 +196,39 @@ module.exports = function (pool) {
         }
     })
 
-    router.delete('/:id_detail', async function (req, res) {
+    // router.delete('/diteel/:id_detail', async function (req, res) {
+    //     const { json } = req.headers
+    //     try {
+            
+    //         const delDetail = await pool.query('DELETE FROM detail_pembelian WHERE id_detail = $1', [req.params.id_detail])
+
+    //         if (json == 'true') {
+    //              res.status(200).json(delDetail)
+    //         } else {
+    //             res.render('pembelian')
+    //         }
+    //     } catch (e) {
+    //         res.status(500).json({message: 'gagal delete detail'})
+    //     }
+
+    // });
+
+    router.delete('/ditel/:id_detail', async function (req, res) {
         const { json } = req.headers
         try {
             
-            delDetail = await pool.query('DELETE FROM detail_pembelian WHERE id_detail = $1', [req.params.id_detail])
+            const delDetail = await pool.query('DELETE FROM detail_pembelian WHERE id_detail = $1', [req.params.id_detail])
             const { rows } = await pool.query('SELECT SUM(total_harga)  AS total FROM detail_pembelian WHERE no_invoice = $1', [req.body.no_invoice])
+
+            const array = [delDetail, rows]
+
             if (json == 'true') {
-                 res.status(200).json(rows)
-            } 
+                 res.status(200).json(array)
+            } else {
+                res.render('pembelian')
+            }
         } catch (e) {
-            res.send(e)
+            res.status(500).json({message: 'gagal delete detail'})
         }
 
     });
