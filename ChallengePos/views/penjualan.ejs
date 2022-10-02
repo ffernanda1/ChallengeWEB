@@ -42,7 +42,7 @@
                             <label for="invoice" class="col-sm-2 col-form-label">Invoice</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text bg-primary text-white">INV-</span>
+                                    <span class="input-group-text bg-primary text-black">INV-</span>
                                 </div>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="searchinvoice" name="searchinvoice">
@@ -74,22 +74,21 @@
             </form>
         </div>
     </div>
-    
 
     <!-- The Modal detail-->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalpembelian" id="modalbutton">
-        Tambah Pembelian
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalpenjualan" id="modalbutton">
+        Kasir
     </button>
     <!-- Modal content -->
 
     <!-- Modal -->
-    <div class="modal fade" id="modalpembelian" tabindex="-1" role="dialog" aria-labelledby="modalpembelian"
+    <div class="modal fade" id="modalpenjualan" tabindex="-1" role="dialog" aria-labelledby="modalpenjualan"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <!-- modal header -->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Pembelian</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Penjualan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -97,39 +96,54 @@
                 <!-- modal body -->
                 <div class="modal-body">
                     <button type="button" class="btn btn-primary" id="generateinvoice">Generate Invoice</button>
-                    <!-- form Pembelian -->
-                    <form class="form-pembelian" id="form-pembelian">
+                    <!-- form penjualan -->
+                    <form class="form-penjualan" id="form-penjualan">
                         <div class="form-group">
                             <label for="no_invoice">Invoice</label>
-                            <input type="text" readonly="readonly" class="form-control" name="no_invoice"
+                            <input type="text" readonly="readonly" class="form-control text-black" name="no_invoice"
                                 id="no_invoice" required>
                         </div>
                         <div class="form-group">
-                            <label for="id_barang">ID Supplier</label>
-                            <select class="form-control" id="id_supplier" name="id_supplier">
+                            <label for="tanggal">Tanggal</label>
+                            <input type="datetime" readonly="readonly" class="form-control text-black" name="tanggal"
+                                id="tanggal" required>
 
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="id_gudang">ID Gudang</label>
-                            <select class="form-control" id="id_gudang" name="id_gudang">
-
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="id_barang">ID Operator</label>
-                            <select class="form-control" id="id_user" name="id_user">
-
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="total_harga">Total Harga Detail</label>
+                            <label for="total_harga">Total Harga</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text bg-primary text-white">Rp</span>
+                                    <span class="input-group-text bg-primary text-black">Rp</span>
                                 </div>
-                                <input type="text" class="form-control" aria-label="amount" id="total_harga"
-                                    name="total_harga" value="0" readonly="readonly">
+                                <input type="text" class="form-control text-black" aria-label="amount" id="total_harga"
+                                    name="total_harga" value="0" onblur="getKembalian()" readonly="readonly">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="total_bayar">Total Bayar</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-black">Rp</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="amount" id="total_bayar"
+                                    name="total_bayar" placeholder="0" onblur="getKembalian()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="kembalian">Kembalian</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-black">Rp</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="amount" id="kembalian"
+                                    name="kembalian" value="0" readonly="readonly">
                                 <div class="input-group-append">
                                     <span class="input-group-text">.00</span>
                                 </div>
@@ -138,7 +152,7 @@
                         <div class="modal-footer">
                             <button hidden type="button" class="btn btn-secondary" data-dismiss="modal"
                                 id="close">Close</button>
-                            <button type="button" class="btn btn-primary" id="savePembelian">Done</button>
+                            <button type="button" class="btn btn-primary" id="savepenjualan">Done</button>
                         </div>
                     </form>
                     <!-- form detail -->
@@ -160,18 +174,18 @@
                                 placeholder="0">
                         </div>
                         <div class="form-group">
-                            <label for="harga_beli">Harga Beli</label>
-                            <input type="text" class="form-control" name="harga_beli" id="harga_beli"
+                            <label for="harga_jual">Harga Jual</label>
+                            <input type="text" class="form-control" name="harga_jual" id="harga_jual"
                                 readonly='readonly'>
                         </div>
                         <div class="form-group">
-                            <label for="total_harga">Total Harga Beli</label>
+                            <label for="total_harga">Total Harga</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text bg-primary text-white">Rp</span>
+                                    <span class="input-group-text bg-primary text-black">Rp</span>
                                 </div>
                                 <input type="text" class="form-control" aria-label="amount" id="total_harga_detail"
-                                    name="total_harga_detail" value="0" readonly="readonly">
+                                    name="total_harga_detail" value="0">
                                 <div class="input-group-append">
                                     <span class="input-group-text">.00</span>
                                 </div>
@@ -187,12 +201,12 @@
                                 <th> No.</th>
                                 <th> Barcode </th>
                                 <th> Qty</th>
-                                <th> Harga Beli</th>
+                                <th> Harga Jual</th>
                                 <th> Total Harga</th>
-                                <th> Action</th>
+                                <th> Cancel</th>
                             </tr>
                         </thead>
-                        <tbody id="beli_detail">
+                        <tbody id="jual_detail">
                         </tbody>
                     </table>
                 </div>
@@ -204,21 +218,20 @@
     <!-- table -->
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Daftar Pembelian Barang</h4>
+            <h4 class="card-title">Daftar Penjualan Barang</h4>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th> No.</th>
-                            <th> No.Invoice Pembelian</th>
-                            <th> Tanggal Pembelian </th>
-                            <th> Total Harga Detail</th>
-                            <th> ID Supplier</th>
-                            <th> ID Gudang</th>
-                            <th> ID Operator</th>
+                            <th> No.Invoice Penjualan</th>
+                            <th> Tanggal penjualan </th>
+                            <th> Total Harga Jualan</th>
+                            <th> Total Bayar</th>
+                            <th> Kembalian</th>
                         </tr>
                     </thead>
-                    <tbody id="pembelian">
+                    <tbody id="penjualan">
                     </tbody>
                 </table>
                 <div class="card-body">
@@ -226,14 +239,14 @@
                         <thead>
                             <tr>
                                 <th> No Detail</th>
-                                <th> No.Invoice Pembelian</th>
+                                <th> No.Invoice Penjualan</th>
                                 <th> Barcode </th>
                                 <th> Qty</th>
-                                <th> Harga Beli</th>
+                                <th> Harga Jual</th>
                                 <th> Total Harga</th>
                             </tr>
                         </thead>
-                        <tbody id="detail_pembelian">
+                        <tbody id="detail_penjualan">
                         </tbody>
                     </table>
                 </div>
@@ -270,7 +283,7 @@
         if (invo) {
             $.ajax({
                 method: "GET",
-                url: `http://localhost:3001/pembelian/details/${invo}`,
+                url: `http://localhost:3001/penjualan/details/${invo}`,
                 dataType: "json",
                 headers: {
                     json: true
@@ -294,7 +307,7 @@
             <td>${index + 1}</td>
             <td>${item.barcode}</td>
             <td>${item.qty}</td>
-            <td>${item.harga_beli}</td>
+            <td>${item.harga_jual}</td>
             <td>${item.total_harga}</td>
           <td>
             <button type="button" class="btn btn-danger btn-icon-delete" detail_data="${item.id_detail}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
@@ -302,26 +315,26 @@
         </tr>
         `
                 });
-                $('#beli_detail').html(dwi)
+                $('#jual_detail').html(dwi)
 
             }).fail(function (err) {
                 console.log("error", err)
-                alert('gagal jquery read detail pembelian modals')
+                alert('gagal jquery read detail penjualan modals')
             })
 
 
         } else {
             $.ajax({
                 method: "GET",
-                url: "http://localhost:3001/pembelian",
+                url: "http://localhost:3001/penjualan",
                 dataType: "json",
                 headers: {
                     json: true
                 },
                 data: params
-            }).done(function (pembelian) {
+            }).done(function (penjualan) {
                 params = { ...params }
-                let data1 = pembelian[0]
+                let data1 = penjualan[0]
 
                 let html = ''
                 data1.forEach((item, index) => {
@@ -331,9 +344,8 @@
             <td><a href="#" class="link" id="invoice" datapage="${item.no_invoice}">${item.no_invoice}</a></td>
             <td>${item.tanggal}</td>
             <td>${item.total_harga}</td>
-            <td>${item.id_supplier}</td>
-            <td>${item.id_gudang}</td>
-            <td>${item.id_operator}</td>
+            <td>${item.total_bayar}</td>
+            <td>${item.kembalian}</td>
           <td>
             <button type="button" class="btn btn-danger btn-icon-delete" id_data="${item.no_invoice}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
           </td>
@@ -341,7 +353,7 @@
         `
                 });
 
-                let data2 = pembelian[1]
+                let data2 = penjualan[1]
                 let detail = ''
                 data2.forEach((item, index) => {
                     detail += `
@@ -350,7 +362,7 @@
             <td>${item.no_invoice}</td>
             <td>${item.barcode}</td>
             <td>${item.qty}</td>
-            <td>${item.harga_beli}</td>
+            <td>${item.harga_jual}</td>
             <td>${item.total_harga}</td>
             <td>
             <button type="button" class="btn btn-danger btn-icon-delete" id_detal="${item.id_detail}"><i class="mdi mdi-trash-can btn-icon-append"></i></button>
@@ -359,38 +371,7 @@
         `
                 });
 
-                let data3 = pembelian[2]
-                let gudang = '<option disabled selected>Select Gudang</option>'
-                data3.forEach((item, index) => {
-                    gudang += `
-        <option value="${item.id_gudang}">
-         ${item.id_gudang} - ${item.nama_gudang}
-        </option>
-        `
-                });
-
-                let data4 = pembelian[3]
-                let supplier = '<option disabled selected>Select Supplier</option>'
-                data4.forEach((item, index) => {
-                    supplier += `
-        <option value="${item.id_supplier}">
-         ${item.id_supplier} - ${item.nama}
-        </option>
-        `
-                });
-
-                let data5 = pembelian[4]
-
-                let operator = '<option disabled selected>Select User</option>'
-                data5.forEach((item, index) => {
-                    operator += `
-        <option value="${item.user_id}">
-         ${item.user_id} - ${item.name}
-        </option>
-        `
-                });
-
-                let data6 = pembelian[5]
+                let data6 = penjualan[2]
                 let varian = '<option disabled selected>Select Barcode</option>'
                 data6.forEach((item, index) => {
                     varian += `
@@ -400,11 +381,8 @@
         `
                 });
                 $('#barcode').html(varian)
-                $('#id_user').html(operator)
-                $('#id_supplier').html(supplier)
-                $('#id_gudang').html(gudang)
-                $('#detail_pembelian').html(detail)
-                $('#pembelian').html(html)
+                $('#detail_penjualan').html(detail)
+                $('#penjualan').html(html)
 
 
             }).fail(function (err) {
@@ -419,14 +397,14 @@
 
         $.ajax({
             method: "GET",
-            url: `http://localhost:3001/pembelian/varian/${barcode}`,
+            url: `http://localhost:3001/penjualan/varian/${barcode}`,
             dataType: "json",
             headers: {
                 json: true
             },
             data: params
-        }).done(function (pembelian) {
-            $("#harga_beli").val(pembelian[0].buy_price)
+        }).done(function (penjualan) {
+            $("#harga_jual").val(penjualan[0].sell_price)
 
         }).fail(function (err) {
             console.log("error", err)
@@ -434,15 +412,15 @@
         })
     }
 
-    const saveData = (no_invoice, barcode, qty, harga_beli, total_harga_detail) => {
+    const saveData = (no_invoice, barcode, qty, harga_jual, total_harga_detail) => {
         $.ajax({
             method: "POST",
-            url: `http://localhost:3001/pembelian/detail`,
+            url: `http://localhost:3001/penjualan/detail`,
             dataType: "json",
             headers: {
                 json: true
             },
-            data: { no_invoice, barcode, qty, harga_beli, total_harga_detail }
+            data: { no_invoice, barcode, qty, harga_jual, total_harga_detail }
         }).done(function (response) {
 
             let invo = response.rows[0].no_invoice
@@ -455,18 +433,18 @@
             alert('gagal pake jquery save details')
         })
     }
-    const saveBeli = (no_invoice, id_supplier, id_gudang, id_operator, total_harga) => {
+    const saveJual = (no_invoice, total_harga, total_bayar, kembalian) => {
         $.ajax({
             method: "PUT",
-            url: `http://localhost:3001/pembelian/pbelian/${no_invoice}`,
+            url: `http://localhost:3001/penjualan/pjualan/${no_invoice}`,
             dataType: "json",
             headers: {
                 json: true
             },
-            data: { id_supplier, id_gudang, id_operator, total_harga }
+            data: { no_invoice, total_harga, total_bayar, kembalian }
         }).done(function (response) {
-            alert('pembelian telah tertambah')
-            $("#form-pembelian").trigger("reset");
+            alert('penjualan telah tertambah')
+            $("#form-penjualan").trigger("reset");
             $("#form-detail").trigger("reset");
             $("#close").trigger("click")
             readData()
@@ -480,7 +458,7 @@
     const saveInvoice = () => {
         $.ajax({
             method: "POST",
-            url: `http://localhost:3001/pembelian/createinvoice`,
+            url: `http://localhost:3001/penjualan/createinvoice`,
             dataType: "json",
             headers: {
                 json: true
@@ -488,6 +466,7 @@
             data: {}
         }).done(function (response) {
             $("#no_invoice").val(response[0].no_invoice)
+            $("#tanggal").val(response[0].tanggal)
             $('#no_invoice1').val(response[0].no_invoice)
             alert('Invoice Created')
         }).fail(function (err) {
@@ -498,13 +477,13 @@
     const deleteData = (id) => {
         $.ajax({
             method: "DELETE",
-            url: `http://localhost:3001/pembelian/${id}`,
+            url: `http://localhost:3001/penjualan/${id}`,
             dataType: "json",
             headers: {
                 json: true
             }
         }).done(function (response) {
-            console.log('salah posisi delte')
+            
             readData()
         }).fail(function (err) {
             alert('gagal pake jquery delete')
@@ -515,7 +494,7 @@
     const deleteDetails = (id_detail) => {
         $.ajax({
             method: "DELETE",
-            url: `http://localhost:3001/pembelian/ditel/${id_detail}`,
+            url: `http://localhost:3001/penjualan/ditel/${id_detail}`,
             dataType: "json",
             headers: {
                 json: true
@@ -537,9 +516,14 @@
 
     function getAmount() {
         var qty = $('#qty').val();
-        var harga = $('#harga_beli').val();
+        var harga = $('#harga_jual').val();
         $('#total_harga_detail').val(qty * harga);
+    }
 
+    function getKembalian() {
+        var harga = $('#total_harga').val();
+        var bayar = $('#total_bayar').val();
+        $('#kembalian').val(bayar - harga);
     }
 
     $(document).ready(function () {
@@ -560,20 +544,19 @@
             const no_invoice = $('#no_invoice').val()
             const barcode = $('#barcode').val()
             const qty = $('#qty').val()
-            const harga_beli = $('#harga_beli').val()
+            const harga_jual = $('#harga_jual').val()
             const total_harga_detail = $('#total_harga_detail').val()
-            saveData(no_invoice, barcode, qty, harga_beli, total_harga_detail)
+            saveData(no_invoice, barcode, qty, harga_jual, total_harga_detail)
 
         })
 
-        $('#savePembelian').click(function (event) {
+        $('#savepenjualan').click(function (event) {
             event.preventDefault();
             const no_invoice = $('#no_invoice').val()
-            const id_supplier = $('#id_supplier').val()
-            const id_gudang = $('#id_gudang').val()
-            const id_operator = $('#id_user').val()
             const total_harga = $('#total_harga').val()
-            saveBeli(no_invoice, id_supplier, id_gudang, id_operator, total_harga)
+            const total_bayar = $('#total_bayar').val()
+            const kembalian = $('#kembalian').val()
+            saveJual(no_invoice, total_harga, total_bayar, kembalian)
         })
 
         $('table tbody').on('click', '.link', function (event) {
@@ -588,19 +571,19 @@
             readData()
         })
 
-        $('#pembelian').on('click', '.btn-icon-delete', function (event) {
+        $('#penjualan').on('click', '.btn-icon-delete', function (event) {
             event.preventDefault()
             const id = $(this).attr('id_data')
             deleteData(id)
         })
 
-        $('#detail_pembelian').on('click', '.btn-icon-delete', function (event) {
+        $('#detail_penjualan').on('click', '.btn-icon-delete', function (event) {
             event.preventDefault()
             const id = $(this).attr('id_detal')
             deleteDetails(id)
         })
 
-        $('#beli_detail').on('click', '.btn-icon-delete', function (event) {
+        $('#jual_detail').on('click', '.btn-icon-delete', function (event) {
             event.preventDefault()
             const detail_id = $(this).attr('detail_data')
             deleteDetails(detail_id)

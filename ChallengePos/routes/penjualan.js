@@ -17,7 +17,7 @@ module.exports = function (pool) {
             let search = []
             let count = 1
             let syntax = []
-            let sql = 'SELECT * FROM pembelian'
+            let sql = 'SELECT * FROM penjualan'
             if (searchinvoice) {
                 sql += ' WHERE '
                 search.push(`%${searchinvoice}%`)
@@ -57,29 +57,25 @@ module.exports = function (pool) {
             }
 
             // const noInvoice = req.query.noInvoice ? req.query.noInvoice : rows.length > 0 ? rows[0].no_invoice : '';
-            const gudang = await pool.query('SELECT * FROM gudang_barang ORDER BY id_gudang');
-            const supplier = await pool.query('SELECT * FROM supplier ORDER BY id_supplier');
             const varian = await pool.query('SELECT * FROM varian ORDER BY barcode');
             const operator = await pool.query('SELECT * FROM pengguna ORDER BY user_id');
             const { rows } = await pool.query(sql, search);
            
             const noInvoice = req.query.noInvoice ? req.query.noInvoice : '';
      
-            const detail = await pool.query('SELECT bd.* FROM detail_pembelian as bd WHERE bd.no_invoice = $1 ORDER BY bd.id_detail', [noInvoice]);
-            const array = [rows, detail.rows, gudang.rows, supplier.rows, operator.rows, varian.rows]
-
-
+            const detail = await pool.query('SELECT bd.* FROM detail_penjualan as bd WHERE bd.no_invoice = $1 ORDER BY bd.id_detail', [noInvoice]);
+            const array = [rows, detail.rows, varian.rows]
 
             if (json == 'true') {
                 res.status(200).json(array)
 
             } else {
-                res.render('pembelian')
+                res.render('penjualan')
             }
 
         } catch (e) {
             console.log('error', e)
-            res.status(500).json({ message: "error get pembelian" })
+            res.status(500).json({ message: "error get penjualan" })
         }
 
     });
@@ -89,19 +85,18 @@ module.exports = function (pool) {
 
         try {
             const barcode = req.params.barcode
-
-            const {rows} = await pool.query('SELECT buy_price FROM varian WHERE barcode = $1', [barcode]);
+            const {rows} = await pool.query('SELECT sell_price FROM varian WHERE barcode = $1', [barcode]);
 
             if (json == 'true') {
                 res.status(200).json(rows)
 
             } else {
-                res.render('pembelian')
+                res.render('penjualan')
             }
 
         } catch (e) {
             console.log('error', e)
-            res.status(500).json({ message: "error get pembelian" })
+            res.status(500).json({ message: "error get penjualan" })
         }
 
     });
@@ -111,12 +106,12 @@ module.exports = function (pool) {
 
         try {
 
-            const { rows } = await pool.query('INSERT INTO pembelian(total_harga) VALUES(0) returning *')
+            const { rows } = await pool.query('INSERT INTO penjualan(total_harga) VALUES(0) returning *')
             console.log(rows)
             if(json == 'true') {
                 res.status(200).json(rows)
             } else {
-                res.render('pembelian')
+                res.render('penjualan')
             }
        
         } catch (e) {
@@ -128,51 +123,51 @@ module.exports = function (pool) {
     router.post('/detail', async function (req, res) {
         const {json} = req.headers
         try {
-            const {total_harga_detail ,id_supplier, id_gudang, id_operator, no_invoice, barcode, qty, harga_beli} = req.body
-            console.log()
-            const sqldetail = 'INSERT INTO detail_pembelian(no_invoice, barcode, qty, harga_beli, total_harga)VALUES ($1, $2, $3, $4, $5) returning *'
-            const sqld =  await pool.query(sqldetail, [no_invoice, barcode, qty, harga_beli, total_harga_detail])
+            const {total_harga_detail ,id_supplier, id_gudang, id_operator, no_invoice, barcode, qty, harga_jual} = req.body
+            console.log(total_harga_detail, no_invoice, barcode, qty, harga_jual)
+            const sqldetail = 'INSERT INTO detail_penjualan(no_invoice, barcode, qty, harga_jual, total_harga)VALUES ($1, $2, $3, $4, $5) returning *'
+            const sqld =  await pool.query(sqldetail, [no_invoice, barcode, qty, harga_jual, total_harga_detail])
             if(json == 'true') {
                 res.status(200).json(sqld)
             } else {
-                res.render('pembelian')
+                res.render('penjualan')
             }
             
         } catch (e) {
-            res.status(500).json({message: 'add pembelian detail gagal'})
+            res.status(500).json({message: 'add penjualan detail gagal'})
         }
     });
 
-    router.put('/pbelian/:no_invoice', async function (req, res) {
+    router.put('/pjualan/:no_invoice', async function (req, res) {
         const {json} = req.headers
         try {
-            const {total_harga ,id_supplier, id_gudang, id_operator, barcode, qty, harga_beli} = req.body
+            const {total_harga, total_bayar, kembalian} = req.body
             const no_invoice = req.params.no_invoice
-        console.log(id_supplier)
-            const sqlpembelian = 'UPDATE pembelian SET total_harga = $1, id_supplier = $2, id_gudang = $3, id_operator = $4 WHERE no_invoice = $5 returning *'
-            const sql = await pool.query(sqlpembelian, [total_harga, id_supplier, id_gudang, id_operator, no_invoice])
+            
+            const sqlpenjualan = 'UPDATE penjualan SET total_harga = $1, total_bayar = $2, kembalian = $3 WHERE no_invoice = $4 returning *'
+            const sql = await pool.query(sqlpenjualan, [total_harga, total_bayar, kembalian, no_invoice])
 
             if(json == 'true') {
                 res.status(200).json(sql)
             } else {
-                res.render('pembelian')
+                res.render('penjualan')
             }
             
         } catch (e) {
-            res.status(500).json({message: 'put pembelian gagal '})
+            res.status(500).json({message: 'put penjualan gagal '})
         }
     });
 
     router.get('/details/:no_invoice', async function (req, res) {
         const {json} = req.headers
         try {
-            const isiDetail = 'SELECT dp.*, v.varian_name FROM detail_pembelian as dp LEFT JOIN varian as v ON dp.barcode = v.barcode WHERE dp.no_invoice = $1 ORDER BY dp.id_detail'
+            const isiDetail = 'SELECT dp.*, v.varian_name FROM detail_penjualan as dp LEFT JOIN varian as v ON dp.barcode = v.barcode WHERE dp.no_invoice = $1 ORDER BY dp.id_detail'
             const { rows } = await pool.query(isiDetail, [req.params.no_invoice]);
             
             if(json == 'true') {
                 res.status(200).json(rows)
             } else {
-                res.render('pembelian')
+                res.render('penjualan')
             }
         } catch (e) {
             res.status(500).json({message: 'get details dengan noinvoice gagal'})
@@ -182,13 +177,13 @@ module.exports = function (pool) {
     router.delete('/:no_invoice', async function (req, res) {
         const { json } = req.headers
         try {
-            delPen = await pool.query('DELETE FROM detail_pembelian WHERE no_invoice = $1', [req.params.no_invoice])
-            const { rows } = await pool.query('DELETE FROM pembelian WHERE no_invoice = $1', [req.params.no_invoice])
+            const delPen = await pool.query('DELETE FROM detail_penjualan WHERE no_invoice = $1', [req.params.no_invoice])
+            const { rows } = await pool.query('DELETE FROM penjualan WHERE no_invoice = $1', [req.params.no_invoice])
             
             if (json == 'true') {
                  res.status(200).json(rows)
             } else {
-                res.render('pembelian')
+                res.render('penjualan')
             }  
         } catch (e) {
             console.log(e)
@@ -200,15 +195,15 @@ module.exports = function (pool) {
         const { json } = req.headers
         try {
             
-            const delDetail = await pool.query('DELETE FROM detail_pembelian WHERE id_detail = $1', [req.params.id_detail])
-            const { rows } = await pool.query('SELECT SUM(total_harga)  AS total FROM detail_pembelian WHERE no_invoice = $1', [req.body.no_invoice])
+            const delDetail = await pool.query('DELETE FROM detail_penjualan WHERE id_detail = $1', [req.params.id_detail])
+            const { rows } = await pool.query('SELECT SUM(total_harga)  AS total FROM detail_penjualan WHERE no_invoice = $1', [req.body.no_invoice])
 
             const array = [delDetail, rows]
 
             if (json == 'true') {
                  res.status(200).json(array)
             } else {
-                res.render('pembelian')
+                res.render('penjualan')
             }
         } catch (e) {
             res.status(500).json({message: 'gagal delete detail'})
