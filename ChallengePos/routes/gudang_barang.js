@@ -3,13 +3,14 @@ var router = express.Router();
 var pool = require('pg')
 var moment = require('moment');
 const e = require('express');
+const { isLoggedIn } = require('../helpers/util');
 
 module.exports = function (pool) {
 
 
 
   /* GET home page. */
-  router.get('/', async function (req, res) {
+  router.get('/',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -18,7 +19,7 @@ module.exports = function (pool) {
       if (json == "true") {
         res.status(200).json(get.rows)
       } else {
-        res.render('gudang_barang')
+        res.render('gudang_barang', {user: req.session.user})
       }
     } catch (error) {
       console.log(error)
@@ -26,7 +27,7 @@ module.exports = function (pool) {
     }
   })
 
-  router.post('/', async function (req, res) {
+  router.post('/',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -43,7 +44,7 @@ module.exports = function (pool) {
     }
   });
 
-  router.get('/:id_gudang', async function (req, res) {
+  router.get('/:id_gudang',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -60,7 +61,7 @@ module.exports = function (pool) {
     }
   })
 
-  router.put('/:id_gudang', async function (req, res) {
+  router.put('/:id_gudang',isLoggedIn, async function (req, res) {
     const { json } = req.headers
     try {
       let sql = `UPDATE gudang_barang SET 
@@ -85,7 +86,7 @@ module.exports = function (pool) {
     }
   })
 
-  router.delete('/:id_gudang', async function (req, res) {
+  router.delete('/:id_gudang',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {

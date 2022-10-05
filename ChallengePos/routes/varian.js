@@ -3,11 +3,11 @@ var router = express.Router();
 var pool = require('pg');
 var path = require('path')
 var moment = require('moment');
-
+const { isLoggedIn } = require('../helpers/util');
 
 module.exports = function (pool) {
 
-  router.get('/', async function (req, res) {
+  router.get('/',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -27,7 +27,7 @@ module.exports = function (pool) {
       if (json == 'true') {
         res.status(200).json(data.rows)
       } else {
-        res.render('varian')
+        res.render('varian', {user: req.session.user})
       }
 
 
@@ -39,7 +39,7 @@ module.exports = function (pool) {
   })
 
 
-  router.get('/select', async function (req, res) {
+  router.get('/select',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -58,7 +58,7 @@ module.exports = function (pool) {
   })
 
 
-  router.get('/api/:id', async function (req, res) {
+  router.get('/api/:id',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -86,7 +86,7 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE var.id_barang = $1`
 
   });
 
-  router.get('/:id', async function (req, res) {
+  router.get('/:id',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -115,7 +115,7 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
 
   });
 
-  router.post('/', async function (req, res) {
+  router.post('/',isLoggedIn, async function (req, res) {
 
     const { json } = req.headers
 
@@ -162,7 +162,7 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
     }
   })
 
-  router.put('/:id', async function (req, res) {
+  router.put('/:id',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
  
@@ -219,7 +219,7 @@ INNER JOIN barang bar ON bar.id_barang = var.id_barang WHERE barcode = $1;`
     }
 
   })
-  router.delete('/:barcode', async function (req, res) {
+  router.delete('/:barcode',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {

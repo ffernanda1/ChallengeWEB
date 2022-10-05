@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var expressLayouts = require('express-ejs-layouts')
 var fileupload = require("express-fileupload")
+var session = require('express-session')
+var flash = require('connect-flash')
 
 const {Pool} = require('pg')
 const pool = new Pool({
@@ -15,17 +17,8 @@ const pool = new Pool({
   port: '5432'
 })
 
-// async function main(){
-
-//   try{
-//     await pool.connect();
-//     console.log('Connected success');
-//     c
-//   }
-// }
 
 var indexRouter = require('./routes/index')(pool);
-// var usersRouter = require('./routes/users')(pool);
 var barangRouter = require('./routes/barang')(pool);
 var satuanRouter = require('./routes/satuan')(pool);
 var supplierRouter = require('./routes/supplier')(pool);
@@ -33,7 +26,7 @@ var varianRouter = require('./routes/varian')(pool);
 var gudangRouter = require('./routes/gudang_barang')(pool);;
 var pembelianRouter = require('./routes/pembelian')(pool);
 var penjualanRouter = require('./routes/penjualan')(pool);
-// var penjualandetailRouter = require('./routes/penjualan_detail')(pool);
+
 
 var app = express();
 
@@ -52,8 +45,15 @@ app.use(fileupload())
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(session({
+  secret: 'rubicamp',
+  resave: false,
+  saveUninitialized: true
+}))
+
+app.use(flash())
+
 app.use('/', indexRouter);
-// app.use('/users', usersRouter);
 app.use('/barang', barangRouter);
 app.use('/satuan', satuanRouter);
 app.use('/supplier', supplierRouter);
@@ -64,6 +64,7 @@ app.use('/penjualan', penjualanRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+ 
 });
 
 // error handler

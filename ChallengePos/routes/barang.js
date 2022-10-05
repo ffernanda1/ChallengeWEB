@@ -2,13 +2,14 @@ var express = require('express');
 var router = express.Router();
 var pool = require('pg')
 var moment = require('moment')
+const { isLoggedIn } = require('../helpers/util');
 
 module.exports = function (pool) {
 
 
 
   /* GET home page. */
-  router.get('/', async function (req, res) {
+  router.get('/',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
 
@@ -18,7 +19,7 @@ module.exports = function (pool) {
       if (json == 'true') {
         res.status(200).json(rows)
       } else {
-        res.render('barang')
+        res.render('barang', {user: req.session.user})
       }
     } catch (error) {
       console.log(error)
@@ -26,7 +27,7 @@ module.exports = function (pool) {
     }
   })
 
-  router.post('/', async function (req, res) {
+  router.post('/',isLoggedIn, async function (req, res) {
     const { json } = req.headers
     try {
       let sql = `INSERT INTO barang (id_barang, nama_barang) VALUES ($1,$2)`
@@ -42,7 +43,7 @@ module.exports = function (pool) {
     }
   });
 
-  router.get('/:id_barang', async function (req, res) {
+  router.get('/:id_barang',isLoggedIn, async function (req, res) {
     const { json } = req.headers
     try {
       let id = req.params.id_barang
@@ -59,7 +60,7 @@ module.exports = function (pool) {
     }
   })
 
-  router.put('/:id_barang', async function (req, res) {
+  router.put('/:id_barang',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
@@ -82,7 +83,7 @@ module.exports = function (pool) {
     }
   })
 
-  router.delete('/:id_barang', async function (req, res) {
+  router.delete('/:id_barang',isLoggedIn, async function (req, res) {
     const { json } = req.headers
 
     try {
